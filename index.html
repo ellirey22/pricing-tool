@@ -53,6 +53,12 @@ nav.tabs a{padding:6px 12px;border-radius:8px;text-decoration:none;color:var(--m
 nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
 nav.tabs a:hover{color:var(--ink)}
 .saved-at{margin-inline-start:auto;font-size:13px;color:var(--muted)}
+.cloud-state .cs{font-size:12.5px;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.cs.ok{background:var(--good-soft);color:var(--good)}
+.cs.busy{background:var(--accent-soft);color:var(--accent)}
+.cs.err{background:var(--bad-soft);color:var(--bad)}
+.steps{margin:0;padding-inline-start:22px;line-height:2}
+.steps code{direction:ltr;unicode-bidi:embed;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px}
 
 main{max-width:1360px;margin:0 auto;padding:16px}
 .banner{padding:10px 14px;border-radius:10px;background:var(--warn-soft);border:1px solid var(--line);margin-bottom:14px;font-size:14px}
@@ -279,7 +285,7 @@ table.list td .in.n{width:100px;direction:ltr;text-align:left}
       <a href="#clients" data-v="clients">العملاء</a>
       <a href="#settings" data-v="settings">الأسعار والإعدادات</a>
     </nav>
-    <div class="saved-at" id="savedAt"></div>
+    <div class="saved-at" id="savedAt"></div><div class="cloud-state" id="cloudState"></div>
   </div>
 </header>
 
@@ -424,6 +430,7 @@ table.list td .in.n{width:100px;direction:ltr;text-align:left}
       <button type="button" data-st="cats">الفئات</button>
       <button type="button" data-st="cities">المدن والسفر</button>
       <button type="button" data-st="labs">المختبر والسجلات</button>
+      <button type="button" data-st="cloud">OneDrive والمتتبع</button>
       <button type="button" data-st="general">عام والنسخ الاحتياطي</button>
     </div>
     <div id="setBody"></div>
@@ -563,7 +570,8 @@ const DEFAULT_CFG = {
     validity:"صلاحية هذا العرض {الصلاحية} يوماً من تاريخه.",
     totalNote:"القيمة الإجمالية للأعمال المذكورة في العرض ({الإجمالي} ريال)، {كتابة}، وفي حال الموافقة الرجاء إرسال هذا العرض بعد التوقيع والختم عليه.",
     notes:`تم إعداد عرض السعر بناءً على المعلومات الواردة من العميل، ولا يشمل العرض أي متطلبات إضافية أو إلزامية يطلبها ${NCEC} وفقاً للرد الأولي على الطلب.`
-  }
+  },
+  cloud:{ clientId:"", tenantId:"", folder:"مسعر العروض", autoBackup:true, tracker:true }
 };
 
 /* =============== state & storage =============== */
@@ -573,14 +581,14 @@ let persistT;
 function persist(now){
   clearTimeout(persistT);
   const go = () => {
-    try{ localStorage.setItem(STORE, JSON.stringify({ cfg:S.cfg, quotes:S.quotes, clients:S.clients })); $("#savedAt").textContent = "محفوظ على هذا الجهاز"; }
+    try{ localStorage.setItem(STORE, JSON.stringify({ cfg:S.cfg, quotes:S.quotes, clients:S.clients })); $("#savedAt").textContent = "محفوظ على هذا الجهاز"; if (typeof scheduleBackup === "function") scheduleBackup(); }
     catch(e){ showBanner("تعذّر الحفظ في المتصفح (قد تكون الصور كبيرة جداً أو التصفح خفي). صغّر الصور أو نزّل نسخة احتياطية."); }
   };
   if (now) go(); else persistT = setTimeout(go, 350);
 }
 function mergeCfg(c){
   const base = clone(DEFAULT_CFG); c = c || {};
-  return { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, texts:{...base.texts, ...c.texts},
+  return { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, texts:{...base.texts, ...c.texts}, cloud:{...base.cloud, ...c.cloud},
     services: base.services.map(s => ({ ...s, ...((c.services || []).find(x => x.key === s.key) || {}) })) };
 }
 function load(){
@@ -811,6 +819,7 @@ $("#v-quote").addEventListener("input", e => {
     if (el.dataset.b === "facility.city"){ applyCity(q); $("#q-freg").value = q.facility.region || ""; renderTravel(); }
     if (el.dataset.b === "client.name") clientAutofill();
     if (el.dataset.b === "date") showNo();
+    if (el.dataset.b === "status" && el.value === "accepted" && !q.acceptedAt) q.acceptedAt = todayISO();
   }
   if (el.dataset.lq){ const s = q.labs[el.dataset.lq] || (q.labs[el.dataset.lq] = { cost:num(S.cfg.labs.find(l => l.id === el.dataset.lq).cost) }); s.qty = num(el.value); el.closest(".pick").classList.toggle("on", s.qty > 0); }
   if (el.dataset.lc){ const s = q.labs[el.dataset.lc] || (q.labs[el.dataset.lc] = { qty:0 }); s.cost = num(el.value); }
@@ -856,6 +865,7 @@ async function saveQuote(silent){
   const i = S.quotes.findIndex(x => x.id === q.id); if (i >= 0) S.quotes[i] = clone(q); else S.quotes.unshift(clone(q));
   persist(true); S.saved = true; $("#dirty").hidden = true; showNo();
   try{ localStorage.removeItem("musaer-env-draft2"); }catch(e){}
+  trackQuote(q);
   if (!silent) toast(`تم حفظ العرض ${q.number}`);
   return true;
 }
@@ -1191,13 +1201,15 @@ $("#qList").addEventListener("click", e => {
   if (b.dataset.act === "dup") duplicate(x);
   if (b.dataset.act === "del"){
     if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد الحذف"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
-    S.quotes = S.quotes.filter(q => q.id !== id); persist(true); renderQuotes();
+    trackQuote(x, "محذوف"); S.quotes = S.quotes.filter(q => q.id !== id); persist(true); renderQuotes();
   }
 });
 $("#qList").addEventListener("change", e => {
   const s = e.target.closest('[data-act="status"]'); if (!s) return;
   const x = S.quotes.find(q => q.id === s.closest("tr").dataset.id); if (!x) return;
-  x.status = s.value; s.dataset.s = s.value; persist(true); if (S.draft.id === x.id) S.draft.status = s.value;
+  x.status = s.value; s.dataset.s = s.value; if (s.value === "accepted" && !x.acceptedAt) x.acceptedAt = todayISO();
+  persist(true); if (S.draft.id === x.id){ S.draft.status = s.value; S.draft.acceptedAt = x.acceptedAt; }
+  trackQuote(x);
 });
 
 /* =============== CLIENTS =============== */
@@ -1291,6 +1303,27 @@ function renderSettings(){
     <div class="tbl-wrap"><table class="list"><thead><tr><th>السجل</th><th>تكلفة الإعداد</th><th></th></tr></thead><tbody>
     ${C.records.map((r, i) => `<tr><td><input class="in" data-c="records.${i}.name" value="${esc(r.name)}" aria-label="اسم السجل"></td><td><input class="in n" data-c="records.${i}.cost" data-t="num" value="${esc(r.cost)}" inputmode="decimal" aria-label="التكلفة"></td>
       <td><button type="button" class="btn sm ghost danger" data-del="records.${i}">حذف</button></td></tr>`).join("")}</tbody></table></div></div></div>`;
+  if (setTab === "cloud"){ const m = cloudMeta(), cc = C.cloud, acct = Cloud.account;
+    el.innerHTML = `<div class="card stack" style="max-width:1050px">
+    <div class="sec-head" style="margin:0"><h2>الربط مع OneDrive</h2><span>${acct ? `<span class="cs ok">متصل: ${esc(acct.username || acct.name || "")}</span>` : cc.clientId ? `<span class="cs err">غير متصل</span>` : ""}</span></div>
+    <p class="hint" style="margin:0">بعد الربط: كل تغيير ينحفظ تلقائياً كنسخة احتياطية في مجلد على OneDrive (ومعه سجل الإصدارات من OneDrive)، وكل عرض محفوظ يُسجَّل في ملف Excel «${esc(TR_NAME)}» مع صفحة ملخص. عند تعميد العرض (الحالة: مقبول) يتحدث صفّه ويُسجَّل تاريخ التعميد.</p>
+    <details ${cc.clientId ? "" : "open"}><summary style="cursor:pointer;font-weight:600">خطوات الإعداد لأول مرة (5 دقائق، مرة وحدة للشركة)</summary>
+      <ol class="steps">
+        <li>افتح <a href="https://entra.microsoft.com" target="_blank" rel="noopener">entra.microsoft.com</a> بحساب الشركة، ثم <b>Applications ← App registrations ← New registration</b>.</li>
+        <li>الاسم: <code>Musaer Pricing</code>، ونوع الحسابات: <b>Accounts in this organizational directory only</b>.</li>
+        <li>في <b>Redirect URI</b> اختر <b>Single-page application (SPA)</b> والصق: <code>${esc(redirectUri())}</code></li>
+        <li>بعد الإنشاء انسخ <b>Application (client) ID</b> و<b>Directory (tenant) ID</b> والصقهم تحت.</li>
+        <li>من <b>API permissions</b> تأكد من وجود <b>Microsoft Graph ← Files.ReadWrite</b> و<b>User.Read</b> (Delegated). إذا طلبت الشركة، اضغط <b>Grant admin consent</b>.</li>
+      </ol>
+      <p class="hint" style="margin:4px 0 0">إذا ما ظهر لك زر New registration، الصلاحية عند مسؤول تقنية المعلومات في شركتكم.</p>
+    </details>
+    <div class="row">${inp("cloud.clientId","Application (client) ID",{ltr:1})}${inp("cloud.tenantId","Directory (tenant) ID",{ltr:1})}${inp("cloud.folder","اسم المجلد في OneDrive")}</div>
+    <div class="row">${inp("cloud.autoBackup","نسخ احتياطي تلقائي",{sel:YN,t:"bool"})}${inp("cloud.tracker","تسجيل العروض في ملف Excel",{sel:YN,t:"bool"})}</div>
+    <div class="btns">${acct ? `<button class="btn" type="button" id="cBackup">رفع نسخة الآن</button><button class="btn" type="button" id="cRestore">استرجاع آخر نسخة من OneDrive</button><button class="btn" type="button" id="cSyncAll">تسجيل كل العروض في المتتبع</button>${m.trackerUrl ? `<a class="btn primary" href="${esc(m.trackerUrl)}" target="_blank" rel="noopener">فتح ملف المتتبع</a>` : ""}<button class="btn ghost danger" type="button" id="cOff">فصل الحساب</button>`
+      : `<button class="btn primary" type="button" id="cConnect" ${cc.clientId ? "" : "disabled"}>ربط حساب Microsoft</button>`}</div>
+    ${acct ? `<p class="hint" style="margin:0">آخر نسخة احتياطية: ${m.lastBackup ? new Date(m.lastBackup).toLocaleString("ar-SA-u-nu-latn") : "—"} · آخر تحديث للمتتبع: ${m.lastSync ? new Date(m.lastSync).toLocaleString("ar-SA-u-nu-latn") : "—"}${Cloud.state === "err" && Cloud.err !== "auth" ? ` · <span style="color:var(--bad)">${esc(Cloud.err.slice(0,160))}</span>` : ""}</p>` : ""}
+    <p class="hint" style="margin:0">في ملف المتتبع: لا تغيّر أسماء الأعمدة أو اسم ورقة «العروض». تقدر تكتب في عمودي «المبلغ المحصّل» و«ملاحظات» وما يتأثرون بالتحديث التلقائي.</p>
+  </div>`; }
   if (setTab === "general") el.innerHTML = `<div class="card stack" style="max-width:1050px">
     <h2>الهوامش والضريبة</h2>
     <div class="row">${inp("pricing.risk","هامش المخاطر الافتراضي %",{t:"num"})}${inp("pricing.profit","هامش الربح الافتراضي %",{t:"num"})}${inp("pricing.labProfit","هامش الربح على المختبر %",{t:"num"})}${inp("pricing.vat","ضريبة القيمة المضافة %",{t:"num"})}</div>
@@ -1313,6 +1346,8 @@ $("#setBody").addEventListener("input", e => {
   let v = el.value; if (el.dataset.t === "num") v = num(v); if (el.dataset.t === "bool") v = v === "true";
   setPath(S.cfg, el.dataset.c, v); persist();
   if (el.dataset.c.startsWith("company.")) brandMark();
+  if (el.dataset.c === "cloud.clientId" || el.dataset.c === "cloud.tenantId"){ clearTimeout(Cloud.it); Cloud.it = setTimeout(async () => { await cloudInit(); const b = $("#cConnect"); if (b) b.disabled = !S.cfg.cloud.clientId; }, 600); }
+  if (el.dataset.c === "cloud.folder") Cloud.trackerId = null;
 });
 $("#setBody").addEventListener("click", e => {
   let b;
@@ -1324,6 +1359,11 @@ $("#setBody").addEventListener("click", e => {
   if ((b = e.target.closest("[data-del]"))){ if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
     const [k, i] = b.dataset.del.split("."); S.cfg[k].splice(+i, 1); persist(); renderSettings(); return; }
   if ((b = e.target.closest("[data-imgdel]"))){ S.cfg.company[b.dataset.imgdel] = ""; persist(true); renderSettings(); brandMark(); return; }
+  if (e.target.id === "cConnect"){ cloudConnect(); return; }
+  if (e.target.id === "cOff"){ cloudDisconnect(); return; }
+  if (e.target.id === "cBackup"){ cloudEnq(uploadBackup).then(() => { if (Cloud.state === "ok") toast("تم رفع النسخة إلى OneDrive"); }); return; }
+  if (e.target.id === "cSyncAll"){ const list = S.quotes.slice().reverse(); list.forEach(q => cloudEnq(() => syncQuote(clone(q)))); toast(`جارٍ تسجيل ${list.length} عرض في المتتبع`); Cloud.q.then(() => { if (Cloud.state === "ok") toast("تم تحديث ملف المتتبع"); }); return; }
+  if (e.target.id === "cRestore"){ const t = e.target; if (!t.dataset.confirm){ t.dataset.confirm = "1"; t.textContent = "اضغط مرة ثانية: سيستبدل بيانات هذا الجهاز"; return; } cloudEnq(restoreFromCloud); return; }
   if (e.target.id === "bkExport"){ saveBlob(`pricing-backup-${todayISO()}.json`, new Blob([JSON.stringify({ app:"musaer-env", kind:"backup", version:2, exportedAt:new Date().toISOString(), cfg:S.cfg, quotes:S.quotes, clients:S.clients })], { type:"application/json" })); return; }
   if (e.target.id === "bkReset"){ const t = e.target; if (!t.dataset.confirm){ t.dataset.confirm = "1"; t.textContent = "اضغط مرة ثانية للتأكيد (بيانات الشركة والعروض تبقى)"; return; }
     const keep = S.cfg.company; S.cfg = clone(DEFAULT_CFG); S.cfg.company = keep; persist(true); renderSettings(); toast("تمت إعادة الأسعار والنصوص"); }
@@ -1352,6 +1392,7 @@ $("#setBody").addEventListener("change", async e => {
         if (!d.company) throw 0;
         S.cfg.company = { ...S.cfg.company, ...d.company };
         if (d.pricing) S.cfg.pricing = { ...S.cfg.pricing, ...d.pricing };
+        if (d.cloud){ S.cfg.cloud = { ...S.cfg.cloud, ...d.cloud }; cloudInit(); }
         persist(true); renderSettings(); brandMark(); toast("تم استيراد بيانات الشركة والترويسة");
       } else {
         S.cfg = mergeCfg(d.cfg); S.quotes = d.quotes || []; S.clients = d.clients || [];
@@ -1364,6 +1405,138 @@ $("#setBody").addEventListener("change", async e => {
 });
 function brandMark(){ const co = S.cfg.company, m = $("#brandMark"); m.innerHTML = co.logo ? `<img src="${esc(co.logo)}" alt="">` : "م"; }
 
+/* =============== ONEDRIVE: backup + Excel tracker (Microsoft Graph) =============== */
+const TRACKER_B64 = "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";
+const SCOPES = ["Files.ReadWrite", "User.Read"];
+const BK_NAME = "نسخة احتياطية - مسعر العروض.json", TR_NAME = "متتبع عروض الأسعار.xlsx", TR_SHEET = "العروض";
+const Cloud = { msal:null, ready:false, account:null, q:Promise.resolve(), trackerId:null, bt:null, state:"off", err:"", initKey:"" };
+const CS_KEY = "musaer-cloud-state";
+const cloudMeta = () => { try{ return JSON.parse(localStorage.getItem(CS_KEY) || "{}"); }catch(e){ return {}; } };
+const setMeta = o => { try{ localStorage.setItem(CS_KEY, JSON.stringify({ ...cloudMeta(), ...o })); }catch(e){} };
+const redirectUri = () => new URL("redirect.html", location.href.split("#")[0]).href;
+const cloudOn = () => !!(Cloud.ready && Cloud.account);
+function setCloud(state, err){
+  Cloud.state = state; if (err !== undefined) Cloud.err = err;
+  const el = $("#cloudState"); if (!el) return;
+  if (!S.cfg.cloud.clientId || (!Cloud.account && state !== "err")){ el.innerHTML = ""; return; }
+  if (state === "busy") el.innerHTML = `<span class="cs busy">OneDrive: جارٍ المزامنة…</span>`;
+  else if (state === "ok"){ const m = cloudMeta(); el.innerHTML = `<span class="cs ok">OneDrive ✓${m.lastBackup ? " · آخر نسخة " + new Date(m.lastBackup).toLocaleTimeString("ar-SA-u-nu-latn", { hour:"2-digit", minute:"2-digit" }) : ""}</span>`; }
+  else if (state === "err") el.innerHTML = Cloud.err === "auth" ? `<button type="button" class="btn sm" id="cloudReauth">أعد ربط OneDrive</button>` : `<span class="cs err" title="${esc(Cloud.err)}">OneDrive: تعذّرت المزامنة</span>`;
+  if (location.hash === "#settings" && setTab === "cloud") renderSettings();
+}
+async function cloudInit(){
+  const c = S.cfg.cloud, key = c.clientId + "|" + c.tenantId;
+  if (!c.clientId || !window.msal){ Cloud.ready = false; Cloud.msal = null; setCloud("off"); return false; }
+  if (Cloud.ready && Cloud.initKey === key) return true;
+  Cloud.ready = false; Cloud.account = null; Cloud.trackerId = null; Cloud.initKey = key;
+  try{
+    Cloud.msal = new msal.PublicClientApplication({ auth:{ clientId:c.clientId.trim(), authority:`https://login.microsoftonline.com/${(c.tenantId || "common").trim()}`, redirectUri:redirectUri() }, cache:{ cacheLocation:"localStorage" } });
+    await Cloud.msal.initialize();
+    Cloud.account = Cloud.msal.getActiveAccount() || Cloud.msal.getAllAccounts()[0] || null;
+    if (Cloud.account) Cloud.msal.setActiveAccount(Cloud.account);
+    Cloud.ready = true; setCloud(Cloud.account ? "ok" : "off");
+    return true;
+  }catch(e){ console.error(e); setCloud("err", "تعذّر تهيئة الربط: تأكد من Client ID و Tenant ID"); return false; }
+}
+async function token(){
+  try{ return (await Cloud.msal.acquireTokenSilent({ scopes:SCOPES, account:Cloud.account })).accessToken; }
+  catch(e){ const err = new Error("auth"); err.code = "auth"; throw err; }
+}
+async function graph(path, opt = {}){
+  const t = await token();
+  const headers = { Authorization:"Bearer " + t, ...(opt.headers || {}) };
+  let body = opt.body;
+  if (opt.json !== undefined){ headers["Content-Type"] = "application/json"; body = JSON.stringify(opt.json); }
+  const res = await fetch("https://graph.microsoft.com/v1.0" + path, { method:opt.method || "GET", headers, body });
+  if (res.status === 404 && opt.allow404) return null;
+  if (res.status === 401){ const err = new Error("auth"); err.code = "auth"; throw err; }
+  if (!res.ok) throw new Error(`Graph ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  return res.status === 204 ? null : res.json();
+}
+const fpath = name => "/me/drive/root:/" + [S.cfg.cloud.folder || "مسعر العروض", name].map(encodeURIComponent).join("/");
+function cloudEnq(fn){
+  Cloud.q = Cloud.q.then(async () => {
+    if (!cloudOn()) return;
+    setCloud("busy");
+    try{ await fn(); setCloud("ok", ""); }
+    catch(e){ console.error(e); setCloud("err", e.code === "auth" ? "auth" : String(e.message || e)); }
+  });
+  return Cloud.q;
+}
+function scheduleBackup(){
+  if (!cloudOn() || !S.cfg.cloud.autoBackup) return;
+  clearTimeout(Cloud.bt); Cloud.bt = setTimeout(() => cloudEnq(uploadBackup), 4000);
+}
+async function uploadBackup(){
+  const data = { app:"musaer-env", kind:"backup", version:2, exportedAt:new Date().toISOString(), cfg:S.cfg, quotes:S.quotes, clients:S.clients };
+  await graph(fpath(BK_NAME) + ":/content", { method:"PUT", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(data) });
+  setMeta({ lastBackup:Date.now() });
+}
+async function restoreFromCloud(){
+  const it = await graph(fpath(BK_NAME), { allow404:true });
+  if (!it || !it["@microsoft.graph.downloadUrl"]) { toast("ما فيه نسخة احتياطية في OneDrive بعد"); return; }
+  const d = await (await fetch(it["@microsoft.graph.downloadUrl"])).json();
+  if (d.app !== "musaer-env") throw new Error("ملف النسخة غير صالح");
+  const cloudCfg = S.cfg.cloud;
+  S.cfg = mergeCfg(d.cfg); S.cfg.cloud = { ...S.cfg.cloud, ...cloudCfg }; S.quotes = d.quotes || []; S.clients = d.clients || [];
+  persist(true); brandMark(); renderSettings();
+  toast(`تم الاسترجاع من OneDrive: ${S.quotes.length} عرض و${S.clients.length} عميل`);
+}
+function b64Bytes(b){ const s = atob(b), a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+async function ensureTracker(){
+  if (Cloud.trackerId) return Cloud.trackerId;
+  let it = await graph(fpath(TR_NAME), { allow404:true });
+  if (!it) it = await graph(fpath(TR_NAME) + ":/content", { method:"PUT", headers:{ "Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }, body:b64Bytes(TRACKER_B64) });
+  Cloud.trackerId = it.id; setMeta({ trackerUrl:it.webUrl });
+  return it.id;
+}
+const XL0 = Date.UTC(1899, 11, 30);
+const xlDate = iso => { if (!iso) return ""; const [y, m, d] = iso.split("-").map(Number); return (Date.UTC(y, m - 1, d) - XL0) / 864e5; };
+const xlNow = () => { const d = new Date(); return Math.round((d.getTime() - d.getTimezoneOffset() * 6e4 - XL0) / 6e4) / 1440; };
+const TR_FMT = [["@","yyyy-mm-dd","@","@","@","@","@","@","@","@","@","@","#,##0.00","#,##0.00","#,##0.00","#,##0.00","#,##0.00","#,##0.00","0.0%","@","yyyy-mm-dd","yyyy-mm-dd","yyyy-mm-dd hh:mm"]];
+function trackerRow(q, statusTxt){
+  const c = calc(q), cat = catOf(q), s = svcOf(q);
+  return [q.number, xlDate(q.date), q.client.name || "", q.client.contact || "", q.client.phone ? "'" + q.client.phone : "", q.facility.name || "", q.facility.city || "", q.facility.region || "",
+    cat.name, s.title, q.request === "renew" ? "تجديد تصريح بيئي" : "إصدار التصريح البيئي", q.phase === "construction" ? "إنشائي" : "تشغيلي",
+    r2(c.net), r2(c.vat), r2(c.gov), r2(c.grand), r2(c.cost), r2(c.profit), c.margin == null ? "" : Math.round(c.margin * 10) / 1000,
+    statusTxt || ST_AR[q.status] || "", q.status === "accepted" && q.acceptedAt ? xlDate(q.acceptedAt) : "", xlDate(addDays(q.date, num(q.validity))), xlNow()];
+}
+async function syncQuote(q, statusTxt){
+  if (!q.number) return;
+  const id = await ensureTracker(), wb = `/me/drive/items/${id}/workbook`, tb = `${wb}/tables/Quotes/rows`;
+  const vals = trackerRow(q, statusTxt);
+  const rows = (await graph(tb)).value || [];
+  let r = rows.find(x => String(x.values[0][0]) === q.number) || rows.find(x => x.values[0].every(v => v === "" || v === null));
+  if (!r){
+    const cols = rows.length ? rows[0].values[0].length : 25;
+    r = await graph(tb, { method:"POST", json:{ values:[vals.concat(Array(Math.max(0, cols - vals.length)).fill(""))] } });
+  }
+  const rg = await graph(`${tb}/itemAt(index=${r.index})/range`);
+  const rowNo = +(/[A-Z]+\$?(\d+)/.exec(String(rg.address).split("!").pop())[1]);
+  await graph(`${wb}/worksheets('${encodeURIComponent(TR_SHEET)}')/range(address='A${rowNo}:W${rowNo}')`, { method:"PATCH", json:{ values:[vals], numberFormat:TR_FMT } });
+  setMeta({ lastSync:Date.now() });
+}
+function trackQuote(q, statusTxt){ if (cloudOn() && S.cfg.cloud.tracker) cloudEnq(() => syncQuote(clone(q), statusTxt)); }
+async function cloudConnect(){
+  if (!Cloud.ready){ const ok = await cloudInit(); if (ok) toast("جاهز. اضغط «ربط حساب Microsoft» مرة ثانية"); return; }
+  try{
+    const r = await Cloud.msal.loginPopup({ scopes:SCOPES, prompt:"select_account" });
+    Cloud.account = r.account; Cloud.msal.setActiveAccount(r.account); setCloud("ok", "");
+    toast("تم ربط OneDrive"); renderSettings();
+    cloudEnq(async () => { await ensureTracker(); await uploadBackup(); });
+  }catch(e){ console.error(e); toast(/popup/i.test(String(e && (e.errorCode || e.message))) ? "المتصفح منع النافذة المنبثقة. اسمح بها وحاول مرة ثانية" : "تعذّر الربط: " + (e.errorMessage || e.message || e).toString().slice(0, 120)); }
+}
+async function cloudReauth(){
+  if (!Cloud.ready) return cloudConnect();
+  try{ const r = await Cloud.msal.acquireTokenPopup({ scopes:SCOPES, account:Cloud.account || undefined }); Cloud.account = r.account; Cloud.msal.setActiveAccount(r.account); setCloud("ok", ""); scheduleBackup(); }
+  catch(e){ toast("تعذّر إعادة الربط"); }
+}
+async function cloudDisconnect(){
+  try{ if (Cloud.msal && Cloud.account){ if (Cloud.msal.clearCache) await Cloud.msal.clearCache({ account:Cloud.account }); } }catch(e){}
+  Cloud.account = null; Cloud.trackerId = null; setCloud("off"); renderSettings(); toast("تم فصل الحساب من هذا الجهاز");
+}
+document.addEventListener("click", e => { if (e.target.id === "cloudReauth") cloudReauth(); });
+
 /* =============== BOOT =============== */
 const had = load();
 try{ const d = JSON.parse(localStorage.getItem("musaer-env-draft2") || "null"); if (d && d.travel && d.payments){ S.draft = d; S.saved = false; } }catch(e){}
@@ -1372,9 +1545,11 @@ brandMark();
 if (!had || (!S.cfg.company.letterhead && S.cfg.company.name === "اسم الشركة")) showBanner("أهلاً! ابدأ من «الأسعار والإعدادات ← عام والنسخ الاحتياطي» واستورد ملف إعداد الشركة، ثم راجع أسعار المدن والمختبر (المبدئية تقديرية). البيانات تُحفظ في هذا المتصفح.");
 $("#savedAt").textContent = had ? "محفوظ على هذا الجهاز" : "";
 route();
+window.addEventListener("load", () => cloudInit());
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.5.0/dist/index.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.27.0/lib/msal-browser.min.js"></script>
 </body>
 </html>
