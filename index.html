@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مُسعِّر عروض الأسعار</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a working desk. Quote lines on the wide side, a sticky totals ledger beside them; the client document is rendered separately on white paper. */
+:root{
+  --bg:#eef2f1; --surface:#ffffff; --ink:#14201e; --muted:#5a6966; --line:#d6dedb;
+  --accent:#0d6a61; --accent-ink:#ffffff; --accent-soft:#dcece8;
+  --good:#1f7a3d; --warn:#9a5c00; --bad:#b3261e;
+  --good-soft:#e2f2e7; --warn-soft:#f8ecd6; --bad-soft:#f8e1df;
+  --font-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --font-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1413; --surface:#162020; --ink:#e4edeb; --muted:#97a8a4; --line:#283634;
+    --accent:#3db3a3; --accent-ink:#04201c; --accent-soft:#17332f;
+    --good:#62c98a; --warn:#e3a54a; --bad:#f07f76;
+    --good-soft:#163222; --warn-soft:#3a2a10; --bad-soft:#3d1a18;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1413; --surface:#162020; --ink:#e4edeb; --muted:#97a8a4; --line:#283634;
+  --accent:#3db3a3; --accent-ink:#04201c; --accent-soft:#17332f;
+  --good:#62c98a; --warn:#e3a54a; --bad:#f07f76;
+  --good-soft:#163222; --warn-soft:#3a2a10; --bad-soft:#3d1a18;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;font-weight:600}
+h1{font-size:20px} h2{font-size:18px} h3{font-size:15px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num,.n,td.tot,.money{font-variant-numeric:tabular-nums}
+
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top-in{max-width:1320px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:700}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap}
+nav.tabs a{padding:6px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500}
+nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+nav.tabs a:hover{color:var(--ink)}
+.mode{margin-inline-start:auto;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.live{background:var(--good)} .dot.demo{background:var(--warn)} .dot.err{background:var(--bad)}
+
+main{max-width:1320px;margin:0 auto;padding:16px}
+.banner{padding:10px 14px;border-radius:10px;background:var(--warn-soft);color:var(--ink);border:1px solid var(--line);margin-bottom:14px;font-size:14px}
+.banner[hidden]{display:none}
+section.view[hidden]{display:none}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid-editor{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:1000px){.grid-editor{grid-template-columns:1fr}}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.row > .f{flex:1 1 160px;min-width:0}
+.f label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.in, .f input, .f select, .f textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.f textarea{min-height:78px;resize:vertical}
+.in:focus,.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.ltr{direction:ltr;text-align:left}
+.hint{font-size:12.5px;color:var(--muted)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 14px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--bg)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:3px 9px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+
+/* quote meta */
+.qmeta{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.qno{font-family:var(--font-display);font-size:22px;font-weight:600;direction:ltr}
+.qno small{font-family:var(--font-body);font-size:13px;color:var(--muted);font-weight:400}
+
+/* add search */
+.adder{position:relative}
+.adder input{font-size:16px;padding:10px 14px;border-width:2px}
+.dd{position:absolute;inset-inline:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.14);z-index:15;max-height:340px;overflow:auto}
+.dd[hidden]{display:none}
+.dd button{display:flex;width:100%;justify-content:space-between;gap:10px;padding:9px 12px;border:0;background:transparent;text-align:start;cursor:pointer}
+.dd button.on,.dd button:hover{background:var(--accent-soft)}
+.dd .meta{color:var(--muted);font-size:13px;white-space:nowrap}
+
+/* lines table */
+.tbl-wrap{overflow-x:auto;margin-top:12px}
+table.lines{width:100%;border-collapse:collapse;min-width:820px}
+table.lines th{font-size:12.5px;color:var(--muted);font-weight:500;text-align:start;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.lines td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}
+table.lines .in{padding:5px 8px;background:transparent;border-color:transparent}
+table.lines .in:hover{border-color:var(--line)}
+table.lines .in:focus{background:var(--bg)}
+table.lines .in.n{direction:ltr;text-align:left;width:84px}
+table.lines .in.unit{width:80px}
+table.lines .in.name{font-weight:500}
+table.lines .in.desc{font-size:13px;color:var(--muted)}
+td.idx{color:var(--muted);width:28px;padding-top:11px !important}
+td.tot{font-weight:600;white-space:nowrap;padding-top:11px !important;direction:ltr;text-align:left}
+td.acts{white-space:nowrap}
+.empty{padding:28px 10px;text-align:center;color:var(--muted)}
+.bulk{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--muted)}
+.bulk input{width:70px;direction:ltr;text-align:left}
+
+/* margin pill */
+.pill{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.muted{background:var(--bg);color:var(--muted)}
+.mcell{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+
+/* ledger */
+.ledger{position:sticky;top:76px}
+.ledger dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:6px 0;align-items:center}
+.ledger dd{padding-inline-start:10px;white-space:nowrap}
+.ledger dt{color:var(--muted);font-size:14px}
+.ledger dd{margin:0;text-align:left;direction:ltr;font-variant-numeric:tabular-nums;font-weight:500}
+.ledger .grand{border-top:2px solid var(--ink);padding-top:10px;margin-top:4px}
+.ledger .grand dt{color:var(--ink);font-weight:600}
+.ledger dd.grand{font-family:var(--font-display);font-size:21px;font-weight:600}
+.ledger .mini{display:flex;gap:6px;align-items:center}
+.ledger .mini input{width:84px;direction:ltr;text-align:left;padding:4px 8px}
+.ledger .mini select{padding:4px 6px;background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.internal{margin-top:14px;padding:12px;border-radius:10px;background:var(--bg);border:1px dashed var(--line)}
+.internal h3{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:8px}
+.words{font-size:13px;color:var(--muted);margin-top:8px}
+.ledger .btns{margin-top:14px}
+.ledger .btns .btn{flex:1 1 auto}
+.dirty{font-size:12.5px;color:var(--warn)}
+
+/* lists */
+table.list{width:100%;border-collapse:collapse}
+table.list th{font-size:12.5px;color:var(--muted);font-weight:500;text-align:start;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.list td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.list tr:hover td{background:var(--bg)}
+table.list .money{direction:ltr;text-align:left;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.kpi .v{font-family:var(--font-display);font-size:22px;font-weight:600;direction:ltr;text-align:right}
+.kpi .l{font-size:13px;color:var(--muted)}
+.st{padding:3px 6px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:13px}
+.st[data-s="accepted"]{background:var(--good-soft);color:var(--good);border-color:transparent}
+.st[data-s="sent"]{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.st[data-s="rejected"]{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.tools input,.tools select{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.tools input{flex:1 1 220px}
+.two{display:grid;grid-template-columns:380px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.logo-prev{max-height:60px;max-width:180px;display:block;margin-top:6px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,18,17,.62);z-index:50;display:flex;flex-direction:column}
+.modal[hidden]{display:none}
+.modal-bar{background:var(--surface);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
+.modal-bar h2{margin-inline-end:auto}
+.paper-wrap{flex:1;overflow:auto;padding:24px 16px}
+.paper-wrap .doc{margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,.35)}
+.copybox{width:100%;min-height:200px;margin-top:8px}
+
+.toast{position:fixed;bottom:18px;inset-inline-start:50%;transform:translateX(50%);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:10px;z-index:80;font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+@media (prefers-reduced-motion:no-preference){.toast{transition:opacity .2s}}
+
+@media print{
+  body > *:not(#modal){display:none !important}
+  #modal{position:static;background:none;display:block}
+  #modal .modal-bar{display:none}
+  .paper-wrap{padding:0;overflow:visible}
+  .paper-wrap .doc{box-shadow:none;margin:0;width:auto;min-height:0;padding:0}
+  @page{size:A4;margin:12mm}
+}
+/* ===== Client document: fixed light paper, never themed ===== */
+.doc{width:794px;min-height:1123px;background:#ffffff;color:#1b2422;padding:46px 50px;font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;font-size:13px;line-height:1.65;direction:rtl;letter-spacing:0}
+.doc *{letter-spacing:0}
+.doc .d-head{display:flex;justify-content:space-between;gap:24px;padding-bottom:18px;border-bottom:3px solid #0d6a61}
+.doc .d-co{display:flex;gap:14px;align-items:flex-start}
+.doc .d-co img{max-height:64px;max-width:150px}
+.doc .d-co .nm{font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif;font-size:19px;font-weight:600;color:#0d6a61}
+.doc .d-co .inf{color:#55625f;font-size:12px;white-space:pre-line}
+.doc .d-title{text-align:left}
+.doc .d-title .t{font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif;font-size:24px;font-weight:600;color:#1b2422;text-align:left}
+.doc .d-title .t small{display:block;font-size:12px;color:#55625f;font-weight:400}
+.doc .d-meta{display:grid;grid-template-columns:auto auto;gap:2px 12px;margin-top:6px;font-size:12px;justify-content:end}
+.doc .d-meta span:nth-child(odd){color:#55625f}
+.doc .d-meta span:nth-child(even){direction:ltr;text-align:right;font-weight:500}
+.doc .d-to{display:flex;justify-content:space-between;gap:20px;margin:20px 0 14px}
+.doc .d-to .box{flex:1;background:#f2f6f5;border-radius:8px;padding:10px 14px}
+.doc .d-to .lbl{font-size:11px;color:#55625f}
+.doc .d-to .cn{font-weight:600;font-size:14px}
+.doc .d-subj{margin:0 0 10px;font-weight:600}
+.doc table{width:100%;border-collapse:collapse}
+.doc th{background:#0d6a61;color:#ffffff;font-weight:500;padding:7px 8px;text-align:right;font-size:12px}
+.doc td{padding:7px 8px;border-bottom:1px solid #e1e7e5;vertical-align:top}
+.doc td.c,.doc th.c{text-align:center}
+.doc td.m,.doc th.m{text-align:left;direction:ltr;white-space:nowrap;font-variant-numeric:tabular-nums}
+.doc tr:nth-child(even) td{background:#f8faf9}
+.doc .ds{color:#55625f;font-size:11.5px}
+.doc .d-sum{display:flex;justify-content:space-between;gap:24px;margin-top:16px}
+.doc .d-words{flex:1;font-size:12px;background:#f2f6f5;border-radius:8px;padding:10px 14px;align-self:flex-start}
+.doc .d-tot{width:300px}
+.doc .d-tot div{display:flex;justify-content:space-between;padding:4px 0}
+.doc .d-tot div span:last-child{direction:ltr;font-variant-numeric:tabular-nums}
+.doc .d-tot .g{border-top:2px solid #1b2422;margin-top:4px;padding-top:8px;font-weight:700;font-size:15px;color:#0d6a61}
+.doc .d-terms{margin-top:22px;font-size:12px}
+.doc .d-terms h4{margin:0 0 4px;font-size:12.5px;color:#0d6a61}
+.doc .d-terms p{margin:0 0 10px;white-space:pre-line}
+.doc .d-sign{display:flex;justify-content:space-between;gap:30px;margin-top:34px}
+.doc .d-sign div{flex:1;border-top:1px solid #9aa7a4;padding-top:6px;font-size:11.5px;color:#55625f;text-align:center}
+.doc .d-foot{margin-top:26px;text-align:center;color:#8a9693;font-size:10.5px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">م</div><h1>مُسعِّر عروض الأسعار</h1></div>
+    <nav class="tabs" aria-label="الأقسام">
+      <a href="#quote" data-v="quote">عرض سعر</a>
+      <a href="#quotes" data-v="quotes">سجل العروض</a>
+      <a href="#catalog" data-v="catalog">قائمة الأسعار</a>
+      <a href="#clients" data-v="clients">العملاء</a>
+      <a href="#settings" data-v="settings">الإعدادات</a>
+    </nav>
+    <div class="mode" id="mode"><span class="dot" id="modeDot"></span><span id="modeTxt">جارٍ التحميل…</span></div>
+  </div>
+</header>
+
+<main>
+  <div class="banner" id="banner" hidden></div>
+
+  <!-- ===== QUOTE EDITOR ===== -->
+  <section class="view" id="v-quote">
+    <div class="grid-editor">
+      <div class="stack">
+        <div class="card">
+          <div class="qmeta">
+            <div style="flex:1 1 200px">
+              <div class="hint">رقم العرض</div>
+              <div class="qno" id="qNo"></div>
+            </div>
+            <div class="f" style="flex:0 1 150px"><label for="qDate">التاريخ</label><input id="qDate" type="date"></div>
+            <div class="f" style="flex:0 1 110px"><label for="qValid">صالح لمدة (يوم)</label><input id="qValid" class="ltr" inputmode="numeric"></div>
+            <div class="f" style="flex:0 1 140px"><label for="qStatus">الحالة</label>
+              <select id="qStatus"><option value="draft">مسودة</option><option value="sent">مُرسل</option><option value="accepted">مقبول</option><option value="rejected">مرفوض</option></select></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-head"><h2>العميل</h2><span class="hint" id="clientHint">اختر عميلاً محفوظاً أو اكتب اسماً جديداً، ويُحفظ تلقائياً مع العرض</span></div>
+          <div class="row">
+            <div class="f"><label for="cName">اسم العميل / الجهة</label><input id="cName" list="clientList" autocomplete="off"><datalist id="clientList"></datalist></div>
+            <div class="f"><label for="cContact">الشخص المسؤول</label><input id="cContact"></div>
+            <div class="f"><label for="cPhone">الجوال</label><input id="cPhone" class="ltr" inputmode="tel"></div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="f"><label for="cEmail">البريد</label><input id="cEmail" class="ltr" inputmode="email"></div>
+            <div class="f"><label for="cVat">الرقم الضريبي للعميل</label><input id="cVat" class="ltr" inputmode="numeric"></div>
+            <div class="f"><label for="qTitle">موضوع العرض</label><input id="qTitle" placeholder="مثال: توريد وتركيب…"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-head"><h2>البنود</h2><span class="hint">اكتب جزءاً من اسم الصنف واضغط Enter. إذا لم يكن في القائمة يُضاف كبند جديد</span></div>
+          <div class="adder">
+            <input id="addSearch" class="in" placeholder="ابحث في قائمة الأسعار أو اكتب بنداً جديداً…" autocomplete="off" aria-label="إضافة بند">
+            <div class="dd" id="addDD" role="listbox" hidden></div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="lines">
+              <thead><tr><th>#</th><th>البند</th><th>الوحدة</th><th>الكمية</th><th>التكلفة</th><th>سعر الوحدة</th><th>الهامش %</th><th>الإجمالي</th><th></th></tr></thead>
+              <tbody id="lines"></tbody>
+            </table>
+          </div>
+          <div class="bulk">
+            <span>تطبيق هامش موحّد على كل البنود:</span>
+            <input id="bulkM" class="in" inputmode="decimal" aria-label="الهامش الموحد">
+            <span>%</span>
+            <button class="btn sm" id="bulkApply">تطبيق</button>
+            <span class="hint" id="roundHint"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div class="f" style="flex-basis:100%"><label for="qNotes">ملاحظات تظهر للعميل في هذا العرض</label><textarea id="qNotes" placeholder="مثال: الأسعار تشمل التوصيل داخل الرياض"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card ledger" aria-label="ملخص العرض">
+        <div class="sec-head" style="margin-bottom:8px"><h2>الملخص</h2><span class="dirty" id="dirty" hidden>تغييرات غير محفوظة</span></div>
+        <dl>
+          <dt>المجموع قبل الخصم</dt><dd id="sSub">0.00</dd>
+          <dt><div class="mini"><span>الخصم</span><input id="sDisc" class="in" inputmode="decimal" aria-label="الخصم"><select id="sDiscT" aria-label="نوع الخصم"><option value="pct">%</option><option value="amt">مبلغ</option></select></div></dt><dd id="sDiscV">0.00</dd>
+          <dt><div class="mini"><span>توصيل / تركيب</span><input id="sDel" class="in" inputmode="decimal" aria-label="رسوم التوصيل"></div></dt><dd id="sDelV">0.00</dd>
+          <dt>الإجمالي الخاضع للضريبة</dt><dd id="sTaxable">0.00</dd>
+          <dt id="sVatL">ضريبة القيمة المضافة 15%</dt><dd id="sVat">0.00</dd>
+          <dt class="grand">الإجمالي</dt><dd class="grand" id="sGrand">0.00</dd>
+        </dl>
+        <div class="words" id="sWords"></div>
+        <div class="internal">
+          <h3>داخلي، لا يظهر للعميل</h3>
+          <dl>
+            <dt>التكلفة</dt><dd id="iCost">0.00</dd>
+            <dt>الربح</dt><dd id="iProfit">0.00</dd>
+            <dt>هامش الربح</dt><dd id="iMargin"><span class="pill muted">—</span></dd>
+          </dl>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="bSave">حفظ العرض</button>
+          <button class="btn primary" id="bPreview">معاينة وتصدير PDF</button>
+          <button class="btn" id="bCopy">نسخ كنص للواتساب</button>
+          <button class="btn" id="bDup">نسخة جديدة منه</button>
+          <button class="btn ghost" id="bNew">عرض جديد فارغ</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== QUOTES LIST ===== -->
+  <section class="view" id="v-quotes" hidden>
+    <div class="kpis" id="kpis"></div>
+    <div class="card">
+      <div class="tools">
+        <input id="qSearch" placeholder="بحث برقم العرض أو اسم العميل…" aria-label="بحث في العروض">
+        <select id="qFilter" aria-label="تصفية بالحالة"><option value="">كل الحالات</option><option value="draft">مسودة</option><option value="sent">مُرسل</option><option value="accepted">مقبول</option><option value="rejected">مرفوض</option></select>
+        <button class="btn primary" id="qNewBtn">+ عرض جديد</button>
+      </div>
+      <div class="tbl-wrap" style="margin-top:0">
+        <table class="list"><thead><tr><th>الرقم</th><th>العميل</th><th>الموضوع</th><th>التاريخ</th><th>الإجمالي</th><th>الهامش</th><th>الحالة</th><th></th></tr></thead><tbody id="qList"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CATALOG ===== -->
+  <section class="view" id="v-catalog" hidden>
+    <div class="two">
+      <div class="stack">
+        <form class="card" id="catForm">
+          <div class="sec-head"><h2 id="catFormT">إضافة صنف / خدمة</h2></div>
+          <div class="stack" style="gap:10px">
+            <div class="f"><label for="ciName">الاسم</label><input id="ciName" required></div>
+            <div class="f"><label for="ciDesc">الوصف</label><input id="ciDesc"></div>
+            <div class="row">
+              <div class="f"><label for="ciUnit">الوحدة</label><input id="ciUnit" placeholder="حبة، م²، ساعة…"></div>
+              <div class="f"><label for="ciCat">التصنيف</label><input id="ciCat" list="catCats"><datalist id="catCats"></datalist></div>
+            </div>
+            <div class="row">
+              <div class="f"><label for="ciCost">التكلفة</label><input id="ciCost" class="ltr" inputmode="decimal"></div>
+              <div class="f"><label for="ciPrice">سعر البيع</label><input id="ciPrice" class="ltr" inputmode="decimal"></div>
+            </div>
+            <div class="hint" id="ciHint">اترك سعر البيع فارغاً ليُحسب من التكلفة والهامش الافتراضي.</div>
+            <div class="btns"><button class="btn primary" type="submit" id="ciSave">حفظ الصنف</button><button class="btn ghost" type="button" id="ciCancel" hidden>إلغاء التعديل</button></div>
+          </div>
+        </form>
+        <div class="card">
+          <h2 style="margin-bottom:6px">استيراد سريع</h2>
+          <p class="hint" style="margin:0 0 8px">الصق من إكسل: كل صنف في سطر، والأعمدة بالترتيب: الاسم، الوحدة، التكلفة، سعر البيع، التصنيف. الفاصل Tab أو فاصلة.</p>
+          <div class="f"><label for="impTxt">البيانات</label><textarea id="impTxt" class="ltr" style="direction:rtl;text-align:right" placeholder="كابل نحاس 4 ملم	متر	6.5	9	كهرباء"></textarea></div>
+          <div class="btns" style="margin-top:8px"><button class="btn" id="impBtn">استيراد</button><span class="hint" id="impMsg"></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="tools"><input id="catSearch" placeholder="بحث في الأصناف…" aria-label="بحث في الأصناف"></div>
+        <div class="tbl-wrap" style="margin-top:0">
+          <table class="list"><thead><tr><th>الصنف</th><th>الوحدة</th><th>التصنيف</th><th>التكلفة</th><th>السعر</th><th>الهامش</th><th></th></tr></thead><tbody id="catList"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CLIENTS ===== -->
+  <section class="view" id="v-clients" hidden>
+    <div class="two">
+      <form class="card" id="clForm">
+        <div class="sec-head"><h2 id="clFormT">إضافة عميل</h2></div>
+        <div class="stack" style="gap:10px">
+          <div class="f"><label for="clName">اسم العميل / الجهة</label><input id="clName" required></div>
+          <div class="f"><label for="clContact">الشخص المسؤول</label><input id="clContact"></div>
+          <div class="row">
+            <div class="f"><label for="clPhone">الجوال</label><input id="clPhone" class="ltr" inputmode="tel"></div>
+            <div class="f"><label for="clEmail">البريد</label><input id="clEmail" class="ltr"></div>
+          </div>
+          <div class="row">
+            <div class="f"><label for="clVat">الرقم الضريبي</label><input id="clVat" class="ltr"></div>
+            <div class="f"><label for="clCity">المدينة / العنوان</label><input id="clCity"></div>
+          </div>
+          <div class="btns"><button class="btn primary" type="submit">حفظ العميل</button><button class="btn ghost" type="button" id="clCancel" hidden>إلغاء التعديل</button></div>
+        </div>
+      </form>
+      <div class="card">
+        <div class="tools"><input id="clSearch" placeholder="بحث في العملاء…" aria-label="بحث في العملاء"></div>
+        <div class="tbl-wrap" style="margin-top:0">
+          <table class="list"><thead><tr><th>العميل</th><th>المسؤول</th><th>الجوال</th><th>عدد العروض</th><th>المقبول</th><th></th></tr></thead><tbody id="clList"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SETTINGS ===== -->
+  <section class="view" id="v-settings" hidden>
+    <form class="card" id="setForm" style="max-width:900px">
+      <div class="sec-head"><h2>بيانات الشركة وإعدادات التسعير</h2><span class="hint">تظهر بيانات الشركة في رأس كل عرض سعر</span></div>
+      <div class="stack" style="gap:12px">
+        <div class="row">
+          <div class="f"><label for="sCo">اسم الشركة</label><input id="sCo"></div>
+          <div class="f"><label for="sCoVat">الرقم الضريبي</label><input id="sCoVat" class="ltr"></div>
+          <div class="f"><label for="sCoCr">السجل التجاري</label><input id="sCoCr" class="ltr"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="sCoPhone">الهاتف</label><input id="sCoPhone" class="ltr"></div>
+          <div class="f"><label for="sCoEmail">البريد</label><input id="sCoEmail" class="ltr"></div>
+          <div class="f"><label for="sCoAddr">العنوان</label><input id="sCoAddr"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="sLogo">الشعار (صورة)</label><input id="sLogo" type="file" accept="image/*"><img id="sLogoPrev" class="logo-prev" alt="" hidden><button type="button" class="btn sm ghost" id="sLogoDel" hidden>إزالة الشعار</button></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="sVatR">نسبة الضريبة %</label><input id="sVatR" class="ltr" inputmode="decimal"></div>
+          <div class="f"><label for="sMargin">الهامش الافتراضي %</label><input id="sMargin" class="ltr" inputmode="decimal"></div>
+          <div class="f"><label for="sRound">تقريب سعر الوحدة للأعلى إلى</label><select id="sRound"><option value="0">بدون تقريب</option><option value="0.5">0.5</option><option value="1">1</option><option value="5">5</option><option value="10">10</option></select></div>
+          <div class="f"><label for="sValid">صلاحية العرض (يوم)</label><input id="sValid" class="ltr" inputmode="numeric"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="sPrefix">بادئة رقم العرض</label><input id="sPrefix" class="ltr"></div>
+          <div class="f"><label for="sNext">الرقم التسلسلي التالي</label><input id="sNext" class="ltr" inputmode="numeric"></div>
+          <div class="f"><label for="sCur">العملة</label><input id="sCur"></div>
+        </div>
+        <div class="f"><label for="sPay">شروط الدفع</label><textarea id="sPay"></textarea></div>
+        <div class="f"><label for="sTerms">الشروط والأحكام العامة</label><textarea id="sTerms"></textarea></div>
+        <div class="btns"><button class="btn primary" type="submit">حفظ الإعدادات</button></div>
+      </div>
+    </form>
+    <div class="card" style="max-width:900px;margin-top:16px">
+      <h2 style="margin-bottom:6px">النسخ الاحتياطي ونقل البيانات</h2>
+      <p class="hint" style="margin:0 0 10px">بياناتك محفوظة في هذا المتصفح فقط. نزّل نسخة احتياطية بين فترة وأخرى، واستخدمها لنقل بياناتك لجهاز آخر.</p>
+      <div class="btns"><button class="btn" type="button" id="bkExport">تنزيل نسخة احتياطية</button>
+        <label class="btn" for="bkImport" style="display:inline-block">استرجاع من نسخة</label><input type="file" id="bkImport" accept="application/json,.json" hidden>
+        <span class="hint" id="bkInfo"></span></div>
+    </div>
+  </section>
+</main>
+
+<!-- preview modal -->
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalT">
+  <div class="modal-bar">
+    <h2 id="modalT">معاينة عرض السعر</h2>
+    <button class="btn primary" id="mPdf">تنزيل PDF</button>
+    <button class="btn" id="mPrint">طباعة</button>
+    <button class="btn" id="mWa">إرسال واتساب</button>
+    <button class="btn" id="mHtml">تنزيل HTML</button>
+    <button class="btn" id="mCopy">نسخ كنص</button>
+    <button class="btn ghost" id="mClose">إغلاق</button>
+  </div>
+  <div class="paper-wrap"><div id="docHost"></div></div>
+</div>
+
+<!-- copy fallback -->
+<div class="modal" id="copyModal" hidden role="dialog" aria-modal="true" aria-labelledby="copyT">
+  <div class="modal-bar"><h2 id="copyT">انسخ النص يدوياً</h2><button class="btn ghost" id="copyClose">إغلاق</button></div>
+  <div class="paper-wrap"><div class="card" style="max-width:640px;margin:0 auto"><label for="copyTxt" class="hint">حدّد النص وانسخه:</label><textarea id="copyTxt" class="in copybox"></textarea></div></div>
+</div>
+
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const AR_DIG = "٠١٢٣٤٥٦٧٨٩", FA_DIG = "۰۱۲۳۴۵۶۷۸۹";
+function num(v){
+  if (typeof v === "number") return isFinite(v) ? v : 0;
+  let s = String(v ?? "").trim().replace(/[٠-٩]/g, d => AR_DIG.indexOf(d)).replace(/[۰-۹]/g, d => FA_DIG.indexOf(d)).replace(/٫/g, ".").replace(/[,٬\s]/g, "");
+  const n = parseFloat(s); return isFinite(n) ? n : 0;
+}
+const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const money = n => (r2(n) || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+const qtyFmt = n => (Math.round(n*1000)/1000).toLocaleString("en-US", {maximumFractionDigits:3});
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const todayISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+function addDays(iso, n){ const d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + (n|0)); return d.toISOString().slice(0,10); }
+function fmtDate(iso){ if(!iso) return ""; const [y,m,d] = iso.split("-"); return `${d}/${m}/${y}`; }
+function hijri(iso){ try{ return new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura-nu-latn",{day:"numeric",month:"long",year:"numeric"}).format(new Date(iso+"T12:00:00")); }catch(e){ return ""; } }
+const clone = o => JSON.parse(JSON.stringify(o));
+let toastT;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+
+/* ---------- Arabic amount in words (تفقيط) ---------- */
+const ONES = ["","واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة"];
+const TEENS = ["عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر","خمسة عشر","ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر"];
+const TENS = ["","","عشرون","ثلاثون","أربعون","خمسون","ستون","سبعون","ثمانون","تسعون"];
+const HUNDREDS = ["","مائة","مائتان","ثلاثمائة","أربعمائة","خمسمائة","ستمائة","سبعمائة","ثمانمائة","تسعمائة"];
+function below1000(n){
+  const h = Math.floor(n/100), r = n % 100, p = [];
+  if (h) p.push(HUNDREDS[h]);
+  if (r){
+    if (r < 10) p.push(ONES[r]);
+    else if (r < 20) p.push(TEENS[r-10]);
+    else { const o = r % 10, t = Math.floor(r/10); p.push(o ? ONES[o] + " و" + TENS[t] : TENS[t]); }
+  }
+  return p.join(" و");
+}
+const SCALES = [[1e9,"مليار","ملياران","مليارات"],[1e6,"مليون","مليونان","ملايين"],[1e3,"ألف","ألفان","آلاف"]];
+function intWords(n){
+  if (n === 0) return "صفر";
+  const parts = [];
+  for (const [v, one, two, plural] of SCALES){
+    const g = Math.floor(n / v); n = n % v;
+    if (!g) continue;
+    if (g === 1) parts.push(one);
+    else if (g === 2) parts.push(two);
+    else if (g <= 10) parts.push(below1000(g) + " " + plural);
+    else parts.push(below1000(g) + " " + one);
+  }
+  if (n) parts.push(below1000(n));
+  return parts.join(" و");
+}
+function tafqeet(amount, cur){
+  const total = Math.round(Math.abs(amount) * 100);
+  const riyals = Math.floor(total / 100), halalas = total % 100;
+  const c = cur || "ريال";
+  let s = "فقط " + intWords(riyals) + " " + c + (c === "ريال" ? " سعودي" : "");
+  if (halalas) s += " و" + intWords(halalas) + " هللة";
+  return s + " لا غير";
+}
+
+/* ---------- state ---------- */
+const DEFAULT_SETTINGS = {
+  companyName:"اسم شركتك", vatNo:"", crNo:"", phone:"", email:"", address:"", logo:"",
+  vatRate:15, defaultMargin:25, roundTo:0, validityDays:14, prefix:"Q-", nextNo:1, currency:"ريال",
+  paymentTerms:"50% دفعة مقدمة عند التعميد، و50% عند التسليم.",
+  terms:"الأسعار بالريال السعودي وتشمل ضريبة القيمة المضافة كما هو موضح.\nمدة التوريد تُحدد بعد التعميد.\nأي أعمال إضافية خارج نطاق هذا العرض تُسعّر بشكل مستقل."
+};
+const S = { mode:"loading", settings: clone(DEFAULT_SETTINGS), catalog:[], clients:[], quotes:[], draft:null, saved:true, view:"quote" };
+const readOnly = false;
+
+function newDraft(){
+  return { id:null, number:"", status:"draft", date: todayISO(), validDays: S.settings.validityDays, title:"",
+    clientId:"", client:{name:"",contact:"",phone:"",email:"",vatNo:""},
+    lines:[], discount:0, discountType:"pct", delivery:0, notes:"" };
+}
+
+/* ---------- pricing math ---------- */
+function roundUp(p){ const r = num(S.settings.roundTo); return r > 0 ? Math.ceil(r2(p) / r - 1e-9) * r : r2(p); }
+function priceFromMargin(cost, m){ m = Math.min(num(m), 95); return cost > 0 ? roundUp(cost / (1 - m/100)) : 0; }
+function marginOf(cost, price){ return price > 0 && cost > 0 ? (price - cost) / price * 100 : null; }
+function calc(d){
+  let sub = 0, cost = 0;
+  for (const l of d.lines){ sub += num(l.qty) * num(l.price); cost += num(l.qty) * num(l.cost); }
+  sub = r2(sub); cost = r2(cost);
+  const disc = r2(d.discountType === "amt" ? num(d.discount) : sub * num(d.discount) / 100);
+  const del = r2(num(d.delivery));
+  const taxable = r2(sub - disc + del);
+  const rate = num(S.settings.vatRate);
+  const vat = r2(taxable * rate / 100);
+  const grand = r2(taxable + vat);
+  const net = sub - disc;
+  const profit = r2(net - cost);
+  const hasCost = d.lines.some(l => num(l.cost) > 0);
+  const margin = hasCost && net > 0 ? profit / net * 100 : null;
+  return { sub, disc, del, taxable, rate, vat, grand, cost, profit, margin };
+}
+function pill(m){
+  if (m === null || m === undefined || !isFinite(m)) return `<span class="pill muted">—</span>`;
+  const cls = m < 10 ? "bad" : m < 20 ? "warn" : "good";
+  return `<span class="pill ${cls}">${m.toFixed(1)}%</span>`;
+}
+
+/* ---------- persistence (this browser) ---------- */
+const STORE_KEY = "musaer-data-v1";
+let storageOK = true;
+function persist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({ settings:S.settings, catalog:S.catalog, clients:S.clients, quotes:S.quotes, savedAt:Date.now() })); }
+  catch(e){ storageOK = false; showBanner("المتصفح يمنع الحفظ (ربما وضع التصفح الخفي). صدّر نسخة احتياطية من الإعدادات قبل الإغلاق."); }
+}
+function loadStore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY); if (!raw) return false;
+    const d = JSON.parse(raw);
+    S.settings = { ...clone(DEFAULT_SETTINGS), ...(d.settings || {}) };
+    S.catalog = d.catalog || []; S.clients = d.clients || []; S.quotes = d.quotes || [];
+    return true;
+  }catch(e){ return false; }
+}
+async function put(col, id, data){
+  const arr = S[col]; const i = arr.findIndex(x => x.id === id);
+  const row = {id, ...clone(data)};
+  if (i >= 0) arr[i] = row; else arr.push(row);
+  persist(); onData(col);
+}
+async function del(col, id){ S[col] = S[col].filter(x => x.id !== id); persist(); onData(col); }
+async function putSettings(){ persist(); onData("settings"); }
+function strip(o){ const c = clone(o); delete c.id; return c; }
+function writeErr(e){ console.error(e); toast("تعذّر الحفظ، حاول مرة أخرى."); }
+function showBanner(t){ const b = $("#banner"); if (t){ b.textContent = t; b.hidden = false; } else b.hidden = true; }
+function setMode(m, txt){
+  S.mode = m; $("#modeDot").className = "dot " + (m === "live" ? "live" : m === "demo" ? "demo" : m === "err" ? "err" : "");
+  $("#modeTxt").textContent = txt;
+}
+
+/* ---------- data arrivals ---------- */
+function onData(col){
+  if (col === "settings"){ fillSettingsForm(); renderSummary(); renderQNo(); }
+  if (col === "catalog"){ S.catalog.sort((a,b) => (a.name||"").localeCompare(b.name||"", "ar")); renderCatalog(); }
+  if (col === "clients"){ S.clients.sort((a,b) => (a.name||"").localeCompare(b.name||"", "ar")); renderClientList(); renderClients(); }
+  if (col === "quotes"){ S.quotes.sort((a,b) => (b.createdAt||0) - (a.createdAt||0)); renderQuotes(); renderClients(); }
+}
+
+/* ---------- router ---------- */
+const VIEWS = ["quote","quotes","catalog","clients","settings"];
+function route(){
+  const h = location.hash.replace("#","");
+  S.view = VIEWS.includes(h) ? h : "quote";
+  for (const v of VIEWS) $("#v-" + v).hidden = v !== S.view;
+  $$("nav.tabs a").forEach(a => { if (a.dataset.v === S.view) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+}
+window.addEventListener("hashchange", route);
+
+/* ========== QUOTE EDITOR ========== */
+function markDirty(){ S.saved = false; $("#dirty").hidden = false; saveDraftLocal(); }
+let draftT;
+function saveDraftLocal(){ clearTimeout(draftT); draftT = setTimeout(() => { try{ localStorage.setItem("musaer-draft", JSON.stringify(S.draft)); }catch(e){} }, 400); }
+
+function renderQNo(){
+  const d = S.draft;
+  $("#qNo").innerHTML = d.number ? esc(d.number) : `<small>يُعطى رقم تلقائي عند الحفظ (${esc(peekNumber())})</small>`;
+}
+function peekNumber(){
+  const y = (S.draft && S.draft.date || todayISO()).slice(0,4);
+  return `${S.settings.prefix || ""}${y}-${String(nextSeq()).padStart(4,"0")}`;
+}
+function nextSeq(){
+  let mx = 0;
+  for (const q of S.quotes){ const m = /(\d+)$/.exec(q.number || ""); if (m) mx = Math.max(mx, parseInt(m[1],10)); }
+  return Math.max(num(S.settings.nextNo) || 1, mx + 1);
+}
+
+function loadDraftIntoForm(){
+  const d = S.draft;
+  renderQNo();
+  $("#qDate").value = d.date; $("#qValid").value = d.validDays; $("#qStatus").value = d.status || "draft";
+  $("#cName").value = d.client.name || ""; $("#cContact").value = d.client.contact || ""; $("#cPhone").value = d.client.phone || "";
+  $("#cEmail").value = d.client.email || ""; $("#cVat").value = d.client.vatNo || ""; $("#qTitle").value = d.title || "";
+  $("#qNotes").value = d.notes || "";
+  $("#sDisc").value = d.discount || ""; $("#sDiscT").value = d.discountType || "pct"; $("#sDel").value = d.delivery || "";
+  $("#bulkM").value = S.settings.defaultMargin;
+  renderLines(); renderSummary();
+  $("#dirty").hidden = S.saved;
+}
+
+function lineRow(l, i){
+  const k = esc(l.key), m = marginOf(num(l.cost), num(l.price));
+  const inCat = S.catalog.some(c => c.name === l.name);
+  return `<tr data-k="${k}">
+    <td class="idx">${i+1}</td>
+    <td style="min-width:220px"><input class="in name" id="l-${k}-name" data-f="name" value="${esc(l.name)}" aria-label="اسم البند ${i+1}">
+        <input class="in desc" id="l-${k}-desc" data-f="desc" value="${esc(l.desc)}" placeholder="وصف (اختياري)" aria-label="وصف البند ${i+1}"></td>
+    <td><input class="in unit" id="l-${k}-unit" data-f="unit" value="${esc(l.unit)}" aria-label="الوحدة"></td>
+    <td><input class="in n" id="l-${k}-qty" data-f="qty" value="${esc(l.qty)}" inputmode="decimal" aria-label="الكمية"></td>
+    <td><input class="in n" id="l-${k}-cost" data-f="cost" value="${esc(l.cost)}" inputmode="decimal" aria-label="التكلفة"></td>
+    <td><input class="in n" id="l-${k}-price" data-f="price" value="${esc(l.price)}" inputmode="decimal" aria-label="سعر الوحدة"></td>
+    <td><div class="mcell"><input class="in n" id="l-${k}-margin" data-f="margin" value="${m === null ? "" : m.toFixed(1)}" inputmode="decimal" aria-label="الهامش" style="width:72px"><span data-o="pill">${pill(m)}</span></div></td>
+    <td class="tot" data-o="total">${money(num(l.qty) * num(l.price))}</td>
+    <td class="acts">
+      <button class="btn sm ghost" data-act="up" title="تحريك لأعلى" aria-label="تحريك لأعلى">↑</button>
+      ${inCat || !l.name ? "" : `<button class="btn sm ghost" data-act="tocat" title="حفظ البند في قائمة الأسعار" aria-label="حفظ البند في قائمة الأسعار">+ قائمة</button>`}
+      <button class="btn sm ghost danger" data-act="del" aria-label="حذف البند">حذف</button>
+    </td></tr>`;
+}
+function renderLines(){
+  const tb = $("#lines");
+  if (!S.draft.lines.length){ tb.innerHTML = `<tr><td colspan="9" class="empty">لا توجد بنود بعد. ابدأ بالكتابة في خانة البحث أعلاه.</td></tr>`; return; }
+  tb.innerHTML = S.draft.lines.map(lineRow).join("");
+}
+function refreshRow(l){
+  const tr = $(`#lines tr[data-k="${CSS.escape(l.key)}"]`); if (!tr) return;
+  const m = marginOf(num(l.cost), num(l.price));
+  tr.querySelector('[data-o="total"]').textContent = money(num(l.qty) * num(l.price));
+  tr.querySelector('[data-o="pill"]').innerHTML = pill(m);
+  return { tr, m };
+}
+function renderSummary(){
+  if (!S.draft) return;
+  const t = calc(S.draft), cur = S.settings.currency || "ريال";
+  $("#sSub").textContent = money(t.sub); $("#sDiscV").textContent = t.disc ? "−" + money(t.disc) : "0.00";
+  $("#sDelV").textContent = money(t.del); $("#sTaxable").textContent = money(t.taxable);
+  $("#sVatL").textContent = `ضريبة القيمة المضافة ${t.rate}%`; $("#sVat").textContent = money(t.vat);
+  $("#sGrand").textContent = money(t.grand) + " " + cur;
+  $("#sWords").textContent = t.grand ? tafqeet(t.grand, cur) : "";
+  $("#iCost").textContent = money(t.cost); $("#iProfit").textContent = money(t.profit);
+  $("#iMargin").innerHTML = pill(t.margin);
+  $("#roundHint").textContent = num(S.settings.roundTo) > 0 ? `يُقرَّب سعر الوحدة للأعلى إلى أقرب ${S.settings.roundTo}` : "";
+}
+
+function addLine(item){
+  const l = item
+    ? { key: uid(), name:item.name || "", desc:item.desc || "", unit:item.unit || "", qty:1, cost: num(item.cost) || "", price: num(item.price) || (num(item.cost) ? priceFromMargin(num(item.cost), S.settings.defaultMargin) : "") }
+    : { key: uid(), name:"", desc:"", unit:"", qty:1, cost:"", price:"" };
+  S.draft.lines.push(l); renderLines(); renderSummary(); markDirty();
+  return l;
+}
+
+/* line input handling */
+$("#lines").addEventListener("input", e => {
+  const inp = e.target.closest("[data-f]"); if (!inp) return;
+  const k = inp.closest("tr").dataset.k; const l = S.draft.lines.find(x => x.key === k); if (!l) return;
+  const f = inp.dataset.f;
+  if (f === "margin"){
+    const v = inp.value.trim();
+    if (v !== "" && num(l.cost) > 0){ l.price = priceFromMargin(num(l.cost), num(v)); $(`#l-${CSS.escape(k)}-price`).value = l.price; }
+    const tr = $(`#lines tr[data-k="${CSS.escape(k)}"]`);
+    tr.querySelector('[data-o="total"]').textContent = money(num(l.qty) * num(l.price));
+    tr.querySelector('[data-o="pill"]').innerHTML = pill(marginOf(num(l.cost), num(l.price)));
+  } else {
+    l[f] = inp.value;
+    const r = refreshRow(l);
+    if ((f === "price" || f === "cost") && r){ $(`#l-${CSS.escape(k)}-margin`).value = r.m === null ? "" : r.m.toFixed(1); }
+  }
+  renderSummary(); markDirty();
+});
+$("#lines").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const k = b.closest("tr").dataset.k; const i = S.draft.lines.findIndex(x => x.key === k); if (i < 0) return;
+  const act = b.dataset.act;
+  if (act === "del"){ S.draft.lines.splice(i,1); renderLines(); renderSummary(); markDirty(); }
+  if (act === "up" && i > 0){ const [l] = S.draft.lines.splice(i,1); S.draft.lines.splice(i-1,0,l); renderLines(); markDirty(); }
+  if (act === "tocat"){
+    const l = S.draft.lines[i];
+    try{ await put("catalog", uid(), { name:l.name, desc:l.desc||"", unit:l.unit||"", category:"", cost:num(l.cost), price:num(l.price), updatedAt:Date.now() }); toast("أُضيف إلى قائمة الأسعار"); b.remove(); }
+    catch(err){ writeErr(err); }
+  }
+});
+
+/* meta inputs */
+const bindDraft = (sel, fn) => $(sel).addEventListener("input", e => { fn(e.target.value); renderSummary(); markDirty(); });
+bindDraft("#qDate", v => { S.draft.date = v || todayISO(); renderQNo(); });
+bindDraft("#qValid", v => S.draft.validDays = num(v));
+$("#qStatus").addEventListener("change", e => { S.draft.status = e.target.value; markDirty(); });
+bindDraft("#cContact", v => S.draft.client.contact = v);
+bindDraft("#cPhone", v => S.draft.client.phone = v);
+bindDraft("#cEmail", v => S.draft.client.email = v);
+bindDraft("#cVat", v => S.draft.client.vatNo = v);
+bindDraft("#qTitle", v => S.draft.title = v);
+bindDraft("#qNotes", v => S.draft.notes = v);
+bindDraft("#sDisc", v => S.draft.discount = v);
+$("#sDiscT").addEventListener("change", e => { S.draft.discountType = e.target.value; renderSummary(); markDirty(); });
+bindDraft("#sDel", v => S.draft.delivery = v);
+$("#cName").addEventListener("input", e => {
+  const v = e.target.value; S.draft.client.name = v;
+  const c = S.clients.find(x => x.name === v);
+  if (c){
+    S.draft.clientId = c.id;
+    S.draft.client = { name:c.name, contact:c.contact||"", phone:c.phone||"", email:c.email||"", vatNo:c.vatNo||"" };
+    $("#cContact").value = S.draft.client.contact; $("#cPhone").value = S.draft.client.phone; $("#cEmail").value = S.draft.client.email; $("#cVat").value = S.draft.client.vatNo;
+    $("#clientHint").textContent = "عميل محفوظ، تم تعبئة بياناته";
+  } else { S.draft.clientId = ""; $("#clientHint").textContent = v ? "عميل جديد، سيُحفظ مع العرض" : "اختر عميلاً محفوظاً أو اكتب اسماً جديداً، ويُحفظ تلقائياً مع العرض"; }
+  markDirty();
+});
+function renderClientList(){ $("#clientList").innerHTML = S.clients.map(c => `<option value="${esc(c.name)}"></option>`).join(""); }
+
+/* bulk margin */
+$("#bulkApply").addEventListener("click", () => {
+  const m = num($("#bulkM").value); let n = 0;
+  for (const l of S.draft.lines){ if (num(l.cost) > 0){ l.price = priceFromMargin(num(l.cost), m); n++; } }
+  renderLines(); renderSummary(); markDirty();
+  toast(n ? `تم تسعير ${n} بند بهامش ${m}%` : "أدخل تكلفة البنود أولاً");
+});
+
+/* catalog search adder */
+let ddIdx = 0, ddItems = [];
+function norm(s){ return String(s||"").toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[ً-ْ]/g,""); }
+function searchCatalog(q){
+  const t = norm(q).split(/\s+/).filter(Boolean); if (!t.length) return [];
+  return S.catalog.filter(c => { const h = norm(`${c.name} ${c.desc} ${c.category}`); return t.every(w => h.includes(w)); }).slice(0, 8);
+}
+function renderDD(){
+  const q = $("#addSearch").value.trim(), dd = $("#addDD");
+  if (!q){ dd.hidden = true; return; }
+  ddItems = searchCatalog(q);
+  const rows = ddItems.map((c,i) => `<button type="button" role="option" data-i="${i}" class="${i===ddIdx?"on":""}"><span>${esc(c.name)}${c.unit?` <span class="meta">/ ${esc(c.unit)}</span>`:""}</span><span class="meta money">${money(num(c.price)||priceFromMargin(num(c.cost),S.settings.defaultMargin))}</span></button>`);
+  rows.push(`<button type="button" role="option" data-i="new" class="${ddIdx===ddItems.length?"on":""}"><span>+ إضافة «${esc(q)}» كبند جديد</span><span class="meta">Enter</span></button>`);
+  dd.innerHTML = rows.join(""); dd.hidden = false;
+}
+function pickDD(i){
+  const q = $("#addSearch").value.trim();
+  let l;
+  if (i === "new" || i >= ddItems.length) l = addLine({ name:q });
+  else l = addLine(ddItems[i]);
+  $("#addSearch").value = ""; $("#addDD").hidden = true; ddIdx = 0;
+  if (!num(l.price)) { const p = $(`#l-${CSS.escape(l.key)}-cost`); if (p) p.focus(); }
+  else $("#addSearch").focus();
+}
+$("#addSearch").addEventListener("input", () => { ddIdx = 0; renderDD(); });
+$("#addSearch").addEventListener("keydown", e => {
+  if ($("#addDD").hidden) return;
+  const max = ddItems.length;
+  if (e.key === "ArrowDown"){ e.preventDefault(); ddIdx = Math.min(ddIdx+1, max); renderDD(); }
+  else if (e.key === "ArrowUp"){ e.preventDefault(); ddIdx = Math.max(ddIdx-1, 0); renderDD(); }
+  else if (e.key === "Enter"){ e.preventDefault(); pickDD(ddIdx); }
+  else if (e.key === "Escape"){ $("#addDD").hidden = true; }
+});
+$("#addDD").addEventListener("mousedown", e => { const b = e.target.closest("button"); if (!b) return; e.preventDefault(); pickDD(b.dataset.i === "new" ? "new" : +b.dataset.i); });
+$("#addSearch").addEventListener("blur", () => setTimeout(() => $("#addDD").hidden = true, 150));
+
+/* save quote */
+async function saveQuote(){
+  const d = S.draft;
+  d.client.name = $("#cName").value.trim();
+  if (!d.client.name){ toast("اكتب اسم العميل أولاً"); $("#cName").focus(); return false; }
+  if (!d.lines.length){ toast("أضف بنداً واحداً على الأقل"); $("#addSearch").focus(); return false; }
+  const btn = $("#bSave"); btn.disabled = true;
+  try{
+    // client: create if new
+    if (!d.clientId){
+      const ex = S.clients.find(c => c.name === d.client.name);
+      if (ex) d.clientId = ex.id;
+      else { const cid = uid(); await put("clients", cid, { ...d.client, city:"", createdAt:Date.now() }); d.clientId = cid; }
+    }
+    if (!d.number){
+      const seq = nextSeq();
+      d.number = `${S.settings.prefix || ""}${d.date.slice(0,4)}-${String(seq).padStart(4,"0")}`;
+      S.settings.nextNo = seq + 1; await putSettings();
+    }
+    if (!d.id){ d.id = uid(); d.createdAt = Date.now(); }
+    d.updatedAt = Date.now();
+    const t = calc(d);
+    d.totals = { sub:t.sub, grand:t.grand, cost:t.cost, profit:t.profit, margin:t.margin };
+    await put("quotes", d.id, strip(d));
+    S.saved = true; $("#dirty").hidden = true; renderQNo();
+    try{ localStorage.removeItem("musaer-draft"); }catch(e){}
+    toast(`تم حفظ العرض ${d.number}`);
+    return true;
+  }catch(err){ writeErr(err); return false; }
+  finally{ btn.disabled = false; }
+}
+$("#bSave").addEventListener("click", saveQuote);
+$("#bNew").addEventListener("click", () => { S.draft = newDraft(); S.saved = true; loadDraftIntoForm(); try{ localStorage.removeItem("musaer-draft"); }catch(e){} $("#cName").focus(); });
+$("#bDup").addEventListener("click", () => duplicate(S.draft));
+function duplicate(q){
+  const d = clone(q); d.id = null; d.number = ""; d.status = "draft"; d.date = todayISO(); d.validDays = S.settings.validityDays; delete d.createdAt; delete d.totals;
+  d.lines.forEach(l => l.key = uid());
+  S.draft = d; S.saved = false; loadDraftIntoForm(); markDirty(); location.hash = "quote";
+  toast("نسخة جديدة جاهزة للتعديل. غيّر العميل أو الكميات واحفظ");
+}
+
+/* ========== CLIENT DOCUMENT ========== */
+function buildDoc(d){
+  const s = S.settings, t = calc(d), cur = s.currency || "ريال";
+  const valid = addDays(d.date, d.validDays || s.validityDays);
+  const coInfo = [s.address, s.phone && ("هاتف: " + s.phone), s.email, s.vatNo && ("الرقم الضريبي: " + s.vatNo), s.crNo && ("س.ت: " + s.crNo)].filter(Boolean).join("\n");
+  const rows = d.lines.map((l,i) => `<tr><td class="c">${i+1}</td><td><div>${esc(l.name)}</div>${l.desc?`<div class="ds">${esc(l.desc)}</div>`:""}</td><td class="c">${esc(l.unit)}</td><td class="c">${qtyFmt(num(l.qty))}</td><td class="m">${money(num(l.price))}</td><td class="m">${money(num(l.qty)*num(l.price))}</td></tr>`).join("");
+  const cl = d.client || {};
+  return `<div class="doc" id="doc">
+    <div class="d-head">
+      <div class="d-co">${s.logo ? `<img src="${esc(s.logo)}" alt="">` : ""}<div><div class="nm">${esc(s.companyName)}</div><div class="inf">${esc(coInfo)}</div></div></div>
+      <div class="d-title"><div class="t">عرض سعر<small>Quotation</small></div>
+        <div class="d-meta"><span>رقم العرض</span><span>${esc(d.number || "مسودة")}</span><span>التاريخ</span><span>${fmtDate(d.date)}</span><span>الموافق</span><span style="direction:rtl">${esc(hijri(d.date))}</span><span>صالح حتى</span><span>${fmtDate(valid)}</span></div>
+      </div>
+    </div>
+    <div class="d-to">
+      <div class="box"><div class="lbl">مقدَّم إلى</div><div class="cn">${esc(cl.name)}</div>
+        <div class="ds">${[cl.contact && ("عناية: " + esc(cl.contact)), cl.phone && ("جوال: <span dir=\"ltr\">" + esc(cl.phone) + "</span>"), cl.email && esc(cl.email), cl.vatNo && ("الرقم الضريبي: " + esc(cl.vatNo))].filter(Boolean).join(" · ")}</div></div>
+    </div>
+    ${d.title ? `<p class="d-subj">الموضوع: ${esc(d.title)}</p>` : ""}
+    <table><thead><tr><th class="c" style="width:34px">#</th><th>البيان</th><th class="c" style="width:70px">الوحدة</th><th class="c" style="width:60px">الكمية</th><th class="m" style="width:100px">سعر الوحدة</th><th class="m" style="width:110px">الإجمالي</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="d-sum">
+      <div class="d-words"><b>المبلغ كتابةً:</b><br>${esc(tafqeet(t.grand, cur))}</div>
+      <div class="d-tot">
+        <div><span>المجموع</span><span>${money(t.sub)}</span></div>
+        ${t.disc ? `<div><span>الخصم${d.discountType === "pct" ? ` (${num(d.discount)}%)` : ""}</span><span>−${money(t.disc)}</span></div>` : ""}
+        ${t.del ? `<div><span>توصيل / تركيب</span><span>${money(t.del)}</span></div>` : ""}
+        ${t.disc || t.del ? `<div><span>الإجمالي قبل الضريبة</span><span>${money(t.taxable)}</span></div>` : ""}
+        <div><span>ضريبة القيمة المضافة ${t.rate}%</span><span>${money(t.vat)}</span></div>
+        <div class="g"><span>الإجمالي شامل الضريبة</span><span>${money(t.grand)} ${esc(cur)}</span></div>
+      </div>
+    </div>
+    <div class="d-terms">
+      ${d.notes ? `<h4>ملاحظات</h4><p>${esc(d.notes)}</p>` : ""}
+      ${s.paymentTerms ? `<h4>شروط الدفع</h4><p>${esc(s.paymentTerms)}</p>` : ""}
+      ${s.terms ? `<h4>الشروط والأحكام</h4><p>${esc(s.terms)}</p>` : ""}
+    </div>
+    <div class="d-sign"><div>اعتماد ${esc(s.companyName)}<br>التوقيع والختم</div><div>موافقة العميل<br>الاسم والتوقيع والتاريخ</div></div>
+    <div class="d-foot">صالح لمدة ${num(d.validDays || s.validityDays)} يوماً من تاريخ إصداره</div>
+  </div>`;
+}
+function quoteText(d){
+  const s = S.settings, t = calc(d), cur = s.currency || "ريال";
+  const L = [];
+  L.push(`*عرض سعر ${d.number || ""}*`.replace("  "," "));
+  L.push(`من: ${s.companyName}`);
+  L.push(`إلى: ${d.client.name}`);
+  if (d.title) L.push(`الموضوع: ${d.title}`);
+  L.push(`التاريخ: ${fmtDate(d.date)} · صالح حتى ${fmtDate(addDays(d.date, d.validDays || s.validityDays))}`);
+  L.push("");
+  d.lines.forEach((l,i) => L.push(`${i+1}) ${l.name}${l.unit?` (${l.unit})`:""}: ${qtyFmt(num(l.qty))} × ${money(num(l.price))} = ${money(num(l.qty)*num(l.price))}`));
+  L.push("");
+  L.push(`المجموع: ${money(t.sub)}`);
+  if (t.disc) L.push(`الخصم: −${money(t.disc)}`);
+  if (t.del) L.push(`توصيل / تركيب: ${money(t.del)}`);
+  L.push(`ضريبة القيمة المضافة ${t.rate}%: ${money(t.vat)}`);
+  L.push(`*الإجمالي شامل الضريبة: ${money(t.grand)} ${cur}*`);
+  if (d.notes) { L.push(""); L.push(d.notes); }
+  return L.join("\n");
+}
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); toast("تم النسخ. الصقه في الواتساب أو البريد"); }
+  catch(e){ $("#copyTxt").value = txt; $("#copyModal").hidden = false; $("#copyTxt").select(); }
+}
+$("#bCopy").addEventListener("click", () => { if (!S.draft.lines.length) return toast("أضف بنوداً أولاً"); copyText(quoteText(S.draft)); });
+$("#mCopy").addEventListener("click", () => copyText(quoteText(S.draft)));
+$("#copyClose").addEventListener("click", () => $("#copyModal").hidden = true);
+
+$("#bPreview").addEventListener("click", () => {
+  if (!S.draft.lines.length) return toast("أضف بنوداً أولاً");
+  $("#docHost").innerHTML = buildDoc(S.draft);
+  $("#modal").hidden = false; $("#mClose").focus();
+  
+});
+$("#mClose").addEventListener("click", () => $("#modal").hidden = true);
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ $("#modal").hidden = true; $("#copyModal").hidden = true; } });
+
+function fileBase(){ return "Quotation-" + String(S.draft.number || "draft").replace(/[^A-Za-z0-9_-]/g, "-"); }
+async function ensureNumbered(){
+  if (S.draft.number && S.saved) return true;
+  if (readOnly) return true;
+  return await saveQuote();
+}
+$("#mPdf").addEventListener("click", async () => {
+  const b = $("#mPdf"); b.disabled = true; const old = b.textContent; b.textContent = "جارٍ التجهيز…";
+  try{
+    if (!(await ensureNumbered())) return;
+    $("#docHost").innerHTML = buildDoc(S.draft);
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    const el = $("#doc");
+    const canvas = await html2canvas(el, { scale:2, backgroundColor:"#ffffff", useCORS:true, logging:false,
+      onclone: cd => { const m = cd.getElementById("modal"); m.style.background = "none"; m.style.position = "static"; const w = cd.querySelector(".paper-wrap"); w.style.padding = "0"; w.style.overflow = "visible"; cd.getElementById("doc").style.boxShadow = "none"; } });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit:"pt", format:"a4", compress:true });
+    const pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight();
+    const pxPerPage = Math.floor(canvas.width * ph / pw);
+    let y = 0, first = true;
+    while (y < canvas.height){
+      const h = Math.min(pxPerPage, canvas.height - y);
+      const c = document.createElement("canvas"); c.width = canvas.width; c.height = h;
+      const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0,0,c.width,h); ctx.drawImage(canvas, 0, y, canvas.width, h, 0, 0, canvas.width, h);
+      if (!first) pdf.addPage();
+      pdf.addImage(c.toDataURL("image/jpeg", 0.93), "JPEG", 0, 0, pw, h * pw / canvas.width);
+      first = false; y += h;
+      if (canvas.height - y < 20) break;
+    }
+    saveBlob(fileBase() + ".pdf", pdf.output("blob"));
+    toast("تم تنزيل ملف PDF");
+    if (S.draft.status === "draft" && !readOnly){ S.draft.status = "sent"; $("#qStatus").value = "sent"; await put("quotes", S.draft.id, strip(S.draft)).catch(()=>{}); }
+  }catch(e){ console.error(e); toast("تعذّر إنشاء PDF. جرّب زر «طباعة» واختر الحفظ PDF"); 
+  }finally{ b.disabled = false; b.textContent = old; }
+});
+function saveBlob(name, blob){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+$("#mPrint").addEventListener("click", async () => {
+  if (!(await ensureNumbered())) return;
+  $("#docHost").innerHTML = buildDoc(S.draft);
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  window.print();
+});
+$("#mWa").addEventListener("click", () => {
+  let ph = String(S.draft.client.phone || "").replace(/[٠-٩]/g, d => AR_DIG.indexOf(d)).replace(/\D/g, "");
+  if (ph.startsWith("00")) ph = ph.slice(2);
+  if (ph.startsWith("05")) ph = "966" + ph.slice(1); else if (ph.startsWith("5") && ph.length === 9) ph = "966" + ph;
+  const url = "https://wa.me/" + ph + "?text=" + encodeURIComponent(quoteText(S.draft));
+  window.open(url, "_blank", "noopener");
+});
+$("#mHtml").addEventListener("click", async () => {
+  try{
+    if (!(await ensureNumbered())) return;
+    $("#docHost").innerHTML = buildDoc(S.draft);
+    const css = [...document.styleSheets].map(ss => { try{ return [...ss.cssRules].map(r => r.cssText).filter(t => t.startsWith(".doc")).join("\n"); }catch(e){ return ""; } }).join("\n");
+    const html = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(fileBase())}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@600&display=swap" rel="stylesheet"><style>body{margin:0;background:#e9eeed}.doc{margin:20px auto}@media print{body{background:#fff}.doc{margin:0;width:auto;min-height:0}@page{size:A4;margin:10mm}}${css}</style></head><body>${buildDoc(S.draft)}</body></html>`;
+    saveBlob(fileBase() + ".html", new Blob([html], {type:"text/html"}));
+    toast("تم تنزيل الملف");
+  }catch(e){ toast("تعذّر التنزيل"); }
+});
+
+/* ========== QUOTES LIST ========== */
+const ST_AR = { draft:"مسودة", sent:"مُرسل", accepted:"مقبول", rejected:"مرفوض" };
+function renderQuotes(){
+  const q = norm($("#qSearch").value.trim()), f = $("#qFilter").value, cur = S.settings.currency || "ريال";
+  const all = S.quotes;
+  const month = todayISO().slice(0,7);
+  const open = all.filter(x => x.status === "sent" || x.status === "draft");
+  const accM = all.filter(x => x.status === "accepted" && (x.date||"").slice(0,7) === month);
+  const decided = all.filter(x => x.status === "accepted" || x.status === "rejected");
+  const win = decided.length ? all.filter(x => x.status === "accepted").length / decided.length * 100 : null;
+  const sum = arr => arr.reduce((a,x) => a + num(x.totals && x.totals.grand), 0);
+  $("#kpis").innerHTML = `
+    <div class="card kpi"><div class="l">عروض مفتوحة (${open.length})</div><div class="v">${money(sum(open))}</div></div>
+    <div class="card kpi"><div class="l">مقبول هذا الشهر (${accM.length})</div><div class="v">${money(sum(accM))}</div></div>
+    <div class="card kpi"><div class="l">نسبة القبول</div><div class="v">${win === null ? "—" : win.toFixed(0) + "%"}</div></div>
+    <div class="card kpi"><div class="l">إجمالي العروض</div><div class="v">${all.length}</div></div>`;
+  const rows = all.filter(x => (!f || x.status === f) && (!q || norm(`${x.number} ${x.client && x.client.name} ${x.title}`).includes(q)));
+  $("#qList").innerHTML = rows.length ? rows.map(x => {
+    const exp = x.status === "sent" && addDays(x.date, x.validDays || 0) < todayISO();
+    return `<tr data-id="${esc(x.id)}">
+      <td class="money"><a href="#quote" data-act="open">${esc(x.number)}</a></td>
+      <td>${esc(x.client && x.client.name)}</td><td>${esc(x.title)}</td>
+      <td class="money">${fmtDate(x.date)}${exp ? ` <span class="pill warn">منتهي</span>` : ""}</td>
+      <td class="money">${money(num(x.totals && x.totals.grand))}</td>
+      <td>${pill(x.totals ? x.totals.margin : null)}</td>
+      <td><select class="st" data-s="${esc(x.status)}" data-act="status" aria-label="حالة العرض ${esc(x.number)}">${Object.entries(ST_AR).map(([k,v]) => `<option value="${k}" ${k===x.status?"selected":""}>${v}</option>`).join("")}</select></td>
+      <td style="white-space:nowrap"><button class="btn sm" data-act="dup">نسخ كعرض جديد</button> <button class="btn sm ghost danger" data-act="del">حذف</button></td></tr>`;
+  }).join("") : `<tr><td colspan="8" class="empty">${all.length ? "لا توجد نتائج مطابقة" : "لم تحفظ أي عرض بعد. ابدأ من تبويب «عرض سعر»"}</td></tr>`;
+}
+$("#qSearch").addEventListener("input", renderQuotes);
+$("#qFilter").addEventListener("change", renderQuotes);
+$("#qNewBtn").addEventListener("click", () => { S.draft = newDraft(); S.saved = true; loadDraftIntoForm(); location.hash = "quote"; });
+$("#qList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = b.closest("tr").dataset.id, x = S.quotes.find(q => q.id === id); if (!x) return;
+  if (b.dataset.act === "open"){ e.preventDefault(); S.draft = clone(x); S.draft.id = x.id; S.draft.lines.forEach(l => l.key = l.key || uid()); S.saved = true; loadDraftIntoForm(); location.hash = "quote"; }
+  if (b.dataset.act === "dup") duplicate(x);
+  if (b.dataset.act === "del"){
+    if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد الحذف"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
+    try{ await del("quotes", id); toast("تم حذف العرض"); }catch(err){ writeErr(err); }
+  }
+});
+$("#qList").addEventListener("change", async e => {
+  const s = e.target.closest('[data-act="status"]'); if (!s) return;
+  const id = s.closest("tr").dataset.id, x = S.quotes.find(q => q.id === id); if (!x) return;
+  const nx = { ...strip(x), status: s.value, updatedAt: Date.now() };
+  try{ await put("quotes", id, nx); if (S.draft.id === id){ S.draft.status = s.value; $("#qStatus").value = s.value; } }catch(err){ writeErr(err); }
+});
+
+/* ========== CATALOG ========== */
+let catEdit = null;
+function renderCatalog(){
+  const q = $("#catSearch").value.trim();
+  const tk = norm(q).split(/\s+/).filter(Boolean);
+  const list = tk.length ? S.catalog.filter(c => { const h = norm(`${c.name} ${c.desc} ${c.category}`); return tk.every(w => h.includes(w)); }) : S.catalog;
+  $("#catList").innerHTML = list.length ? list.map(c => `<tr data-id="${esc(c.id)}">
+    <td><div style="font-weight:500">${esc(c.name)}</div>${c.desc?`<div class="hint">${esc(c.desc)}</div>`:""}</td>
+    <td>${esc(c.unit)}</td><td>${esc(c.category)}</td>
+    <td class="money">${money(num(c.cost))}</td><td class="money">${money(num(c.price))}</td>
+    <td>${pill(marginOf(num(c.cost), num(c.price)))}</td>
+    <td style="white-space:nowrap"><button class="btn sm" data-act="add">أضف للعرض</button> <button class="btn sm ghost" data-act="edit">تعديل</button> <button class="btn sm ghost danger" data-act="del">حذف</button></td></tr>`).join("")
+    : `<tr><td colspan="7" class="empty">${S.catalog.length ? "لا توجد نتائج" : "قائمة الأسعار فارغة. أضف أصنافك وخدماتك أو الصقها من إكسل"}</td></tr>`;
+  $("#catCats").innerHTML = [...new Set(S.catalog.map(c => c.category).filter(Boolean))].map(c => `<option value="${esc(c)}"></option>`).join("");
+}
+$("#catSearch").addEventListener("input", renderCatalog);
+function resetCatForm(){ catEdit = null; $("#catForm").reset(); $("#catFormT").textContent = "إضافة صنف / خدمة"; $("#ciCancel").hidden = true; updCiHint(); }
+function updCiHint(){
+  const c = num($("#ciCost").value), p = num($("#ciPrice").value);
+  if (c && !p) $("#ciHint").textContent = `سيُحسب السعر تلقائياً: ${money(priceFromMargin(c, S.settings.defaultMargin))} (هامش ${S.settings.defaultMargin}%)`;
+  else if (c && p) { const m = marginOf(c,p); $("#ciHint").textContent = `الهامش: ${m === null ? "—" : m.toFixed(1) + "%"}`; }
+  else $("#ciHint").textContent = "اترك سعر البيع فارغاً ليُحسب من التكلفة والهامش الافتراضي.";
+}
+$("#ciCost").addEventListener("input", updCiHint); $("#ciPrice").addEventListener("input", updCiHint);
+$("#ciCancel").addEventListener("click", resetCatForm);
+$("#catForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const cost = num($("#ciCost").value); let price = num($("#ciPrice").value);
+  if (!price && cost) price = priceFromMargin(cost, S.settings.defaultMargin);
+  const item = { name:$("#ciName").value.trim(), desc:$("#ciDesc").value.trim(), unit:$("#ciUnit").value.trim(), category:$("#ciCat").value.trim(), cost, price, updatedAt:Date.now() };
+  if (!item.name) return;
+  try{ await put("catalog", catEdit || uid(), item); toast(catEdit ? "تم تحديث الصنف" : "تمت إضافة الصنف"); resetCatForm(); $("#ciName").focus(); }
+  catch(err){ writeErr(err); }
+});
+$("#catList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = b.closest("tr").dataset.id, c = S.catalog.find(x => x.id === id); if (!c) return;
+  if (b.dataset.act === "add"){ addLine(c); toast(`أُضيف «${c.name}» إلى العرض الحالي`); }
+  if (b.dataset.act === "edit"){
+    catEdit = id; $("#ciName").value = c.name||""; $("#ciDesc").value = c.desc||""; $("#ciUnit").value = c.unit||""; $("#ciCat").value = c.category||"";
+    $("#ciCost").value = c.cost||""; $("#ciPrice").value = c.price||""; $("#catFormT").textContent = "تعديل صنف"; $("#ciCancel").hidden = false; updCiHint(); $("#ciName").focus();
+  }
+  if (b.dataset.act === "del"){
+    if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
+    try{ await del("catalog", id); }catch(err){ writeErr(err); }
+  }
+});
+$("#impBtn").addEventListener("click", async () => {
+  const lines = $("#impTxt").value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (!lines.length) return;
+  const b = $("#impBtn"); b.disabled = true; let n = 0;
+  try{
+    for (const ln of lines){
+      const p = ln.includes("\t") ? ln.split("\t") : ln.split(/[,،؛;]/);
+      const name = (p[0]||"").trim(); if (!name) continue;
+      const cost = num(p[2]); let price = num(p[3]); if (!price && cost) price = priceFromMargin(cost, S.settings.defaultMargin);
+      const ex = S.catalog.find(c => c.name === name);
+      await put("catalog", ex ? ex.id : uid(), { name, desc: ex ? ex.desc||"" : "", unit:(p[1]||"").trim(), category:(p[4]||"").trim(), cost, price, updatedAt:Date.now() });
+      n++; $("#impMsg").textContent = `تم ${n} من ${lines.length}`;
+    }
+    $("#impTxt").value = ""; $("#impMsg").textContent = `تم استيراد ${n} صنف`;
+  }catch(err){ writeErr(err); }
+  finally{ b.disabled = false; }
+});
+
+/* ========== CLIENTS ========== */
+let clEdit = null;
+function renderClients(){
+  const q = norm($("#clSearch").value.trim());
+  const list = S.clients.filter(c => !q || norm(`${c.name} ${c.contact} ${c.phone}`).includes(q));
+  $("#clList").innerHTML = list.length ? list.map(c => {
+    const qs = S.quotes.filter(x => x.clientId === c.id || (x.client && x.client.name === c.name));
+    const acc = qs.filter(x => x.status === "accepted").length;
+    return `<tr data-id="${esc(c.id)}"><td style="font-weight:500">${esc(c.name)}</td><td>${esc(c.contact)}</td><td class="money">${esc(c.phone)}</td><td>${qs.length}</td><td>${acc}</td>
+      <td style="white-space:nowrap"><button class="btn sm" data-act="quote">عرض سعر جديد</button> <button class="btn sm ghost" data-act="edit">تعديل</button> <button class="btn sm ghost danger" data-act="del">حذف</button></td></tr>`;
+  }).join("") : `<tr><td colspan="6" class="empty">${S.clients.length ? "لا توجد نتائج" : "لا يوجد عملاء بعد. يُضاف العميل تلقائياً عند حفظ أول عرض له"}</td></tr>`;
+}
+$("#clSearch").addEventListener("input", renderClients);
+function resetClForm(){ clEdit = null; $("#clForm").reset(); $("#clFormT").textContent = "إضافة عميل"; $("#clCancel").hidden = true; }
+$("#clCancel").addEventListener("click", resetClForm);
+$("#clForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const c = { name:$("#clName").value.trim(), contact:$("#clContact").value.trim(), phone:$("#clPhone").value.trim(), email:$("#clEmail").value.trim(), vatNo:$("#clVat").value.trim(), city:$("#clCity").value.trim() };
+  if (!c.name) return;
+  const old = clEdit && S.clients.find(x => x.id === clEdit);
+  try{ await put("clients", clEdit || uid(), { ...c, createdAt: old && old.createdAt || Date.now() }); toast("تم حفظ العميل"); resetClForm(); }catch(err){ writeErr(err); }
+});
+$("#clList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const id = b.closest("tr").dataset.id, c = S.clients.find(x => x.id === id); if (!c) return;
+  if (b.dataset.act === "quote"){
+    S.draft = newDraft(); S.draft.clientId = c.id; S.draft.client = { name:c.name, contact:c.contact||"", phone:c.phone||"", email:c.email||"", vatNo:c.vatNo||"" };
+    S.saved = true; loadDraftIntoForm(); location.hash = "quote"; setTimeout(() => $("#addSearch").focus(), 50);
+  }
+  if (b.dataset.act === "edit"){
+    clEdit = id; $("#clName").value = c.name||""; $("#clContact").value = c.contact||""; $("#clPhone").value = c.phone||""; $("#clEmail").value = c.email||""; $("#clVat").value = c.vatNo||""; $("#clCity").value = c.city||"";
+    $("#clFormT").textContent = "تعديل عميل"; $("#clCancel").hidden = false; $("#clName").focus();
+  }
+  if (b.dataset.act === "del"){
+    if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
+    try{ await del("clients", id); }catch(err){ writeErr(err); }
+  }
+});
+
+/* ========== SETTINGS ========== */
+const SET_MAP = { sCo:"companyName", sCoVat:"vatNo", sCoCr:"crNo", sCoPhone:"phone", sCoEmail:"email", sCoAddr:"address", sVatR:"vatRate", sMargin:"defaultMargin", sRound:"roundTo", sValid:"validityDays", sPrefix:"prefix", sNext:"nextNo", sCur:"currency", sPay:"paymentTerms", sTerms:"terms" };
+const NUM_KEYS = ["vatRate","defaultMargin","roundTo","validityDays","nextNo"];
+function fillSettingsForm(){
+  for (const [id,k] of Object.entries(SET_MAP)){ const el = document.getElementById(id); if (document.activeElement !== el) el.value = S.settings[k] ?? ""; }
+  if (document.activeElement !== $("#sNext")) $("#sNext").value = nextSeq();
+  const lp = $("#sLogoPrev"); lp.hidden = !S.settings.logo; $("#sLogoDel").hidden = !S.settings.logo; if (S.settings.logo) lp.src = S.settings.logo;
+}
+$("#setForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  for (const [id,k] of Object.entries(SET_MAP)){ const v = document.getElementById(id).value; S.settings[k] = NUM_KEYS.includes(k) ? num(v) : v.trim(); }
+  try{ await putSettings(); toast("تم حفظ الإعدادات"); renderSummary(); renderQNo(); }catch(err){ writeErr(err); }
+});
+$("#sLogo").addEventListener("change", e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  const img = new Image(), url = URL.createObjectURL(f);
+  img.onload = () => {
+    const sc = Math.min(1, 320 / Math.max(img.width, img.height));
+    const c = document.createElement("canvas"); c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    S.settings.logo = c.toDataURL("image/png"); URL.revokeObjectURL(url);
+    $("#sLogoPrev").src = S.settings.logo; $("#sLogoPrev").hidden = false; $("#sLogoDel").hidden = false;
+    toast("اضغط «حفظ الإعدادات» لاعتماد الشعار");
+  };
+  img.src = url;
+});
+$("#sLogoDel").addEventListener("click", () => { S.settings.logo = ""; $("#sLogoPrev").hidden = true; $("#sLogoDel").hidden = true; toast("اضغط «حفظ الإعدادات» لاعتماد التغيير"); });
+
+$("#bkExport").addEventListener("click", () => {
+  const data = JSON.stringify({ app:"musaer", version:1, exportedAt:new Date().toISOString(), settings:S.settings, catalog:S.catalog, clients:S.clients, quotes:S.quotes }, null, 1);
+  saveBlob(`pricing-backup-${todayISO()}.json`, new Blob([data], {type:"application/json"}));
+});
+$("#bkImport").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  try{
+    const d = JSON.parse(await f.text());
+    if (d.app !== "musaer") throw new Error("bad");
+    S.settings = { ...clone(DEFAULT_SETTINGS), ...(d.settings || {}) };
+    S.catalog = d.catalog || []; S.clients = d.clients || []; S.quotes = d.quotes || [];
+    persist(); ["settings","catalog","clients","quotes"].forEach(onData);
+    toast(`تم الاسترجاع: ${S.catalog.length} صنف، ${S.clients.length} عميل، ${S.quotes.length} عرض`);
+  }catch(err){ toast("الملف غير صالح. اختر ملف النسخة الاحتياطية الذي نزّلته من هنا"); }
+  e.target.value = "";
+});
+
+/* ========== BOOT ========== */
+function restoreDraft(){
+  try{ const raw = localStorage.getItem("musaer-draft"); if (raw){ const d = JSON.parse(raw); if (d && Array.isArray(d.lines)){ S.draft = d; S.saved = false; return; } } }catch(e){}
+  S.draft = newDraft();
+}
+route(); restoreDraft(); loadDraftIntoForm(); fillSettingsForm(); renderQuotes(); renderCatalog(); renderClients();
+
+const hadData = loadStore();
+setMode("live", "محفوظ على هذا الجهاز");
+onData("settings"); onData("catalog"); onData("clients"); onData("quotes");
+if (!hadData) showBanner("أهلاً! ابدأ من «الإعدادات» وأدخل بيانات شركتك، ثم أضف أصنافك في «قائمة الأسعار». البيانات تُحفظ في هذا المتصفح، فخذ نسخة احتياطية من الإعدادات بين فترة وأخرى.");
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
