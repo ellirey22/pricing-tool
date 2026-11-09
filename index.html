@@ -540,7 +540,7 @@ const DEFAULT_SERVICES = [
 const R_MK = "منطقة مكة المكرمة", R_MD = "منطقة المدينة المنورة", R_SH = "المنطقة الشرقية";
 const DEFAULT_CFG = {
   company:{ name:"اسم الشركة", nameEn:"", accountName:"", tagline:"", ncecClass:"أ", license:"", cr:"", vat:"", phone:"", email:"", website:"", address:"",
-    logo:"", letterhead:"", header:"", footer:"", stamp:"", showStamp:true, brand:"#002840", brand2:"#1898d0", mt:128, mb:128, mx:72,
+    logo:"", letterhead:"", header:"", footer:"", stamp:"", showStamp:true, signLine:false, brand:"#002840", brand2:"#1898d0", mt:128, mb:128, mx:72,
     signName:"", signTitle:"المدير التنفيذي", bankName:"", iban:"" },
   pricing:{ baseCity:"جدة", risk:10, profit:25, labProfit:15, vat:15, govVat:false, roundTo:50, travelSeparate:false, showBreakdown:false, localVisit:150, perDiem:150, prefix:"JED-", addYear:false, nextNo:1, validity:30 },
   services:DEFAULT_SERVICES,
@@ -936,8 +936,8 @@ function blocksHTML(m){
   B.push(`<div class="d-sec"><h4>وفي حال الموافقة:</h4><table class="d-sign"><thead><tr><th>${esc(co.accountName || co.name)}</th><th>العميل: ${esc(q.client.name)}</th></tr></thead><tbody>
     <tr><td><span>الممثل:</span> ${esc(co.signName)}</td><td><span>الممثل:</span></td></tr>
     <tr><td><span>الصفة:</span> ${esc(co.signTitle)}</td><td><span>الصفة:</span></td></tr>
-    <tr><td class="stamp"><span>الختم:</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp"><span>الختم:</span></td></tr>
-    <tr><td><span>التوقيع:</span></td><td><span>التوقيع:</span></td></tr></tbody></table></div>`);
+    <tr><td class="stamp" ${co.signLine ? "" : 'rowspan="2"'}><span>الختم:</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp"><span>الختم:</span></td></tr>
+    <tr>${co.signLine ? `<td><span>التوقيع:</span></td>` : ""}<td><span>التوقيع:</span></td></tr></tbody></table></div>`);
   return B;
 }
 async function renderPages(){
@@ -1160,7 +1160,10 @@ async function buildDocx(q){
   B.push(tbl([
     sr([Pg(R(co.accountName || co.name, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R("العميل: " + (q.client.name || ""), { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
     sr([lv("الممثل:", co.signName)], [lv("الممثل:", "")]), sr([lv("الصفة:", co.signTitle)], [lv("الصفة:", "")]),
-    sr(stampKids, [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })]), sr([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], [lv("التوقيع:", "", true), Pg(R(""), { after:300 })])
+    ...(co.signLine
+      ? [sr(stampKids, [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })]), sr([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], [lv("التوقيع:", "", true), Pg(R(""), { after:300 })])]
+      : [new X.TableRow({ cantSplit:true, children:[ new X.TableCell({ children:stampKids, rowSpan:2, width:{ size:half, type:X.WidthType.DXA }, borders:ALLB, margins:{ top:70, bottom:70, left:110, right:110 } }), cell([lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })], { w:CW - half }) ] }),
+         new X.TableRow({ cantSplit:true, children:[ cell([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], { w:CW - half }) ] })])
   ], [half, CW - half]));
 
   const doc = new X.Document({ creator:co.name, title:`عرض سعر ${m.ref}`,
@@ -1264,7 +1267,7 @@ function renderSettings(){
     <h2 style="margin-top:6px">الترويسة والهوية</h2>
     <p class="hint" style="margin:0">أفضل خيار: صورة الورق الرسمي كاملة (صفحة A4 فيها الشعار أعلى والبيانات أسفل) وتصير خلفية لكل صفحة في PDF و Word. إذا ما رفعتها، تُبنى ترويسة تلقائية من الشعار والبيانات.</p>
     <div class="row">${imgBox("letterhead","الورق الرسمي (صفحة A4 كاملة)","يظهر خلف كل صفحة")}${imgBox("stamp","ختم الشركة","يظهر في خانة الختم عند التوقيع")}${imgBox("logo","الشعار","للترويسة التلقائية وشريط التطبيق")}</div>
-    <div class="row">${inp("company.showStamp","إظهار الختم في العرض",{sel:YN,t:"bool"})}${inp("company.brand","اللون الرئيسي",{type:"color"})}${inp("company.brand2","اللون الثانوي",{type:"color"})}</div>
+    <div class="row">${inp("company.showStamp","إظهار الختم في العرض",{sel:YN,t:"bool"})}${inp("company.signLine","خانة توقيع الشركة",{sel:[["false","بدون (الختم يكفي)"],["true","إظهار"]],t:"bool"})}${inp("company.brand","اللون الرئيسي",{type:"color"})}${inp("company.brand2","اللون الثانوي",{type:"color"})}</div>
     <div class="row">${inp("company.mt","هامش أعلى الصفحة (px)",{t:"num"})}${inp("company.mb","هامش أسفل الصفحة (px)",{t:"num"})}${inp("company.mx","الهوامش الجانبية (px)",{t:"num"})}</div>
     <p class="hint" style="margin:0">الهوامش تضبط مكان النص بحيث ما يغطي الشعار أعلى الصفحة أو البيانات أسفلها. الصفحة 794 × 1123.</p>
   </div>`;
