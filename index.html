@@ -6,25 +6,25 @@
 <title>مُسعِّر العروض البيئية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: a calm, Apple-style pricing desk. Frosted header with a segmented nav, a jump bar for the five steps,
    airy cards with 44px+ controls on the wide side, and a receipt-style summary beside them. Proposal pages are separate paper. */
 :root{
   --bg:#f5f5f7; --surface:#ffffff; --fill:#f0f1f4; --fill-2:#e6e8ec; --ink:#1d1d1f; --muted:#6e6e73; --line:rgba(0,0,0,.08);
-  --accent:#0b6fb8; --accent-ink:#ffffff; --accent-soft:rgba(11,111,184,.10); --navy:#002840; --gold:#e0a63f;
+  --accent:#004862; --accent-ink:#ffffff; --accent-soft:rgba(0,153,217,.12); --navy:#012c41; --gold:#e2a54c; --brand-blue:#0099d9; --brand-green:#4da454;
   --good:#1a7f37; --warn:#a85a00; --bad:#d70015; --switch:#34c759;
   --good-soft:#e3f4e8; --warn-soft:#fbefdc; --bad-soft:#fde7ea;
   --r:20px; --r-sm:12px; --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
-  --font-body:-apple-system,BlinkMacSystemFont,"SF Arabic","IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
-  --font-display:-apple-system,BlinkMacSystemFont,"SF Arabic","Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --font-body:"Readex Pro",-apple-system,BlinkMacSystemFont,"SF Arabic","IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --font-display:"Readex Pro",-apple-system,BlinkMacSystemFont,"SF Arabic","IBM Plex Sans Arabic",Tahoma,sans-serif;
   --hdr:rgba(245,245,247,.78);
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#000000; --surface:#1c1c1e; --fill:#2c2c2e; --fill-2:#3a3a3c; --ink:#f5f5f7; --muted:#98989d; --line:rgba(255,255,255,.10);
-    --accent:#3aa0ff; --accent-ink:#00121f; --accent-soft:rgba(58,160,255,.16); --navy:#cfe6ff; --gold:#f0b85a;
+    --accent:#3fb6ea; --accent-ink:#00121f; --accent-soft:rgba(63,182,234,.16); --navy:#d6eefa; --gold:#efb74a; --brand-blue:#3fb6ea; --brand-green:#6cc274;
     --good:#4cd27a; --warn:#ffb340; --bad:#ff6961; --switch:#30d158;
     --good-soft:rgba(76,210,122,.14); --warn-soft:rgba(255,179,64,.14); --bad-soft:rgba(255,105,97,.14);
     --shadow:0 1px 2px rgba(0,0,0,.4); --hdr:rgba(22,22,24,.78);
@@ -33,7 +33,7 @@
 }
 :root[data-theme="dark"]{
   --bg:#000000; --surface:#1c1c1e; --fill:#2c2c2e; --fill-2:#3a3a3c; --ink:#f5f5f7; --muted:#98989d; --line:rgba(255,255,255,.10);
-  --accent:#3aa0ff; --accent-ink:#00121f; --accent-soft:rgba(58,160,255,.16); --navy:#cfe6ff; --gold:#f0b85a;
+  --accent:#3fb6ea; --accent-ink:#00121f; --accent-soft:rgba(63,182,234,.16); --navy:#d6eefa; --gold:#efb74a; --brand-blue:#3fb6ea; --brand-green:#6cc274;
   --good:#4cd27a; --warn:#ffb340; --bad:#ff6961; --switch:#30d158;
   --good-soft:rgba(76,210,122,.14); --warn-soft:rgba(255,179,64,.14); --bad-soft:rgba(255,105,97,.14);
   --shadow:0 1px 2px rgba(0,0,0,.4); --hdr:rgba(22,22,24,.78);
@@ -305,7 +305,7 @@ table.list a{font-weight:700;text-decoration:none}
 
 .f label.switch{font-size:15px;color:var(--ink);margin:0;font-weight:500}
 /* ===== Proposal pages: fixed white paper, never themed ===== */
-.pg{--brand:#002840;--brand2:#1898d0;--mt:128px;--mb:128px;--mx:72px;width:794px;height:1123px;background:#fff no-repeat 0 0 / 100% 100%;color:#14222c;position:relative;display:flex;flex-direction:column;font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;font-size:12.5px;line-height:1.75;direction:rtl;letter-spacing:0;box-shadow:0 8px 40px rgba(0,0,0,.35);overflow:hidden;flex:none}
+.pg{--brand:#012c41;--brand2:#0099d9;--mt:128px;--mb:128px;--mx:72px;width:794px;height:1123px;background:#fff no-repeat 0 0 / 100% 100%;color:#14222c;position:relative;display:flex;flex-direction:column;font-family:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;font-weight:300;font-size:12px;line-height:1.8;direction:rtl;letter-spacing:0;box-shadow:0 8px 40px rgba(0,0,0,.35);overflow:hidden;flex:none}
 .pg *{letter-spacing:0}
 .pg-h,.pg-f{flex:none}
 .pg-b{flex:1;padding:6px var(--mx) 6px;overflow:hidden;min-height:0}
@@ -367,8 +367,8 @@ table.list a{font-weight:700;text-decoration:none}
 .d-sign th{background:#eef4f8;color:var(--brand);padding:6px 10px;border:1px solid #d3dee6;text-align:right;width:50%}
 .d-sign td{padding:5px 10px;border:1px solid #d3dee6;vertical-align:top;height:28px}
 .d-sign td span{color:#6d7c88}
-.d-sign td.stamp{height:128px;position:relative}
-.d-sign td.stamp img{position:absolute;top:2px;left:40%;width:118px;height:118px;opacity:.95;transform:rotate(-8deg)}
+.d-sign td.stamp{height:84px;position:relative}
+.d-sign td.stamp img{position:absolute;top:2px;left:40%;width:80px;height:80px;opacity:.95;transform:rotate(-8deg)}
 #pages.editing [data-edit]{outline:1.5px dashed #c98a1b;outline-offset:2px;border-radius:3px;cursor:text;background:#fffbea}
 #pages.editing [data-edit]:focus{outline:2px solid #c98a1b;background:#fff6d6}
 
@@ -435,11 +435,10 @@ table.list a{font-weight:700;text-decoration:none}
             <div class="f"><label for="q-ccr">السجل التجاري للعميل</label><input id="q-ccr" class="ltr" inputmode="numeric" data-b="client.cr"></div>
           </div>
           <div class="row" style="margin-top:10px">
-            <div class="f" style="flex-basis:260px"><label for="q-fname">اسم النشاط</label><input id="q-fname" data-b="facility.name" placeholder="مثال: مصنع … لإنتاج …"></div>
+            <div class="f" style="flex-basis:260px"><label for="q-fname">نوع النشاط</label><input id="q-fname" data-b="facility.name" placeholder="مثال: مصنع بلاستيك، محطة وقود، مستودع"></div>
             <div class="f"><label for="q-fcity">المدينة</label><select id="q-fcity" data-b="facility.city"></select></div>
             <div class="f"><label for="q-fdist">الحي</label><input id="q-fdist" data-b="facility.district"></div>
             <div class="f"><label for="q-freg">المنطقة</label><input id="q-freg" data-b="facility.region"></div>
-            <div class="f"><label for="q-fcoord">الإحداثيات</label><input id="q-fcoord" class="ltr" data-b="facility.coords" placeholder="21.5433, 39.1728"></div>
           </div>
         </div>
 
@@ -658,29 +657,29 @@ const J = a => a.join("\n");
 const DEFAULT_SERVICES = [
   { key:"c1-plan", title:"خطة الإدارة البيئية", doc:"الخطة", writing:3500, durationShort:"7 أيام عمل",
     scope:J([S_REVIEW, "تحديد الجوانب البيئية للنشاط (الانبعاثات، والنفايات، والمياه، والضوضاء، والمواد الكيميائية) والاشتراطات البيئية المنطبقة عليه.", "إعداد خطة الإدارة البيئية للنشاط ومتابعة اعتمادها لدى المركز حتى صدور التصريح البيئي."]),
-    methodology:J(["استلام ومراجعة مستندات النشاط (السجل التجاري، والرخص، والمخططات، وبيانات التشغيل).", "زيارة ميدانية لموقع النشاط لحصر مصادر التأثير البيئي والتحقق من البيانات.", "تحديد الجوانب والتأثيرات البيئية للنشاط وتقييم أهميتها.",
+    methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} (السجل التجاري، والرخص، والمخططات، وبيانات التشغيل).", "زيارة ميدانية لموقع النشاط لحصر مصادر التأثير البيئي والتحقق من البيانات.", "تحديد الجوانب والتأثيرات البيئية للنشاط وتقييم أهميتها.",
       `إعداد خطة الإدارة البيئية متضمنةً إجراءات التحكم والتخفيف، وخطة إدارة النفايات، وبرنامج الرصد الذاتي، والمسؤوليات، وإجراءات الطوارئ البيئية، بما يتوافق مع اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:DUR("7 أيام عمل"), payments:PAY3("الخطة") },
   { key:"c2-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:9000, durationShort:"7 أيام عمل",
     scope:J([S_REVIEW, "تقييم مدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    methodology:J(["استلام ومراجعة مستندات النشاط والتصاريح السابقة وسجلات التشغيل والسجلات البيئية.", "زيارة ميدانية تدقيقية للموقع ومقابلة المسؤولين، وحصر مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB, M_NC,
+    methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} وسجلات التشغيل والسجلات البيئية.", "زيارة ميدانية تدقيقية للموقع ومقابلة المسؤولين، وحصر مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB, M_NC,
       `إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
   { key:"c2-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:11000, durationShort:"7 أيام عمل",
     scope:J([P_REVIEW, "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه.", "تقييم التأثيرات البيئية المتوقعة خلال مرحلتي الإنشاء والتشغيل.", "إعداد دراسة تقييم الأثر البيئي للفئة الثانية وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    methodology:J(["جمع ومراجعة بيانات المشروع (المخططات، والطاقة الإنتاجية، والمواد الخام، واستهلاك المياه والطاقة).", "زيارة ميدانية لموقع المشروع لتوصيف الوضع الراهن والمستقبلات الحساسة المحيطة.",
+    methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق} (المخططات، والطاقة الإنتاجية، والمواد الخام، واستهلاك المياه والطاقة).", "زيارة ميدانية لموقع المشروع لتوصيف الوضع الراهن والمستقبلات الحساسة المحيطة.",
       "عمل القياسات البيئية اللازمة للوضع الراهن (خط الأساس) عبر مختبر معتمد لمرة واحدة.", "تحديد التأثيرات البيئية المتوقعة وتقييم أهميتها خلال مرحلتي الإنشاء والتشغيل.", "اقتراح إجراءات التحكم والتخفيف، وإعداد خطة الإدارة والرصد البيئي.",
       `إعداد دراسة تقييم الأثر البيئي للفئة الثانية وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
   { key:"c3-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:16000, durationShort:"20 يوم عمل",
     scope:J([S_REVIEW, "تقييم شامل لمدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية وبشروط التصريح السابق.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    methodology:J(["استلام ومراجعة مستندات النشاط والتصاريح السابقة ونتائج الرصد الذاتي والسجلات البيئية.", "زيارة ميدانية تدقيقية شاملة للموقع ومقابلة المسؤولين، وحصر جميع مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB,
+    methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} ونتائج الرصد الذاتي والسجلات البيئية.", "زيارة ميدانية تدقيقية شاملة للموقع ومقابلة المسؤولين، وحصر جميع مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB,
       "تقييم الأداء البيئي للنشاط، والتأثيرات التي قد تمتد خارج حدود الموقع.", M_NC, `إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:DUR("20 يوم عمل"), payments:PAY3("الدراسة") },
   { key:"c3-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:22000, durationShort:"10 أيام لتقرير النطاق + 20 يوم للدراسة",
     scope:J([P_REVIEW, "إعداد تقرير تحديد النطاق ورفعه إلى المركز للحصول على الموافقة.", "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه، وتقييم التأثيرات البيئية المتوقعة بما فيها التأثيرات التي قد تتجاوز حدود المشروع.",
       "إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    methodology:J(["جمع ومراجعة بيانات المشروع، وزيارة استطلاعية لموقعه ومحيطه.", "إعداد تقرير النطاق (حدود الدراسة، والعناصر البيئية المتأثرة، ومنهجية التقييم، وخطة القياسات) ورفعه على منصة المركز.",
+    methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق}، وزيارة استطلاعية لموقعه ومحيطه.", "إعداد تقرير النطاق (حدود الدراسة، والعناصر البيئية المتأثرة، ومنهجية التقييم، وخطة القياسات) ورفعه على منصة المركز.",
       "بعد الموافقة على تقرير النطاق: عمل القياسات البيئية للوضع الراهن عبر مختبر معتمد لمرة واحدة وفق ما ورد في التقرير.", "وصف الوضع البيئي الراهن، وتقييم التأثيرات المتوقعة وأهميتها خلال مرحلتي الإنشاء والتشغيل، بما فيها التأثيرات التراكمية.",
       "دراسة البدائل واقتراح إجراءات التخفيف، وإعداد خطة الإدارة والرصد البيئي وخطة الاستجابة للطوارئ.", `إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:J([DUR("10 أيام عمل لتقرير النطاق"), `بعد الحصول على موافقة ${NCEC} على تقرير النطاق، يتم إعداد دراسة تقييم الأثر البيئي في مدة زمنية لا تتعدى 20 يوم عمل.`]),
@@ -688,8 +687,8 @@ const DEFAULT_SERVICES = [
 ];
 const R_MK = "منطقة مكة المكرمة", R_MD = "منطقة المدينة المنورة", R_SH = "المنطقة الشرقية";
 const DEFAULT_CFG = {
-  company:{ name:"اسم الشركة", nameEn:"", accountName:"", tagline:"", ncecClass:"أ", license:"", cr:"", vat:"", phone:"", email:"", website:"", address:"",
-    logo:"", letterhead:"", header:"", footer:"", stamp:"", showStamp:true, signLine:false, brand:"#002840", brand2:"#1898d0", mt:128, mb:128, mx:72,
+  company:{ name:"اسم الشركة", nameEn:"", accountName:"", legalName:"", tagline:"", ncecClass:"أ", license:"", cr:"", vat:"", phone:"", email:"", website:"", address:"",
+    logo:"", letterhead:"", header:"", footer:"", stamp:"", showStamp:true, signLine:false, brand:"#012c41", brand2:"#0099d9", mt:128, mb:128, mx:72,
     signName:"", signTitle:"المدير التنفيذي", bankName:"", iban:"" },
   pricing:{ baseCity:"جدة", risk:10, profit:25, labProfit:15, vat:15, govVat:false, roundTo:50, travelSeparate:false, showBreakdown:false, localVisit:150, perDiem:150, prefix:"JED-", addYear:false, nextNo:1, validity:30 },
   services:DEFAULT_SERVICES,
@@ -720,7 +719,7 @@ const DEFAULT_CFG = {
     totalNote:"القيمة الإجمالية للأعمال المذكورة في العرض ({الإجمالي} ريال)، {كتابة}، وفي حال الموافقة الرجاء إرسال هذا العرض بعد التوقيع والختم عليه.",
     notes:`تم إعداد عرض السعر بناءً على المعلومات الواردة من العميل، ولا يشمل العرض أي متطلبات إضافية أو إلزامية يطلبها ${NCEC} وفقاً للرد الأولي على الطلب.`
   },
-  tv:3,
+  tv:4,
   cloud:{ clientId:"", tenantId:"", folder:"مسعر العروض", autoBackup:true, tracker:true }
 };
 
@@ -738,7 +737,15 @@ function persist(now){
 }
 function mergeCfg(c){
   const base = clone(DEFAULT_CFG); c = c ? clone(c) : {};
-  if ((c.tv || 0) < 3){ (c.services || []).forEach(x => { delete x.methodology; delete x.scope; }); if (c.texts){ delete c.texts.intro; delete c.texts.scopeLead; } c.tv = 3; }
+  if ((c.tv || 0) < 3){ (c.services || []).forEach(x => { delete x.methodology; delete x.scope; }); if (c.texts){ delete c.texts.intro; delete c.texts.scopeLead; } }
+  if ((c.tv || 0) < 4){
+    (c.services || []).forEach(x => { delete x.methodology; });
+    const co = c.company || {};
+    if (!co.legalName && /ادفانسد|أدفانسد/.test(co.accountName || "")) co.legalName = "شركة أدفانسد إنفايرونمنتال سلوشنز";
+    if (co.brand === "#002840") co.brand = "#012c41";
+    if (co.brand2 === "#1898d0") co.brand2 = "#0099d9";
+    c.tv = 4;
+  }
   return { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, texts:{...base.texts, ...c.texts}, cloud:{...base.cloud, ...c.cloud},
     services: base.services.map(s => ({ ...s, ...((c.services || []).find(x => x.key === s.key) || {}) })) };
 }
@@ -823,7 +830,7 @@ function vars(q, c){
   return { "العميل":q.client.name || "…", "النشاط":q.facility.name || "…", "المدينة":q.facility.city || "…", "الشركة":co.name, "فئة_التأهيل":co.ncecClass,
     "الخدمة":s.title, "الفئة":cat.name, "التأثير":cat.impact, "الصلاحية":String(num(q.validity)), "المدة":q.duration || s.durationShort,
     "الإجمالي": c ? money(c.grand) : "", "كتابة": c ? tafqeet(c.grand) : "",
-    "الشركة_الرسمي": co.accountName || co.name, "للعميل": lam(q.client.name || "…"), "بسجل": q.client.cr ? ` بسجل رقم (${q.client.cr})` : "",
+    "الشركة_الرسمي": co.legalName || co.accountName || co.name, "التصريح_السابق": q.request === "renew" ? " والتصريح البيئي السابق -إن وجد-" : "", "للعميل": lam(q.client.name || "…"), "بسجل": q.client.cr ? ` بسجل رقم (${q.client.cr})` : "",
     "الغرض": (q.request === "renew" ? "لتجديد" : "لعمل") + " التصريح البيئي " + (q.phase === "construction" ? "الإنشائي" : "التشغيلي") };
 }
 function fill(str, q, c){ const V = vars(q, c); return String(str || "").replace(/\{([^{}]+)\}/g, (m, k) => V[k] !== undefined ? V[k] : m); }
@@ -844,6 +851,12 @@ function clientRows(q, c){
   if (c.price.travel) rows.push({ key:"travel", label:L("travel", "الزيارات الميدانية والتنقل"), detail:D("travel", `${vt} إلى موقع النشاط في ${q.facility.city}`), amount:c.price.travel });
   c.extras.forEach((x, i) => rows.push({ key:"x" + i, label:x.label || "بند إضافي", detail:"", amount:c.price.extras[i], extra:i }));
   return rows;
+}
+function classText(q){
+  const cat = catOf(q);
+  return q.request === "renew" && !q.modified
+    ? `${cat.name} (معتمدة من ${NCEC})`
+    : `${cat.name} (بناءً على المعطيات الأولية، ويُعتمد التصنيف لاحقاً من ${NCEC})`;
 }
 function buildModel(q){
   const co = S.cfg.company, P = S.cfg.pricing, cat = catOf(q), svc = svcOf(q), c = calc(q);
@@ -895,6 +908,7 @@ function renderCats(){
   const seg = (name, label, opts, cur) => `<div><span class="lbl">${label}</span><div class="seg" role="group" aria-label="${label}">${opts.map(([v,t]) => `<button type="button" data-seg="${name}" data-v="${v}" aria-pressed="${cur === v}">${t}</button>`).join("")}</div></div>`;
   $("#segRow").innerHTML = seg("request","الموضوع",[["issue","إصدار التصريح البيئي"],["renew","تجديد تصريح بيئي"]], q.request)
     + seg("phase","مرحلة النشاط",[["construction","إنشائي"],["operation","تشغيلي"]], q.phase)
+    + (q.request === "renew" ? `<div><span class="lbl">تعديل على النشاط</span><label class="switch" style="min-width:260px"><input type="checkbox" data-b="modified" data-t="bool" ${q.modified ? "checked" : ""}> يوجد تعديل أو توسعة أو أنشطة جديدة</label></div>` : "")
     + seg("service","الخدمة المطلوبة", q.cat === 1 ? [["plan","خطة الإدارة البيئية"]] : [["audit","دراسة تدقيق بيئي"],["eia","دراسة تقييم أثر بيئي"]], q.service);
   $("#writingLbl").textContent = `تكلفة إعداد ${svcOf(q).title} (كتابة وفريق)`;
 }
@@ -1058,7 +1072,7 @@ function blocksHTML(m){
   const q = m.q, c = m.c, co = m.co, B = [], f = q.facility;
   const ed = (k, cls = "d-p") => `class="${cls}" data-edit="${k}"`;
   const kv = (k, v, ltr) => `<div><span>${k}:</span> <b>${ltr ? `<bdi dir="ltr">${esc(v)}</bdi>` : esc(v)}</b></div>`;
-  B.push(`<div class="d-meta"><div class="kv">${kv("التاريخ", m.date, 1)}${kv("الموافق", m.hijri)}${co.license ? kv("رقم الترخيص البيئي للشركة", co.license, 1) : ""}</div>
+  B.push(`<div class="d-meta"><div class="kv">${kv("التاريخ", m.date, 1)}${co.license ? kv("رقم الترخيص البيئي للشركة", co.license, 1) : ""}</div>
     <div class="kv">${kv("رقم العرض", m.ref, 1)}${kv("صالح حتى", m.valid, 1)}</div></div>`);
   B.push(`<div><div class="d-greet"><span>المكرمين/ <b>${esc(q.client.name) || "…………………………"}</b></span><span>المحترمين</span><span>السلام عليكم ورحمة الله وبركاته</span><span>وبعد،</span></div>
     <p ${ed("text.intro")}>${esc(m.intro)}</p></div>`);
@@ -1066,10 +1080,10 @@ function blocksHTML(m){
   B.push(`<table class="d-info"><tbody>
     <tr><th>الموضوع</th><td>${cb(q.request === "issue","إصدار التصريح البيئي")}${cb(q.request === "renew","تجديد تصريح بيئي")}<span class="cbx-sep"></span>${cb(q.phase === "construction","إنشائي")}${cb(q.phase === "operation","تشغيلي")}</td></tr>
     <tr><th>الخدمة المطلوبة</th><td>${q.cat === 1 ? cb(true,"خطة الإدارة البيئية") : cb(q.service === "audit","دراسة تدقيق بيئي") + cb(q.service === "eia","دراسة تقييم أثر بيئي")}</td></tr>
-    <tr><th>تصنيف النشاط</th><td>${esc(m.cat.name)} (${esc(m.cat.impact)})</td></tr>
-    <tr><th>اسم النشاط</th><td>${esc(f.name)}</td></tr>
+    <tr><th>تصنيف النشاط</th><td>${esc(classText(q))}</td></tr>
+    <tr><th>نوع النشاط</th><td>${esc(f.name)}</td></tr>
     <tr><th>الموقع</th><td>${loc}</td></tr>
-    <tr><th>الإحداثيات</th><td dir="ltr" style="text-align:right">${esc(f.coords)}</td></tr></tbody></table>`);
+</tbody></table>`);
   B.push(`<p class="d-p">واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:</p>`);
   let n = 0;
   const H = t => `<h3>${SEC[n++]}: ${t}</h3>`;
@@ -1262,7 +1276,7 @@ async function buildDocx(q){
   const B = [], half = Math.round(CW / 2);
   const kvCell = (pairs, w) => cell(pairs.map(([k, v]) => Pg([R(k + ": ", { color:"6D7C88", size:19 }), R(v, { bold:true, size:19 })], { after:20 })), { w, borders:NOB });
   B.push(tbl([ new X.TableRow({ children:[
-    kvCell([["التاريخ", m.date], ["الموافق", m.hijri], ...(co.license ? [["رقم الترخيص البيئي للشركة", co.license]] : [])], half),
+    kvCell([["التاريخ", m.date], ...(co.license ? [["رقم الترخيص البيئي للشركة", co.license]] : [])], half),
     kvCell([["رقم العرض", m.ref], ["صالح حتى", m.valid]], CW - half) ] }) ], [half, CW - half]));
   B.push(Pg(R(""), { after:60, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:4, color:"D9E2E8", space:2 } } }));
   const meas = (t, font) => { const x = (meas.c || (meas.c = document.createElement("canvas"))).getContext("2d"); x.font = font; return x.measureText(t).width; };
@@ -1278,7 +1292,7 @@ async function buildDocx(q){
   B.push(tbl([
     ir("الموضوع", [...CB(q.request === "issue","إصدار التصريح البيئي"), ...CB(q.request === "renew","تجديد تصريح بيئي"), R("|      ", { color:"C5D1DA" }), ...CB(q.phase === "construction","إنشائي"), ...CB(q.phase === "operation","تشغيلي")]),
     ir("الخدمة المطلوبة", q.cat === 1 ? CB(true, "خطة الإدارة البيئية") : [...CB(q.service === "audit","دراسة تدقيق بيئي"), ...CB(q.service === "eia","دراسة تقييم أثر بيئي")]),
-    ir("تصنيف النشاط", [R(`${m.cat.name} (${m.cat.impact})`)]), ir("اسم النشاط", [R(f.name || " ")]), ir("الموقع", [R(loc || " ")]), ir("الإحداثيات", [R(f.coords || " ")])
+    ir("تصنيف النشاط", [R(classText(q))]), ir("نوع النشاط", [R(f.name || " ")]), ir("الموقع", [R(loc || " ")])
   ], [iw, CW - iw]));
   B.push(Pg(R("واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:"), { before:140, after:60 }));
   let n = 0;
@@ -1317,14 +1331,14 @@ async function buildDocx(q){
   B.push(H4("وفي حال الموافقة:"));
   const sr = (a, b2, o = {}) => new X.TableRow({ cantSplit:true, children:[ cell(a, { w:half, fill:o.fill }), cell(b2, { w:CW - half, fill:o.fill }) ] });
   const lv = (k, v, last) => Pg([R(k + " ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
-  const stampKids = co.stamp && co.showStamp ? [lv("الختم:", ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null, align:X.AlignmentType.CENTER })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
+  const stampKids = co.stamp && co.showStamp ? [lv("الختم:", ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:72, height:72 } })], { after:0, keepNext:true, line:null, align:X.AlignmentType.CENTER })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
   B.push(tbl([
     sr([Pg(R(co.accountName || co.name, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R("العميل: " + (q.client.name || ""), { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
     sr([lv("الممثل:", co.signName)], [lv("الممثل:", "")]), sr([lv("الصفة:", co.signTitle)], [lv("الصفة:", "")]),
     ...(co.signLine
       ? [new X.TableRow({ cantSplit:true, children:[ cell(stampKids, { w:half }), new X.TableCell({ children:[lv("الختم والتوقيع:", ""), Pg(R(""), { after:300 })], rowSpan:2, width:{ size:CW - half, type:X.WidthType.DXA }, borders:ALLB, margins:{ top:70, bottom:70, left:110, right:110 } }) ] }),
          new X.TableRow({ cantSplit:true, children:[ cell([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], { w:half }) ] })]
-      : [sr(stampKids, [lv("الختم والتوقيع:", "", true), Pg(R(""), { after:1300 })])])
+      : [sr(stampKids, [lv("الختم والتوقيع:", "", true), Pg(R(""), { after:600 })])])
   ], [half, CW - half]));
 
   const doc = new X.Document({ creator:co.name, title:`عرض سعر ${m.ref}`,
@@ -1421,7 +1435,7 @@ function renderSettings(){
   const C = S.cfg, el = $("#setBody");
   if (setTab === "company") el.innerHTML = `<div class="card stack" style="max-width:1050px">
     <div class="ph">لإعداد الشركة بسرعة: استورد «ملف إعداد الشركة» من تبويب «عام والنسخ الاحتياطي». يعبّي البيانات والترويسة والختم مرة وحدة، والعروض المحفوظة ما تتأثر.</div>
-    <div class="row">${inp("company.name","اسم الشركة")}${inp("company.accountName","الاسم في الحساب البنكي والتوقيع")}${inp("company.nameEn","الاسم بالإنجليزي",{ltr:1})}</div>
+    <div class="row">${inp("company.name","اسم الشركة")}${inp("company.legalName","اسم الشركة في نص العرض")}${inp("company.accountName","الاسم في الحساب البنكي والتوقيع")}${inp("company.nameEn","الاسم بالإنجليزي",{ltr:1})}</div>
     <div class="row">${inp("company.license","رقم الترخيص البيئي للشركة",{ltr:1})}${inp("company.ncecClass","فئة التأهيل لدى المركز")}${inp("company.cr","السجل التجاري",{ltr:1})}${inp("company.vat","الرقم الضريبي",{ltr:1})}</div>
     <div class="row">${inp("company.phone","الهاتف",{ltr:1})}${inp("company.email","البريد",{ltr:1})}${inp("company.website","الموقع الإلكتروني",{ltr:1})}${inp("company.address","العنوان")}</div>
     <div class="row">${inp("company.signName","اسم الممثل في التوقيع")}${inp("company.signTitle","الصفة")}${inp("company.bankName","البنك")}${inp("company.iban","رقم الآيبان",{ltr:1})}</div>
@@ -1433,7 +1447,7 @@ function renderSettings(){
     <p class="hint" style="margin:0">الهوامش تضبط مكان النص بحيث ما يغطي الشعار أعلى الصفحة أو البيانات أسفلها. الصفحة 794 × 1123.</p>
   </div>`;
   if (setTab === "services") el.innerHTML = `<div class="card" style="max-width:1100px">
-    <div class="ph">متغيرات تقدر تستخدمها في النصوص: ${["العميل","للعميل","بسجل","الشركة_الرسمي","الغرض","النشاط","المدينة","الشركة","الخدمة","الفئة","التأثير","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
+    <div class="ph">متغيرات تقدر تستخدمها في النصوص: ${["العميل","للعميل","بسجل","الشركة_الرسمي","الغرض","التصريح_السابق","النشاط","المدينة","الشركة","الخدمة","الفئة","التأثير","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
     ${C.services.map((s, i) => { const cat = S.cfg.categories.find(c => "c" + c.id === s.key.split("-")[0]) || {};
       return `<div class="cat-edit"><h3>${esc(cat.name || "")}: ${esc(s.title)}</h3>
       <div class="row">${inp(`services.${i}.title`,"اسم الخدمة")}${inp(`services.${i}.writing`,"تكلفة الإعداد",{t:"num"})}${inp(`services.${i}.durationShort`,"المدة المختصرة")}</div>
