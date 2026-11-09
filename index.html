@@ -304,6 +304,92 @@ table.list a{font-weight:700;text-decoration:none}
 }
 
 .f label.switch{font-size:15px;color:var(--ink);margin:0;font-weight:500}
+/* ---- v2 refinements: calmer type scale, interactive category tiles, photo hero ---- */
+:root{ --font-body:"IBM Plex Sans Arabic",-apple-system,BlinkMacSystemFont,"SF Arabic","Segoe UI",Tahoma,sans-serif; --font-display:"IBM Plex Sans Arabic",-apple-system,BlinkMacSystemFont,"SF Arabic",Tahoma,sans-serif; }
+body{font-size:14.5px;line-height:1.6}
+h1{font-size:16.5px} h2{font-size:17px} h3{font-size:14.5px}
+.brand h1{font-size:16px}
+nav.tabs a{min-height:34px;padding:0 15px;font-size:13.5px}
+.card{padding:20px;border-radius:18px}
+.sec-head{margin-bottom:14px}
+.sec-head h2{gap:10px}
+.sec-head h2 .n{width:26px;height:26px;font-size:13px}
+.f label,.lbl{font-size:12px;margin-bottom:5px}
+.in,.f input:not([type=checkbox]):not([type=file]):not([type=color]),.f select,.f textarea{min-height:42px;font-size:14.5px;border-radius:10px}
+.f textarea{min-height:96px}
+.btn{min-height:40px;font-size:14px;padding:0 18px}
+.btn.sm{min-height:32px;font-size:13px;padding:0 12px}
+.seg button,.mode-pick button{min-height:36px;font-size:13.5px;padding:0 14px}
+.switch{min-height:44px;font-size:14px}
+.f label.switch{font-size:14px}
+.switch input{width:44px;height:26px}
+.switch input:before{width:22px;height:22px}
+.switch input:checked:before{transform:translateX(-18px)}
+.stepper button{width:38px;min-height:36px;font-size:19px}
+.f .stepper{min-height:42px}
+.f .stepper button{min-height:42px;width:42px}
+.f .stepper input{min-height:42px !important}
+.pick{min-height:56px;padding:8px 12px;border-radius:14px}
+.pick .nm{font-size:14px}
+.subhead{margin:20px 0 10px}
+.subhead h3{font-size:15px}
+.ledger{padding:20px}
+.ledger dt{font-size:13.5px}
+.ledger dd{font-size:14px}
+.ledger dd.grand{font-size:26px}
+.kpi .v{font-size:25px}
+.jump a{min-height:36px;font-size:13.5px}
+table.list td{font-size:14px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:22px;min-height:170px;margin:0 0 16px;padding:26px 30px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#fff;
+  background:linear-gradient(100deg, rgba(1,44,65,.92) 0%, rgba(0,72,98,.70) 45%, rgba(0,72,98,.15) 100%), url("assets/hero-meadow.jpg") center 62% / cover no-repeat;box-shadow:var(--shadow)}
+.hero h2{font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif;font-size:24px;font-weight:600;color:#fff;margin-bottom:6px}
+.hero p{margin:0;font-size:14px;opacity:.88;max-width:52ch}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap}
+.hero-stats div{background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 16px;min-width:120px}
+.hero-stats b{display:block;font-family:"Readex Pro",sans-serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.hero-stats span{font-size:12px;opacity:.85}
+@media (max-width:600px){ .hero{padding:20px;min-height:150px} .hero h2{font-size:20px} .hero-stats div{min-width:0;flex:1} }
+
+/* interactive category tiles */
+.cat{min-height:150px;padding:16px;gap:3px;background:var(--surface);border:1.5px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .18s ease, box-shadow .18s ease, border-color .18s, background .18s}
+.cat:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,40,64,.12);background:var(--surface)}
+.cat .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:8px;transition:transform .25s ease}
+.cat .ic svg{width:24px;height:24px}
+.cat:hover .ic{transform:scale(1.08) rotate(-4deg)}
+.cat.lv1{--tone:#4da454} .cat.lv2{--tone:#e2a54c} .cat.lv3{--tone:#00726c}
+.cat .ic{background:color-mix(in srgb, var(--tone) 14%, transparent);color:var(--tone)}
+.cat .t{font-size:16px}
+.cat .i{font-size:12.5px}
+.cat .chip{font-size:11.5px;padding:2px 9px;background:var(--fill)}
+.cat[aria-pressed="true"]{border-color:var(--tone);background:color-mix(in srgb, var(--tone) 7%, var(--surface));box-shadow:0 0 0 4px color-mix(in srgb, var(--tone) 16%, transparent), 0 10px 26px rgba(0,40,64,.10)}
+.cat[aria-pressed="true"] .ic{background:var(--tone);color:#fff}
+.cat[aria-pressed="true"]:after{background:var(--tone);top:14px;left:14px}
+.cat .lvl{display:none}
+.mon-card{margin-top:18px;padding:14px 16px;border-radius:14px;background:var(--fill)}
+.mon-card .f select{background:var(--surface)}
+.mon-card .in,.mon-card .f input:not([type=checkbox]){background:var(--surface)}
+.mon-card .f .stepper{background:var(--surface)}
+.mon-card .switch{background:var(--surface)}
+.lang-seg .seg button{min-width:76px}
+#govInfo{margin:8px 0 0}
+details.en-fields{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+details.en-fields summary{cursor:pointer;font-weight:600;color:var(--accent);font-size:13.5px}
+details.en-fields[open] summary{margin-bottom:10px}
+
+/* proposal pages: logical sides for English (LTR) */
+.pg.en{direction:ltr}
+.pg.en .pno{right:auto;left:auto;inset-inline-end:var(--mx)}
+.pg.lh .pno{inset-inline-start:auto}
+.d-info th,.d-tbl th,.d-sign th{text-align:start !important}
+.pg:not(.en) .d-tbl .m{text-align:left !important}
+.pg.en .d-tbl .m{text-align:right !important}
+.d-sec ul{padding:0;padding-inline-start:20px}
+.d-sec li:before{right:auto;inset-inline-start:-13px}
+.d-sec ul.dash{padding-inline-start:22px}
+.d-sec ul.dash li:before{right:auto;inset-inline-start:-15px}
+
 /* ===== Proposal pages: fixed white paper, never themed ===== */
 .pg{--brand:#012c41;--brand2:#0099d9;--mt:128px;--mb:128px;--mx:72px;width:794px;height:1123px;background:#fff no-repeat 0 0 / 100% 100%;color:#14222c;position:relative;display:flex;flex-direction:column;font-family:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;font-weight:300;font-size:12px;line-height:1.8;direction:rtl;letter-spacing:0;box-shadow:0 8px 40px rgba(0,0,0,.35);overflow:hidden;flex:none}
 .pg *{letter-spacing:0}
@@ -405,6 +491,7 @@ table.list a{font-weight:700;text-decoration:none}
 
   <!-- ================= QUOTE EDITOR ================= -->
   <section id="v-quote">
+    <div class="hero"><div><h2>عرض سعر جديد</h2><p>سعّر خدمات التصاريح البيئية وتقارير المراقبة، وأصدر العرض على ورق الشركة خلال دقائق.</p></div><div class="hero-stats" id="heroStats"></div></div>
     <nav class="jump" id="jump" aria-label="خطوات العرض">
       <a href="javascript:void 0" data-j="sec-1"><i>1</i>العميل والنشاط</a>
       <a href="javascript:void 0" data-j="sec-2"><i>2</i>الفئة والخدمة</a>
@@ -420,6 +507,7 @@ table.list a{font-weight:700;text-decoration:none}
             <div class="f" style="flex:1 1 220px"><span class="lbl">رقم العرض</span><div id="qNo" style="font-family:var(--font-display);font-size:21px;font-weight:600;direction:ltr;text-align:right"></div></div>
             <div class="f" style="flex:0 1 150px"><label for="q-date">التاريخ</label><input id="q-date" type="date" data-b="date"></div>
             <div class="f" style="flex:0 1 110px"><label for="q-validity">الصلاحية (يوم)</label><input id="q-validity" class="ltr" inputmode="numeric" data-b="validity" data-t="num"></div>
+            <div class="f lang-seg" style="flex:0 1 auto"><span class="lbl">لغة العرض</span><div class="seg" id="langSeg" role="group" aria-label="لغة العرض"></div></div>
             <div class="f" style="flex:0 1 140px"><label for="q-status">الحالة</label>
               <select id="q-status" data-b="status"><option value="draft">مسودة</option><option value="sent">مُرسل</option><option value="accepted">مقبول</option><option value="rejected">مرفوض</option></select></div>
           </div>
@@ -458,6 +546,7 @@ table.list a{font-weight:700;text-decoration:none}
           <div class="picker" id="labBox"></div>
           <div class="subhead"><h3>السجلات البيئية</h3><span id="recNote"></span></div>
           <div class="picker" id="recBox"></div>
+          <div id="monBox"></div>
           <div class="subhead"><h3>بنود إضافية</h3><button class="btn sm" id="addExtra" type="button">+ بند</button></div>
           <div class="extras" id="extraBox"></div>
         </div>
@@ -474,6 +563,8 @@ table.list a{font-weight:700;text-decoration:none}
             <div class="f"><label for="q-gov">مبلغ الرسوم الحكومية</label><input id="q-gov" class="ltr" inputmode="decimal" data-b="gov.amount" data-t="num"></div>
             <div class="f"><label class="switch"><input type="checkbox" id="q-brk" data-b="showBreakdown" data-t="bool"> إظهار تفاصيل البنود للعميل</label></div>
           </div>
+          <p class="hint" id="govInfo"></p>
+          <div class="row" id="capexBox"></div>
           <div class="row" style="margin-top:10px">
             <div class="f"><label for="q-risk">هامش المخاطر %</label><input id="q-risk" class="ltr" inputmode="decimal" data-b="risk" data-t="num"></div>
             <div class="f"><label for="q-profit">هامش الربح %</label><input id="q-profit" class="ltr" inputmode="decimal" data-b="profit" data-t="num"></div>
@@ -639,63 +730,143 @@ function tafqeet(a){
   return "فقط " + intWords(ri) + " ريال سعودي" + (ha ? " و" + intWords(ha) + " هللة" : "") + " لا غير";
 }
 
-/* =============== defaults (generic; company data is entered in settings) =============== */
-const REVIEW = "مراجعة بيانات النشاط الواردة من العميل والتأكد من استمرار مطابقتها للوضع البيئي الراهن للنشاط.";
+/* =============== i18n =============== */
 const NCEC = "المركز الوطني للرقابة على الالتزام البيئي";
-const M_ANALYZE = "تحليل وتقييم التأثيرات البيئية للنشاط ووضع إجراءات التحكم والتخفيف المناسبة لها.";
-const M_MEASURE = "عمل القياسات البيئية اللازمة وفقاً لتأثيرات النشاط البيئية للوضع الراهن لمرة واحدة.";
-const M_DELIVER = "تسليم التصريح البيئي للعميل.";
-const DUR = d => `عند اكتمال الحصول على المستندات الرسمية المطلوبة للنشاط من العميل، يتم تقديم طلب المعاملة إلى موقع ${NCEC} في مدة زمنية لا تتعدى ${d} من تاريخ سداد الدفعات المالية المطلوبة وفقاً للجدول المالي أدناه.`;
-const PAY3 = doc => [{label:"عند توقيع العقد",pct:50},{label:`قبل رفع ${doc} إلى المركز الوطني`,pct:40},{label:"بعد صدور التصريح البيئي",pct:10}];
-const STUDY = n => [`إعداد الدراسة البيئية المطلوبة للفئة ${n} بما يتوافق مع اللوائح والأنظمة والاشتراطات البيئية الصادرة عن ${NCEC}.`, M_ANALYZE, M_MEASURE, "المراجعة النهائية للدراسة البيئية ورفع الطلب على موقع المركز الوطني للحصول على الموافقة.", M_DELIVER].join("\n");
-const S_REVIEW = "مراجعة بيانات النشاط الواردة من العميل والتأكد من مطابقتها للوضع البيئي الراهن للنشاط.";
-const P_REVIEW = "مراجعة بيانات المشروع الواردة من العميل ووصف النشاط ومراحله.";
-const SUBMIT = `المراجعة النهائية ورفع الطلب على منصة ${NCEC}، ومتابعته والرد على ملاحظات المركز حتى الحصول على الموافقة.`;
-const M_LAB = "عمل القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة، ومقارنة نتائجها بالمعايير البيئية الوطنية.";
-const M_NC = "تحديد أوجه عدم الالتزام وتحليل أسبابها، ووضع خطة إجراءات تصحيحية بجدول زمني محدد.";
+const NCEC_EN = "the National Center for Environmental Compliance (NCEC)";
+const L = {
+  ar:{ dir:"rtl", date:"التاريخ", ref:"رقم العرض", valid:"صالح حتى", license:"رقم الترخيص البيئي للشركة", to:"المكرمين/", respected:"المحترمين", salam:"السلام عليكم ورحمة الله وبركاته", after:"وبعد،",
+    subject:"الموضوع", issue:"إصدار التصريح البيئي", renew:"تجديد تصريح بيئي", construction:"إنشائي", operation:"تشغيلي", service:"الخدمة المطلوبة", classification:"تصنيف النشاط", type:"نوع النشاط", location:"الموقع",
+    lead:"واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:", sec:SEC, scope:"نطاق العمل", method:"المنهجية المتبعة في العمل:", timeline:"الفترة الزمنية", financial:"التكلفة المالية", bank:"بيانات الحساب البنكي",
+    payTable:"جدول الدفعات:", item:"البند", amount:"المبلغ (ر.س)", works:"الأعمال", payment:"الدفعات", cost:"التكلفة (ر.س)", discount:"الخصم", afterDisc:"بعد خصم", net:"قيمة الأعمال قبل الضريبة",
+    vat:"ضريبة القيمة المضافة", gov:"الرسوم الحكومية", govNoVat:" (غير خاضعة للضريبة)", total:"القيمة الإجمالية", sar:"ر.س", accName:"اسم الحساب", bankName:"البنك", iban:"رقم الآيبان",
+    accept:"وفي حال الموافقة:", client:"العميل", rep:"الممثل:", title:"الصفة:", stamp:"الختم:", stampSign:"الختم والتوقيع:", signature:"التوقيع:", page:(i, n) => `صفحة ${i} من ${n}`,
+    ord:ORD, monEach:"عند تسليم كل تقرير", monRow:"تقارير المراقبة البيئية", report:"تقارير", plan:"خطة الإدارة البيئية", audit:"دراسة تدقيق بيئي", eia:"دراسة تقييم أثر بيئي", mon:"تقرير المراقبة البيئية" },
+  en:{ dir:"ltr", date:"Date", ref:"Quotation No.", valid:"Valid Until", license:"Company Environmental License No.", to:"To:", respected:"", salam:"Dear Sir/Madam,", after:"",
+    subject:"Subject", issue:"Issuance of Environmental Permit", renew:"Renewal of Environmental Permit", construction:"Construction", operation:"Operation", service:"Required Service", classification:"Activity Classification", type:"Activity Type", location:"Location",
+    lead:"Based on the scope of work, this proposal covers the following:", sec:["First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth"], scope:"Scope of Work", method:"Methodology:", timeline:"Timeline", financial:"Financial Proposal", bank:"Bank Details",
+    payTable:"Payment Schedule:", item:"Item", amount:"Amount (SAR)", works:"Milestone", payment:"Installment", cost:"Amount (SAR)", discount:"Discount", afterDisc:"After a discount of", net:"Total before VAT",
+    vat:"VAT", gov:"Government Fees", govNoVat:" (not subject to VAT)", total:"Total Amount", sar:"SAR", accName:"Account Name", bankName:"Bank", iban:"IBAN",
+    accept:"Upon Acceptance:", client:"Client", rep:"Representative:", title:"Position:", stamp:"Stamp:", stampSign:"Stamp & Signature:", signature:"Signature:", page:(i, n) => `Page ${i} of ${n}`,
+    ord:["1st","2nd","3rd","4th","5th","6th","7th","8th"], monEach:"Upon delivery of each report", monRow:"Environmental monitoring reports", report:"reports", plan:"Environmental Management Plan", audit:"Environmental Audit Study", eia:"Environmental Impact Assessment Study", mon:"Environmental Monitoring Report" }
+};
+const PERIODS = { quarterly:["ربع سنوي","Quarterly"], semiannual:["نصف سنوي","Semi-annual"], annual:["سنوي","Annual"] };
+const isEn = q => q.lang === "en";
+const Lq = q => L[isEn(q) ? "en" : "ar"];
+const periodTxt = (q, p) => (PERIODS[p] || PERIODS.quarterly)[isEn(q) ? 1 : 0];
+const EN1 = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+const EN10 = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function en999(n){ const h = Math.floor(n / 100), r = n % 100, p = []; if (h) p.push(EN1[h] + " Hundred"); if (r) p.push(r < 20 ? EN1[r] : EN10[Math.floor(r / 10)] + (r % 10 ? "-" + EN1[r % 10] : "")); return p.join(" "); }
+function enWords(n){ if (!n) return "Zero"; const p = []; for (const [v, w] of [[1e9,"Billion"],[1e6,"Million"],[1e3,"Thousand"]]){ const g = Math.floor(n / v); n %= v; if (g) p.push(en999(g) + " " + w); } if (n) p.push(en999(n)); return p.join(" "); }
+function tafqeetEn(a){ const t = Math.round(Math.abs(a) * 100), ri = Math.floor(t / 100), ha = t % 100; return enWords(ri) + " Saudi Riyals" + (ha ? " and " + enWords(ha) + " Halalas" : "") + " Only"; }
+const words = (q, a) => isEn(q) ? tafqeetEn(a) : tafqeet(a);
+
+/* =============== defaults (generic; company data is entered in settings) =============== */
 const J = a => a.join("\n");
+const M_DELIVER = "تسليم التصريح البيئي للعميل.", M_DELIVER_EN = "Delivery of the environmental permit to the client.";
+const DUR = d => `عند اكتمال الحصول على المستندات الرسمية المطلوبة للنشاط من العميل، يتم تقديم طلب المعاملة إلى موقع ${NCEC} في مدة زمنية لا تتعدى ${d} من تاريخ سداد الدفعات المالية المطلوبة وفقاً للجدول المالي أدناه.`;
+const DUR_EN = d => `Upon receipt of all required official documents for the activity from the client, the application will be submitted on the NCEC platform within ${d} from the date of payment of the applicable installments, as per the payment schedule below.`;
+const PAY3 = (doc, docEn) => [{label:"عند توقيع العقد",labelEn:"Upon contract signing",pct:50},{label:`قبل رفع ${doc} إلى المركز الوطني`,labelEn:`Prior to submission of the ${docEn} to NCEC`,pct:40},{label:"بعد صدور التصريح البيئي",labelEn:"Upon issuance of the environmental permit",pct:10}];
+const S_REVIEW = "مراجعة بيانات النشاط الواردة من العميل والتأكد من مطابقتها للوضع البيئي الراهن للنشاط.";
+const S_REVIEW_EN = "Review of the activity data provided by the client and verification of its conformity with the current environmental status of the activity.";
+const P_REVIEW = "مراجعة بيانات المشروع الواردة من العميل ووصف النشاط ومراحله.";
+const P_REVIEW_EN = "Review of the project data provided by the client, including a description of the activity and its phases.";
+const SUBMIT = `المراجعة النهائية ورفع الطلب على منصة ${NCEC}، ومتابعته والرد على ملاحظات المركز حتى الحصول على الموافقة.`;
+const SUBMIT_EN = "Final review and submission of the application on the NCEC platform, with follow-up and response to NCEC comments until approval is obtained.";
+const M_LAB = "عمل القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة، ومقارنة نتائجها بالمعايير البيئية الوطنية.";
+const M_LAB_EN = "Conducting the required environmental measurements through an accredited laboratory (one round) and comparing the results against national environmental standards.";
+const M_NC = "تحديد أوجه عدم الالتزام وتحليل أسبابها، ووضع خطة إجراءات تصحيحية بجدول زمني محدد.";
+const M_NC_EN = "Identifying non-compliances and their root causes, and developing a corrective action plan with a defined timeline.";
+const LAB1 = "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", LAB1_EN = "Conducting the required environmental measurements through an accredited laboratory (one round).";
 const DEFAULT_SERVICES = [
-  { key:"c1-plan", title:"خطة الإدارة البيئية", doc:"الخطة", writing:3500, durationShort:"7 أيام عمل",
+  { key:"c1-plan", title:"خطة الإدارة البيئية", titleEn:"Environmental Management Plan", writing:3500, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
     scope:J([S_REVIEW, "تحديد الجوانب البيئية للنشاط (الانبعاثات، والنفايات، والمياه، والضوضاء، والمواد الكيميائية) والاشتراطات البيئية المنطبقة عليه.", "إعداد خطة الإدارة البيئية للنشاط ومتابعة اعتمادها لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J([S_REVIEW_EN, "Identification of the activity's environmental aspects (emissions, waste, water, noise and chemicals) and the applicable environmental requirements.", "Preparation of the Environmental Management Plan and follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} (السجل التجاري، والرخص، والمخططات، وبيانات التشغيل).", "زيارة ميدانية لموقع النشاط لحصر مصادر التأثير البيئي والتحقق من البيانات.", "تحديد الجوانب والتأثيرات البيئية للنشاط وتقييم أهميتها.",
       `إعداد خطة الإدارة البيئية متضمنةً إجراءات التحكم والتخفيف، وخطة إدارة النفايات، وبرنامج الرصد الذاتي، والمسؤوليات، وإجراءات الطوارئ البيئية، بما يتوافق مع اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
-    duration:DUR("7 أيام عمل"), payments:PAY3("الخطة") },
-  { key:"c2-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:9000, durationShort:"7 أيام عمل",
-    scope:J([S_REVIEW, "تقييم مدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق} (commercial registration, licenses, layouts and operational data).", "Site visit to identify sources of environmental impact and verify the data provided.", "Identification and significance assessment of the activity's environmental aspects and impacts.",
+      "Preparation of the Environmental Management Plan, including control and mitigation measures, a waste management plan, a self-monitoring program, responsibilities and environmental emergency procedures, in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
+    duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الخطة", "plan") },
+  { key:"c2-audit", title:"دراسة تدقيق بيئي", titleEn:"Environmental Audit Study", writing:9000, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
+    scope:J([S_REVIEW, "تقييم مدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية.", LAB1, "إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    scopeEn:J([S_REVIEW_EN, "Assessment of the existing activity's compliance with national environmental requirements and standards.", LAB1_EN, "Preparation of the Category 2 Environmental Audit Study and corrective action plan, with follow-up until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} وسجلات التشغيل والسجلات البيئية.", "زيارة ميدانية تدقيقية للموقع ومقابلة المسؤولين، وحصر مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB, M_NC,
       `إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
-    duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
-  { key:"c2-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:11000, durationShort:"7 أيام عمل",
+    methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق}, operational records and environmental registers.", "Audit site visit, interviews with responsible personnel, and identification of emission, waste, water and noise sources.", M_LAB_EN, M_NC_EN,
+      "Preparation of the Category 2 Environmental Audit Study and the operational Environmental Management and Monitoring Plan in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
+    duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الدراسة", "study") },
+  { key:"c2-eia", title:"دراسة تقييم أثر بيئي", titleEn:"Environmental Impact Assessment Study", writing:11000, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
     scope:J([P_REVIEW, "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه.", "تقييم التأثيرات البيئية المتوقعة خلال مرحلتي الإنشاء والتشغيل.", "إعداد دراسة تقييم الأثر البيئي للفئة الثانية وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    scopeEn:J([P_REVIEW_EN, "Study of the environmental baseline of the project site and its surroundings.", "Assessment of the expected environmental impacts during the construction and operation phases.", "Preparation of the Category 2 Environmental Impact Assessment study and the Environmental Management and Monitoring Plan, with follow-up until the environmental permit is issued."]),
     methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق} (المخططات، والطاقة الإنتاجية، والمواد الخام، واستهلاك المياه والطاقة).", "زيارة ميدانية لموقع المشروع لتوصيف الوضع الراهن والمستقبلات الحساسة المحيطة.",
       "عمل القياسات البيئية اللازمة للوضع الراهن (خط الأساس) عبر مختبر معتمد لمرة واحدة.", "تحديد التأثيرات البيئية المتوقعة وتقييم أهميتها خلال مرحلتي الإنشاء والتشغيل.", "اقتراح إجراءات التحكم والتخفيف، وإعداد خطة الإدارة والرصد البيئي.",
       `إعداد دراسة تقييم الأثر البيئي للفئة الثانية وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
-    duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
-  { key:"c3-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:16000, durationShort:"20 يوم عمل",
-    scope:J([S_REVIEW, "تقييم شامل لمدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية وبشروط التصريح السابق.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodologyEn:J(["Collection and review of project data{التصريح_السابق} (layouts, production capacity, raw materials, and water and energy consumption).", "Site visit to characterize the baseline conditions and nearby sensitive receptors.",
+      "Conducting the required baseline environmental measurements through an accredited laboratory (one round).", "Identification and significance assessment of expected environmental impacts during the construction and operation phases.", "Proposal of control and mitigation measures and preparation of the Environmental Management and Monitoring Plan.",
+      "Preparation of the Category 2 Environmental Impact Assessment study in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
+    duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الدراسة", "study") },
+  { key:"c3-audit", title:"دراسة تدقيق بيئي", titleEn:"Environmental Audit Study", writing:16000, durationShort:"20 يوم عمل", durationShortEn:"20 working days",
+    scope:J([S_REVIEW, "تقييم شامل لمدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية وبشروط التصريح السابق.", LAB1, "إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    scopeEn:J([S_REVIEW_EN, "Comprehensive assessment of the existing activity's compliance with national environmental requirements and standards and with the conditions of its previous permit.", LAB1_EN, "Preparation of the Category 3 Environmental Audit Study and corrective action plan, with follow-up until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} ونتائج الرصد الذاتي والسجلات البيئية.", "زيارة ميدانية تدقيقية شاملة للموقع ومقابلة المسؤولين، وحصر جميع مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB,
       "تقييم الأداء البيئي للنشاط، والتأثيرات التي قد تمتد خارج حدود الموقع.", M_NC, `إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
-    duration:DUR("20 يوم عمل"), payments:PAY3("الدراسة") },
-  { key:"c3-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:22000, durationShort:"10 أيام لتقرير النطاق + 20 يوم للدراسة",
+    methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق}, self-monitoring results and environmental registers.", "Comprehensive audit site visit, interviews with responsible personnel, and identification of all emission, waste, water and noise sources.", M_LAB_EN,
+      "Assessment of the activity's environmental performance and of impacts that may extend beyond the site boundary.", M_NC_EN, "Preparation of the Category 3 Environmental Audit Study and the operational Environmental Management and Monitoring Plan in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
+    duration:DUR("20 يوم عمل"), durationEn:DUR_EN("20 working days"), payments:PAY3("الدراسة", "study") },
+  { key:"c3-eia", title:"دراسة تقييم أثر بيئي", titleEn:"Environmental Impact Assessment Study", writing:22000, durationShort:"10 أيام لتقرير النطاق + 20 يوم للدراسة", durationShortEn:"10 days (scoping report) + 20 days (study)",
     scope:J([P_REVIEW, "إعداد تقرير تحديد النطاق ورفعه إلى المركز للحصول على الموافقة.", "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه، وتقييم التأثيرات البيئية المتوقعة بما فيها التأثيرات التي قد تتجاوز حدود المشروع.",
       "إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    scopeEn:J([P_REVIEW_EN, "Preparation of the scoping report and its submission to NCEC for approval.", "Study of the environmental baseline of the project site and its surroundings, and assessment of expected impacts, including those that may extend beyond the project boundary.",
+      "Preparation of the Category 3 Environmental Impact Assessment study and the Environmental Management and Monitoring Plan, with follow-up until the environmental permit is issued."]),
     methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق}، وزيارة استطلاعية لموقعه ومحيطه.", "إعداد تقرير النطاق (حدود الدراسة، والعناصر البيئية المتأثرة، ومنهجية التقييم، وخطة القياسات) ورفعه على منصة المركز.",
       "بعد الموافقة على تقرير النطاق: عمل القياسات البيئية للوضع الراهن عبر مختبر معتمد لمرة واحدة وفق ما ورد في التقرير.", "وصف الوضع البيئي الراهن، وتقييم التأثيرات المتوقعة وأهميتها خلال مرحلتي الإنشاء والتشغيل، بما فيها التأثيرات التراكمية.",
       "دراسة البدائل واقتراح إجراءات التخفيف، وإعداد خطة الإدارة والرصد البيئي وخطة الاستجابة للطوارئ.", `إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
+    methodologyEn:J(["Collection and review of project data{التصريح_السابق}, and a reconnaissance visit to the site and its surroundings.", "Preparation of the scoping report (study boundaries, affected environmental components, assessment methodology and measurement plan) and its submission on the NCEC platform.",
+      "Following approval of the scoping report: conducting baseline environmental measurements through an accredited laboratory (one round) as defined in the report.", "Description of the environmental baseline and assessment of expected impacts and their significance during construction and operation, including cumulative impacts.",
+      "Analysis of alternatives, proposal of mitigation measures, and preparation of the Environmental Management and Monitoring Plan and the emergency response plan.", "Preparation of the Category 3 Environmental Impact Assessment study in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
     duration:J([DUR("10 أيام عمل لتقرير النطاق"), `بعد الحصول على موافقة ${NCEC} على تقرير النطاق، يتم إعداد دراسة تقييم الأثر البيئي في مدة زمنية لا تتعدى 20 يوم عمل.`]),
-    payments:[{label:"عند توقيع العقد",pct:50},{label:"قبل رفع تقرير النطاق إلى المركز الوطني",pct:20},{label:"قبل رفع الدراسة البيئية إلى المركز الوطني",pct:20},{label:"بعد صدور التصريح البيئي",pct:10}] }
+    durationEn:J([DUR_EN("10 working days for the scoping report"), "Following NCEC's approval of the scoping report, the Environmental Impact Assessment study will be prepared within 20 working days."]),
+    payments:[{label:"عند توقيع العقد",labelEn:"Upon contract signing",pct:50},{label:"قبل رفع تقرير النطاق إلى المركز الوطني",labelEn:"Prior to submission of the scoping report to NCEC",pct:20},
+      {label:"قبل رفع الدراسة البيئية إلى المركز الوطني",labelEn:"Prior to submission of the environmental study to NCEC",pct:20},{label:"بعد صدور التصريح البيئي",labelEn:"Upon issuance of the environmental permit",pct:10}] },
+  { key:"mon", title:"تقرير المراقبة البيئية", titleEn:"Environmental Monitoring Report", writing:3000, durationShort:"10 أيام عمل لكل تقرير", durationShortEn:"10 working days per report",
+    intro:`يسعدنا نحن {الشركة_الرسمي} بتقديم هذا العرض الفني والمالي الخاص بإعداد تقارير المراقبة البيئية الدورية {للعميل}{بسجل} وفقاً لاشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية الصادر عن ${NCEC}.\nونؤكد التزامنا بتنفيذ أعمال الرصد والقياسات البيئية وإعداد التقارير ورفعها في مواعيدها، وتقديم الدعم الفني الكامل حتى قبولها من ${NCEC}.`,
+    introEn:"{الشركة_الرسمي} is pleased to submit this technical and financial proposal for the preparation of periodic environmental monitoring reports for {للعميل}{بسجل}, in accordance with the environmental permit conditions and the Environmental Monitoring Report Guideline issued by the National Center for Environmental Compliance (NCEC).\nWe are fully committed to carrying out the required environmental monitoring and measurements, preparing and submitting the reports on schedule, and providing complete technical support until they are accepted by NCEC.",
+    scope:J(["إعداد تقارير المراقبة البيئية الدورية للنشاط وفق اشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية الصادر عن المركز.", "تنفيذ أعمال الرصد والقياسات البيئية المطلوبة عبر مختبر معتمد لكل فترة تقرير.", "رفع التقارير على منصة المركز ومتابعتها حتى قبولها."]),
+    scopeEn:J(["Preparation of the activity's periodic environmental monitoring reports in accordance with the environmental permit conditions and NCEC's Environmental Monitoring Report Guideline.", "Conducting the required environmental monitoring and measurements through an accredited laboratory for each reporting period.", "Submission of the reports on the NCEC platform and follow-up until acceptance."]),
+    methodology:J(["مراجعة التصريح البيئي واشتراطاته وخطة الإدارة والرصد البيئي المعتمدة.", "زيارة ميدانية للموقع خلال كل فترة تقرير وجمع بيانات التشغيل.", "تنفيذ الرصد والقياسات البيئية المحددة في اشتراطات التصريح عبر مختبر معتمد، ومقارنة النتائج بالمقاييس البيئية الوطنية.",
+      "جمع وتحليل بيانات الإدارة البيئية: النفايات الخطرة وغير الخطرة والمعاد تدويرها والمقاولين المرخصين، واستهلاك الموارد والمواد الخام والطاقة والمياه.", "توثيق الحوادث البيئية وحالات عدم الالتزام والإجراءات التصحيحية، ونتائج عمليات التفتيش والتدقيق والتدريب البيئي.",
+      "إعداد التقرير وفق متطلبات الدليل الاسترشادي (صفحة العنوان، والملخص التنفيذي، ووصف النشاط، والأداء والإدارة البيئية، والنتائج والتوصيات).", "رفع التقرير على منصة المركز ومتابعة الملاحظات حتى قبوله."]),
+    methodologyEn:J(["Review of the environmental permit, its conditions and the approved Environmental Management and Monitoring Plan.", "Site visit during each reporting period and collection of operational data.", "Conducting the environmental monitoring and measurements specified in the permit conditions through an accredited laboratory, and comparing the results against national environmental standards.",
+      "Collection and analysis of environmental management data: hazardous, non-hazardous and recycled waste and licensed contractors, as well as consumption of resources, raw materials, energy and water.", "Documentation of environmental incidents, non-compliances and corrective actions, and of inspection, audit and environmental training activities.",
+      "Preparation of the report in line with the Guideline requirements (title page, executive summary, activity description, environmental performance and management, findings and recommendations).", "Submission of the report on the NCEC platform and follow-up on comments until acceptance."]),
+    duration:"يتم تسليم كل تقرير خلال 10 أيام عمل من نهاية فترة التقرير واستلام بيانات التشغيل ونتائج القياسات.",
+    durationEn:"Each report will be delivered within 10 working days from the end of the reporting period and receipt of the operational data and measurement results.",
+    payments:[{label:"عند توقيع العقد",labelEn:"Upon contract signing",pct:30},{label:"عند تسليم التقارير الدورية (بالتساوي على عدد التقارير)",labelEn:"Upon delivery of the periodic reports (divided equally among the reports)",pct:70}] }
 ];
 const R_MK = "منطقة مكة المكرمة", R_MD = "منطقة المدينة المنورة", R_SH = "المنطقة الشرقية";
+const EN_NAMES = {
+  "جدة":"Jeddah","مكة المكرمة":"Makkah","الطائف":"Taif","رابغ":"Rabigh","الليث":"Al Lith","القنفذة":"Al Qunfudhah","المدينة المنورة":"Madinah","ينبع":"Yanbu","الرياض":"Riyadh","الخرج":"Al Kharj",
+  "الدمام":"Dammam","الخبر":"Al Khobar","الجبيل":"Jubail","الأحساء":"Al Ahsa","بريدة":"Buraydah","حائل":"Hail","تبوك":"Tabuk","أبها":"Abha","خميس مشيط":"Khamis Mushait","جازان":"Jazan","نجران":"Najran","الباحة":"Al Baha","سكاكا":"Sakaka","عرعر":"Arar",
+  [R_MK]:"Makkah Region",[R_MD]:"Madinah Region","منطقة الرياض":"Riyadh Region",[R_SH]:"Eastern Province","منطقة القصيم":"Qassim Region","منطقة حائل":"Hail Region","منطقة تبوك":"Tabuk Region","منطقة عسير":"Asir Region",
+  "منطقة جازان":"Jazan Region","منطقة نجران":"Najran Region","منطقة الباحة":"Al Baha Region","منطقة الجوف":"Al Jouf Region","منطقة الحدود الشمالية":"Northern Borders Region",
+  "قياس جودة الهواء المحيط":"Ambient air quality monitoring","قياس انبعاثات المداخن":"Stack emissions monitoring","قياس الضوضاء المحيطة":"Ambient noise monitoring","قياس الضوضاء في بيئة العمل":"Occupational noise monitoring",
+  "تحليل مياه الصرف الصناعي":"Industrial wastewater analysis","تحليل المياه الجوفية":"Groundwater analysis","تحليل المياه المعالجة":"Treated water analysis","تحليل التربة":"Soil analysis","قياس جودة الهواء الداخلي":"Indoor air quality monitoring",
+  "نقطة":"point","مدخنة":"stack","عينة":"sample",
+  "سجل النفايات الصلبة وغير الخطرة":"Non-hazardous solid waste register","سجل النفايات الخطرة":"Hazardous waste register","سجل المواد الكيميائية الخطرة":"Hazardous chemicals register","سجل الانبعاثات الهوائية":"Air emissions register",
+  "سجل استهلاك المياه والصرف":"Water consumption and wastewater register","سجل الضوضاء":"Noise register","سجل الحوادث والطوارئ البيئية":"Environmental incidents and emergencies register","سجل صيانة معدات التحكم البيئي":"Environmental control equipment maintenance register",
+  "الفئة الأولى":"Category 1","الفئة الثانية":"Category 2","الفئة الثالثة":"Category 3"
+};
+const enOf = (o, k = "name") => (o && (o[k + "En"] || EN_NAMES[o[k]])) || (o && o[k]) || "";
 const DEFAULT_CFG = {
-  company:{ name:"اسم الشركة", nameEn:"", accountName:"", legalName:"", tagline:"", ncecClass:"أ", license:"", cr:"", vat:"", phone:"", email:"", website:"", address:"",
+  company:{ name:"اسم الشركة", nameEn:"", accountName:"", accountNameEn:"", legalName:"", tagline:"", ncecClass:"أ", license:"", cr:"", vat:"", phone:"", email:"", website:"", address:"",
     logo:"", letterhead:"", header:"", footer:"", stamp:"", showStamp:true, signLine:false, brand:"#012c41", brand2:"#0099d9", mt:128, mb:128, mx:72,
-    signName:"", signTitle:"المدير التنفيذي", bankName:"", iban:"" },
+    signName:"", signNameEn:"", signTitle:"المدير التنفيذي", signTitleEn:"Chief Executive Officer", bankName:"", bankNameEn:"", iban:"" },
   pricing:{ baseCity:"جدة", risk:10, profit:25, labProfit:15, vat:15, govVat:false, roundTo:50, travelSeparate:false, showBreakdown:false, localVisit:150, perDiem:150, prefix:"JED-", addYear:false, nextNo:1, validity:30 },
+  fees:{ form:500, plan:1000, eia2:10000, eia3:[13000,27500,45000,75000,137500,275000], audit:0, mon:0 },
   services:DEFAULT_SERVICES,
   categories:[
-    { id:1, name:"الفئة الأولى", impact:"منخفضة التأثير البيئي", gov:1000, visits:1, persons:1, days:1, nights:0, labs:"no", records:"no" },
-    { id:2, name:"الفئة الثانية", impact:"متوسطة التأثير البيئي", gov:3000, visits:1, persons:1, days:1, nights:1, labs:"req", records:"opt" },
-    { id:3, name:"الفئة الثالثة", impact:"عالية التأثير البيئي", gov:6000, visits:2, persons:2, days:2, nights:1, labs:"req", records:"req" }
+    { id:1, name:"الفئة الأولى", nameEn:"Category 1", impact:"منخفضة التأثير البيئي", visits:1, persons:1, days:1, nights:0, labs:"no", records:"no" },
+    { id:2, name:"الفئة الثانية", nameEn:"Category 2", impact:"متوسطة التأثير البيئي", visits:1, persons:1, days:1, nights:1, labs:"req", records:"opt" },
+    { id:3, name:"الفئة الثالثة", nameEn:"Category 3", impact:"عالية التأثير البيئي", visits:2, persons:2, days:2, nights:1, labs:"req", records:"req" }
   ],
   cities:[
     ["جدة","local",0,0,0,R_MK],["مكة المكرمة","car",250,0,350,R_MK],["الطائف","car",400,0,350,R_MK],["رابغ","car",350,0,300,R_MK],["الليث","car",350,0,300,R_MK],["القنفذة","car",700,0,300,R_MK],
@@ -703,25 +874,31 @@ const DEFAULT_CFG = {
     ["الدمام","flight",1200,220,450,R_SH],["الخبر","flight",1200,220,450,R_SH],["الجبيل","flight",1300,220,450,R_SH],["الأحساء","flight",1200,220,400,R_SH],
     ["بريدة","flight",1000,200,400,"منطقة القصيم"],["حائل","flight",1000,200,350,"منطقة حائل"],["تبوك","flight",900,200,350,"منطقة تبوك"],["أبها","flight",850,200,400,"منطقة عسير"],["خميس مشيط","flight",850,200,400,"منطقة عسير"],
     ["جازان","flight",850,200,400,"منطقة جازان"],["نجران","flight",950,200,350,"منطقة نجران"],["الباحة","flight",800,200,350,"منطقة الباحة"],["سكاكا","flight",1100,200,350,"منطقة الجوف"],["عرعر","flight",1100,200,350,"منطقة الحدود الشمالية"]
-  ].map(([name,mode,transport,car,hotel,region]) => ({ id:uid(), name, mode, transport, car, hotel, region })),
+  ].map(([name,mode,transport,car,hotel,region]) => ({ id:uid(), name, nameEn:EN_NAMES[name] || "", mode, transport, car, hotel, region, regionEn:EN_NAMES[region] || "" })),
   labs:[
     ["قياس جودة الهواء المحيط","نقطة",3500],["قياس انبعاثات المداخن","مدخنة",4500],["قياس الضوضاء المحيطة","نقطة",600],["قياس الضوضاء في بيئة العمل","نقطة",500],
     ["تحليل مياه الصرف الصناعي","عينة",1800],["تحليل المياه الجوفية","عينة",1500],["تحليل المياه المعالجة","عينة",1300],["تحليل التربة","عينة",1500],["قياس جودة الهواء الداخلي","نقطة",1500]
-  ].map(([name,unit,cost]) => ({ id:uid(), name, unit, cost })),
+  ].map(([name,unit,cost]) => ({ id:uid(), name, nameEn:EN_NAMES[name] || "", unit, unitEn:EN_NAMES[unit] || "", cost })),
   records:[
     ["سجل النفايات الصلبة وغير الخطرة",600],["سجل النفايات الخطرة",800],["سجل المواد الكيميائية الخطرة",800],["سجل الانبعاثات الهوائية",700],
     ["سجل استهلاك المياه والصرف",600],["سجل الضوضاء",500],["سجل الحوادث والطوارئ البيئية",500],["سجل صيانة معدات التحكم البيئي",500]
-  ].map(([name,cost]) => ({ id:uid(), name, cost })),
+  ].map(([name,cost]) => ({ id:uid(), name, nameEn:EN_NAMES[name] || "", cost })),
   texts:{
-    intro:`يسعدنا نحن {الشركة_الرسمي} بتقديم هذا العرض الفني والمالي الخاص بإعداد المتطلبات البيئية اللازمة {الغرض} وفقاً للوائح والأنظمة الصادرة عن ${NCEC} {للعميل}{بسجل}.\n\nونظراً لطبيعة موقع النشاط، فإننا نؤكد التزامنا بتنفيذ كافة الأعمال البيئية اللازمة، وتقديم الدعم الفني الكامل لإصدار التصريح البيئي من ${NCEC}.`,
-    scopeLead:REVIEW,
+    intro:`يسعدنا نحن {الشركة_الرسمي} بتقديم هذا العرض الفني والمالي الخاص بإعداد المتطلبات البيئية اللازمة {الغرض} وفقاً للوائح والأنظمة الصادرة عن ${NCEC} {للعميل}{بسجل}.\nونظراً لطبيعة موقع النشاط، فإننا نؤكد التزامنا بتنفيذ كافة الأعمال البيئية اللازمة، وتقديم الدعم الفني الكامل لإصدار التصريح البيئي من ${NCEC}.`,
     validity:"صلاحية هذا العرض {الصلاحية} يوماً من تاريخه.",
     totalNote:"القيمة الإجمالية للأعمال المذكورة في العرض ({الإجمالي} ريال)، {كتابة}، وفي حال الموافقة الرجاء إرسال هذا العرض بعد التوقيع والختم عليه.",
     notes:`تم إعداد عرض السعر بناءً على المعلومات الواردة من العميل، ولا يشمل العرض أي متطلبات إضافية أو إلزامية يطلبها ${NCEC} وفقاً للرد الأولي على الطلب.`
   },
-  tv:4,
+  textsEn:{
+    intro:"{الشركة_الرسمي} is pleased to submit this technical and financial proposal for the preparation of the environmental requirements {الغرض} for {للعميل}{بسجل}, in accordance with the regulations issued by the National Center for Environmental Compliance (NCEC).\nGiven the nature of the activity site, we are fully committed to carrying out all required environmental works and providing complete technical support until the environmental permit is issued by NCEC.",
+    validity:"This proposal is valid for {الصلاحية} days from its date.",
+    totalNote:"The total value of the works described in this proposal is SAR {الإجمالي} ({كتابة}). Upon acceptance, kindly return this proposal signed and stamped.",
+    notes:"This proposal has been prepared based on the information provided by the client and does not include any additional or mandatory requirements that NCEC may request in its initial response to the application."
+  },
+  tv:5,
   cloud:{ clientId:"", tenantId:"", folder:"مسعر العروض", autoBackup:true, tracker:true }
 };
+const CAPEX = ["أقل من 10 ملايين ريال","من 10 إلى أقل من 25 مليون","من 25 إلى أقل من 50 مليون","من 50 إلى أقل من 100 مليون","من 100 إلى أقل من 250 مليون","250 مليون ريال فأكثر"];
 
 /* =============== state & storage =============== */
 const STORE = "musaer-env-v2";
@@ -744,47 +921,72 @@ function mergeCfg(c){
     if (!co.legalName && /ادفانسد|أدفانسد/.test(co.accountName || "")) co.legalName = "شركة أدفانسد إنفايرونمنتال سلوشنز";
     if (co.brand === "#002840") co.brand = "#012c41";
     if (co.brand2 === "#1898d0") co.brand2 = "#0099d9";
-    c.tv = 4;
   }
-  return { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, texts:{...base.texts, ...c.texts}, cloud:{...base.cloud, ...c.cloud},
-    services: base.services.map(s => ({ ...s, ...((c.services || []).find(x => x.key === s.key) || {}) })) };
+  if ((c.tv || 0) < 5){
+    if (c.texts && c.texts.intro) c.texts.intro = c.texts.intro.replace(/\n\s*\n/g, "\n");
+    const co = c.company || {};
+    if (/ادفانسد|أدفانسد/.test(co.accountName || "")){
+      co.legalName = "شركة أدفانسد إنفايرونمنتال سلوشنز";
+      co.accountNameEn = co.accountNameEn || "Advanced Environmental Solutions Company";
+      co.signNameEn = co.signNameEn || "Hani Ibrahim Alem"; co.signTitleEn = co.signTitleEn || "Chief Executive Officer"; co.bankNameEn = co.bankNameEn || "Saudi National Bank (SNB)";
+    }
+  }
+  c.tv = 5;
+  const out = { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, fees:{...base.fees, ...c.fees}, texts:{...base.texts, ...c.texts}, textsEn:{...base.textsEn, ...c.textsEn}, cloud:{...base.cloud, ...c.cloud} };
+  out.services = base.services.map(s => {
+    const sv = (c.services || []).find(x => x.key === s.key) || {};
+    const m = { ...s, ...sv };
+    if (sv.payments) m.payments = sv.payments.map((p, i) => ({ labelEn:(s.payments[i] || {}).labelEn || "", ...p }));
+    return m;
+  });
+  const fillEn = arr => (arr || []).map(x => ({ ...x, nameEn:x.nameEn || EN_NAMES[x.name] || "", ...(x.unit !== undefined ? { unitEn:x.unitEn || EN_NAMES[x.unit] || "" } : {}), ...(x.region !== undefined ? { regionEn:x.regionEn || EN_NAMES[x.region] || "" } : {}) }));
+  out.labs = fillEn(out.labs); out.records = fillEn(out.records); out.cities = fillEn(out.cities); out.categories = fillEn(out.categories);
+  return out;
 }
 function load(){
   try{ const raw = localStorage.getItem(STORE); if (!raw) return false;
-    const d = JSON.parse(raw); S.cfg = mergeCfg(d.cfg); S.quotes = d.quotes || []; S.clients = d.clients || []; return true;
-  }catch(e){ return false; }
+    const d = JSON.parse(raw); S.cfg = mergeCfg(d.cfg); S.quotes = (d.quotes || []).map(normQ); S.clients = d.clients || []; return true;
+  }catch(e){ console.error(e); return false; }
 }
 function showBanner(t){ const b = $("#banner"); b.textContent = t || ""; b.hidden = !t; }
 
 /* =============== quote model =============== */
 const catOf = q => S.cfg.categories.find(c => c.id === q.cat) || S.cfg.categories[0];
-const keyFor = (cat, service) => cat === 1 ? "c1-plan" : `c${cat}-${service === "eia" ? "eia" : "audit"}`;
+const keyFor = (cat, service) => service === "mon" ? "mon" : cat === 1 ? "c1-plan" : `c${cat}-${service === "eia" ? "eia" : "audit"}`;
 const svcOf = q => S.cfg.services.find(s => s.key === keyFor(q.cat, q.service)) || S.cfg.services[0];
 const cityOf = name => S.cfg.cities.find(c => c.name === name);
 const isBase = q => (q.facility.city || S.cfg.pricing.baseCity) === S.cfg.pricing.baseCity;
+function normQ(q){
+  q.lang = q.lang || "ar"; q.mon = q.mon || { period:"quarterly", count:4 }; q.monAdd = q.monAdd || { on:false, period:"quarterly", count:4, unit:2500 };
+  q.capex = q.capex || 0; q.en = q.en || { text:{}, labels:{}, details:{} }; q.text = q.text || {}; q.labels = q.labels || {}; q.details = q.details || {};
+  q.gov = q.gov || { include:false, amount:0 }; if (q.gov.manual === undefined) q.gov.manual = !!q.id;
+  q.client.cr = q.client.cr || ""; q.facility.region = q.facility.region || "";
+  return q;
+}
 function newDraft(catId = 2){
   const P = S.cfg.pricing;
-  const q = { id:null, number:"", status:"draft", date:todayISO(), validity:P.validity,
+  const q = normQ({ id:null, number:"", status:"draft", date:todayISO(), validity:P.validity, lang:"ar",
     client:{ name:"", contact:"", phone:"", email:"", cr:"" }, clientId:"",
-    facility:{ name:"", city:P.baseCity, district:"", region:"", coords:"" },
-    cat:catId, request:"issue", phase:"operation", service:"audit",
+    facility:{ name:"", city:P.baseCity, district:"", region:"" },
+    cat:catId, request:"issue", phase:"operation", service:"audit", modified:false,
     writing:0, duration:"", labs:{}, records:{}, extras:[], payments:[],
     travel:{ mode:"local", visits:1, persons:1, days:1, nights:0, transport:0, car:0, hotel:0, perDiem:P.perDiem },
-    gov:{ include:false, amount:0 }, risk:P.risk, profit:P.profit, labProfit:P.labProfit, discount:0, showBreakdown:!!P.showBreakdown,
-    text:{}, labels:{}, details:{} };
+    gov:{ include:false, amount:0, manual:false }, risk:P.risk, profit:P.profit, labProfit:P.labProfit, discount:0, showBreakdown:!!P.showBreakdown,
+    text:{}, labels:{}, details:{} });
   applyCategory(q, catId); applyCity(q);
   return q;
 }
 function applyService(q){
   const s = svcOf(q);
   q.writing = s.writing; q.duration = s.durationShort; q.payments = clone(s.payments);
-  for (const k of ["methodology","duration"]) delete q.text[k];
+  for (const o of [q.text, q.en.text]) for (const k of ["methodology","duration","scopeLead","intro"]) delete o[k];
+  if (q.service === "mon"){ q.travel.visits = 1; }
 }
 function applyCategory(q, id){
   const c = S.cfg.categories.find(x => x.id === id); if (!c) return;
-  q.cat = id; q.gov.amount = c.gov;
-  if (id === 1) q.service = "plan"; else if (q.service === "plan") q.service = q.phase === "construction" ? "eia" : "audit";
-  Object.assign(q.travel, { visits:c.visits, persons:c.persons, days:c.days, nights:isBase(q) ? 0 : c.nights });
+  q.cat = id;
+  if (q.service !== "mon"){ if (id === 1) q.service = "plan"; else if (q.service === "plan") q.service = q.phase === "construction" ? "eia" : "audit"; }
+  Object.assign(q.travel, { visits:q.service === "mon" ? 1 : c.visits, persons:c.persons, days:c.days, nights:isBase(q) ? 0 : c.nights });
   applyService(q);
 }
 function applyCity(q){
@@ -801,76 +1003,129 @@ function travelCalc(q){
   const transport = v * p * num(t.transport), car = t.mode === "car" ? 0 : v * d * num(t.car), hotel = v * n * p * num(t.hotel), perDiem = v * d * p * num(t.perDiem);
   return { local:0, transport, car, hotel, perDiem, total: transport + car + hotel + perDiem };
 }
+function govAuto(q){
+  const F = S.cfg.fees, s = svcOf(q), items = [];
+  if (q.service !== "mon" && (q.request === "issue" || q.modified)) items.push(["مراجعة استمارة التصنيف البيئي", num(F.form)]);
+  if (s.key === "c1-plan") items.push(["مراجعة خطة الإدارة البيئية (الفئة الأولى)", num(F.plan)]);
+  else if (s.key === "c2-eia") items.push(["مراجعة دراسة تقييم الأثر البيئي (الفئة الثانية)", num(F.eia2)]);
+  else if (s.key === "c3-eia") items.push([`مراجعة دراسة تقييم الأثر البيئي (الفئة الثالثة، ${CAPEX[q.capex || 0]})`, num((F.eia3 || [])[q.capex || 0])]);
+  else if (s.key === "mon") items.push(["مراجعة تقرير المراقبة البيئية", num(F.mon)]);
+  else items.push(["مراجعة دراسة التدقيق البيئي (بدون مقابل مالي)", num(F.audit)]);
+  return { items, total:items.reduce((a, x) => a + x[1], 0) };
+}
 function roundUp(x){ const r = num(S.cfg.pricing.roundTo); return r > 0 ? Math.ceil(r2(x) / r - 1e-9) * r : r2(x); }
 function factor(risk, profit){ return (1 + num(risk)/100) / (1 - Math.min(num(profit), 90)/100); }
 function calc(q){
-  const P = S.cfg.pricing, writing = num(q.writing);
+  const P = S.cfg.pricing;
+  if (!q.gov.manual) q.gov.amount = govAuto(q).total;
+  const nRep = q.service === "mon" ? Math.max(1, num(q.mon.count)) : 1;
+  const writing = num(q.writing) * nRep;
   const labItems = S.cfg.labs.filter(l => q.labs[l.id] && num(q.labs[l.id].qty) > 0).map(l => ({ ...l, qty:num(q.labs[l.id].qty), cost:num(q.labs[l.id].cost) }));
-  const lab = labItems.reduce((a,l) => a + l.qty * l.cost, 0);
+  const lab = labItems.reduce((a,l) => a + l.qty * l.cost, 0) * nRep;
   const recItems = S.cfg.records.filter(r => q.records[r.id] && q.records[r.id].on).map(r => ({ ...r, cost:num(q.records[r.id].cost) }));
   const rec = recItems.reduce((a,r) => a + r.cost, 0);
-  const tr = travelCalc(q);
+  const tr0 = travelCalc(q), tr = Object.fromEntries(Object.entries(tr0).map(([k, v]) => [k, v * nRep]));
   const extras = (q.extras || []).filter(x => x.label || num(x.cost));
   const extra = extras.reduce((a,x) => a + num(x.cost), 0);
+  const ma = q.service !== "mon" && q.monAdd.on ? { count:Math.max(1, num(q.monAdd.count)), unit:num(q.monAdd.unit) } : null;
+  const maCost = ma ? ma.count * ma.unit : 0;
   const k = factor(q.risk, q.profit), kl = factor(q.risk, q.labProfit), sep = !!P.travelSeparate;
   const price = { main: roundUp((writing + (sep ? 0 : tr.total)) * k), travel: sep && tr.total ? roundUp(tr.total * k) : 0,
-    lab: lab ? roundUp(lab * kl) : 0, rec: rec ? roundUp(rec * k) : 0, extras: extras.map(x => roundUp(num(x.cost) * k)) };
-  const sub = price.main + price.travel + price.lab + price.rec + price.extras.reduce((a,b) => a + b, 0);
+    lab: lab ? roundUp(lab * kl) : 0, rec: rec ? roundUp(rec * k) : 0, extras: extras.map(x => roundUp(num(x.cost) * k)), mon: ma ? roundUp(maCost * k) : 0 };
+  const sub = price.main + price.travel + price.lab + price.rec + price.mon + price.extras.reduce((a,b) => a + b, 0);
   const disc = Math.min(num(q.discount), sub), net = sub - disc;
   const gov = q.gov.include ? num(q.gov.amount) : 0;
   const vat = r2((net + (P.govVat ? gov : 0)) * num(P.vat) / 100), grand = r2(net + gov + vat);
-  const cost = writing + lab + rec + tr.total + extra, riskAmt = cost * num(q.risk) / 100, profit = net - cost;
+  const cost = writing + lab + rec + tr.total + extra + maCost, riskAmt = cost * num(q.risk) / 100, profit = net - cost;
+  const base = net - price.mon;
   const pays = (q.payments || []), pctSum = r2(pays.reduce((a,p) => a + num(p.pct), 0));
-  let acc = 0; const payAmts = pays.map((p, i) => { if (i === pays.length - 1 && Math.abs(pctSum - 100) < 0.01) return r2(net - acc); const a = r2(net * num(p.pct) / 100); acc += a; return a; });
-  return { writing, lab, labItems, rec, recItems, tr, extra, extras, price, sub, disc, net, gov, vat, grand, cost, riskAmt, profit, margin: net > 0 ? profit / net * 100 : null, vatRate:num(P.vat), payAmts, pctSum };
+  let acc = 0; const payAmts = pays.map((p, i) => { if (i === pays.length - 1 && Math.abs(pctSum - 100) < 0.01) return r2(base - acc); const a = r2(base * num(p.pct) / 100); acc += a; return a; });
+  return { writing, lab, labItems, rec, recItems, tr, nRep, extra, extras, ma, maCost, price, sub, disc, net, gov, vat, grand, cost, riskAmt, profit, margin: net > 0 ? profit / net * 100 : null, vatRate:num(P.vat), payAmts, pctSum };
 }
 const lam = n => n.startsWith("ال") ? "ل" + n.slice(1) : "ل" + n;
 function vars(q, c){
-  const cat = catOf(q), s = svcOf(q), co = S.cfg.company;
-  return { "العميل":q.client.name || "…", "النشاط":q.facility.name || "…", "المدينة":q.facility.city || "…", "الشركة":co.name, "فئة_التأهيل":co.ncecClass,
-    "الخدمة":s.title, "الفئة":cat.name, "التأثير":cat.impact, "الصلاحية":String(num(q.validity)), "المدة":q.duration || s.durationShort,
-    "الإجمالي": c ? money(c.grand) : "", "كتابة": c ? tafqeet(c.grand) : "",
-    "الشركة_الرسمي": co.legalName || co.accountName || co.name, "التصريح_السابق": q.request === "renew" ? " والتصريح البيئي السابق -إن وجد-" : "", "للعميل": lam(q.client.name || "…"), "بسجل": q.client.cr ? ` بسجل رقم (${q.client.cr})` : "",
-    "الغرض": (q.request === "renew" ? "لتجديد" : "لعمل") + " التصريح البيئي " + (q.phase === "construction" ? "الإنشائي" : "التشغيلي") };
+  const cat = catOf(q), s = svcOf(q), co = S.cfg.company, en = isEn(q), cons = q.phase === "construction";
+  const purpose = q.service === "mon" ? (en ? "for the periodic environmental monitoring reports" : "لتقارير المراقبة البيئية الدورية")
+    : en ? `${q.request === "renew" ? "to renew" : "to obtain"} the environmental ${cons ? "construction" : "operating"} permit`
+    : `${q.request === "renew" ? "لتجديد" : "لعمل"} التصريح البيئي ${cons ? "الإنشائي" : "التشغيلي"}`;
+  return { "العميل":q.client.name || "…", "النشاط":q.facility.name || "…", "المدينة":en ? enOf(cityOf(q.facility.city)) || q.facility.city : q.facility.city || "…",
+    "الشركة":en ? co.nameEn || co.name : co.name, "فئة_التأهيل":co.ncecClass, "الخدمة":en ? s.titleEn : s.title, "الفئة":en ? enOf(cat) : cat.name, "التأثير":cat.impact,
+    "الصلاحية":String(num(q.validity)), "المدة":q.duration || (en ? s.durationShortEn : s.durationShort),
+    "الإجمالي": c ? money(c.grand) : "", "كتابة": c ? words(q, c.grand) : "",
+    "الشركة_الرسمي": en ? (co.nameEn || "Advanced Environmental Solutions") : (co.legalName || co.accountName || co.name),
+    "التصريح_السابق": q.request === "renew" ? (en ? " and the previous environmental permit (if any)" : " والتصريح البيئي السابق -إن وجد-") : "",
+    "للعميل": en ? (q.client.name || "…") : lam(q.client.name || "…"), "بسجل": q.client.cr ? (en ? `, Commercial Registration No. (${q.client.cr})` : ` بسجل رقم (${q.client.cr})`) : "", "الغرض": purpose };
 }
 function fill(str, q, c){ const V = vars(q, c); return String(str || "").replace(/\{([^{}]+)\}/g, (m, k) => V[k] !== undefined ? V[k] : m); }
 const TEXT_KEYS = [
   ["intro","الفقرة الافتتاحية",false], ["scopeLead","نطاق العمل",true], ["methodology","المنهجية المتبعة في العمل",true],
   ["validity","سطر صلاحية العرض",false], ["duration","الفترة الزمنية",true], ["totalNote","سطر القيمة الإجمالية",false], ["notes","الملاحظات بعد الجدول المالي",true]
 ];
-function tplText(k, q){ const s = svcOf(q); if (k === "methodology") return s.methodology; if (k === "duration") return s.duration; if (k === "scopeLead") return s.scope || S.cfg.texts.scopeLead || ""; return S.cfg.texts[k] || ""; }
-const textOf = (k, q) => q.text[k] != null ? q.text[k] : tplText(k, q);
+const OV = q => isEn(q) ? q.en : q;
+function tplText(k, q){
+  const s = svcOf(q), en = isEn(q), X = en ? "En" : "", T = en ? S.cfg.textsEn : S.cfg.texts;
+  if (k === "methodology") return s["methodology" + X];
+  if (k === "duration") return s["duration" + X];
+  if (k === "scopeLead") return s["scope" + X] || "";
+  if (k === "intro") return s["intro" + X] || T.intro;
+  return T[k] || "";
+}
+const textOf = (k, q) => OV(q).text[k] != null ? OV(q).text[k] : tplText(k, q);
+const payLabel = (q, p) => isEn(q) ? (p.labelEn || p.label) : p.label;
 
 function clientRows(q, c){
-  const t = q.travel, rows = [], s = svcOf(q), sep = !!S.cfg.pricing.travelSeparate;
-  const L = (k, d) => q.labels[k] != null ? q.labels[k] : d, D = (k, d) => q.details[k] != null ? q.details[k] : d;
-  const vt = num(t.visits) === 1 ? "زيارة ميدانية واحدة" : num(t.visits) === 2 ? "زيارتين ميدانيتين" : `${num(t.visits)} زيارات ميدانية`;
-  rows.push({ key:"main", label:L("main", `إعداد ${s.title} ومتابعتها لدى ${NCEC} حتى صدور التصريح`), detail:D("main", sep || !num(t.visits) ? "" : `شاملة ${vt} لموقع النشاط${isBase(q) ? "" : " في " + q.facility.city} وتكاليف التنقل`), amount:c.price.main });
-  if (c.price.lab) rows.push({ key:"lab", label:L("lab", "القياسات البيئية بواسطة مختبر معتمد"), detail:D("lab", c.labItems.map(l => `${l.name} (${l.qty} ${l.unit})`).join("، ")), amount:c.price.lab });
-  if (c.price.rec) rows.push({ key:"rec", label:L("rec", "إعداد السجلات البيئية"), detail:D("rec", c.recItems.map(r => r.name).join("، ")), amount:c.price.rec });
-  if (c.price.travel) rows.push({ key:"travel", label:L("travel", "الزيارات الميدانية والتنقل"), detail:D("travel", `${vt} إلى موقع النشاط في ${q.facility.city}`), amount:c.price.travel });
-  c.extras.forEach((x, i) => rows.push({ key:"x" + i, label:x.label || "بند إضافي", detail:"", amount:c.price.extras[i], extra:i }));
+  const t = q.travel, rows = [], s = svcOf(q), sep = !!S.cfg.pricing.travelSeparate, en = isEn(q), O = OV(q);
+  const Lb = (k, d) => O.labels[k] != null ? O.labels[k] : d, D = (k, d) => O.details[k] != null ? O.details[k] : d;
+  const v = num(t.visits) * c.nRep, city = en ? enOf(cityOf(q.facility.city)) || q.facility.city : q.facility.city;
+  const vt = en ? (v === 1 ? "one site visit" : v === 2 ? "two site visits" : `${v} site visits`) : (v === 1 ? "زيارة ميدانية واحدة" : v === 2 ? "زيارتين ميدانيتين" : `${v} زيارات ميدانية`);
+  const mainLabel = q.service === "mon"
+    ? (en ? `Preparation of ${c.nRep} environmental monitoring reports (${periodTxt(q, q.mon.period)})` : `إعداد ${c.nRep} تقارير مراقبة بيئية (${periodTxt(q, q.mon.period)})`)
+    : (en ? `Preparation of the ${s.titleEn} and follow-up with NCEC until permit issuance` : `إعداد ${s.title} ومتابعتها لدى ${NCEC} حتى صدور التصريح`);
+  const mainDetail = sep || !v ? "" : en ? `Including ${vt} to the activity site${isBase(q) ? "" : " in " + city} and associated travel costs` : `شاملة ${vt} لموقع النشاط${isBase(q) ? "" : " في " + city} وتكاليف التنقل`;
+  rows.push({ key:"main", label:Lb("main", mainLabel), detail:D("main", mainDetail), amount:c.price.main });
+  const labList = c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ");
+  if (c.price.lab) rows.push({ key:"lab", label:Lb("lab", en ? "Environmental measurements by an accredited laboratory" : "القياسات البيئية بواسطة مختبر معتمد"), detail:D("lab", labList + (c.nRep > 1 ? (en ? ` × ${c.nRep} reports` : ` × ${c.nRep} تقارير`) : "")), amount:c.price.lab });
+  if (c.price.rec) rows.push({ key:"rec", label:Lb("rec", en ? "Preparation of environmental registers" : "إعداد السجلات البيئية"), detail:D("rec", c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ")), amount:c.price.rec });
+  if (c.price.travel) rows.push({ key:"travel", label:Lb("travel", en ? "Site visits and travel" : "الزيارات الميدانية والتنقل"), detail:D("travel", en ? `${vt} to the activity site in ${city}` : `${vt} إلى موقع النشاط في ${city}`), amount:c.price.travel });
+  if (c.price.mon) rows.push({ key:"mon", label:Lb("mon", en ? `Periodic environmental monitoring reports (${periodTxt(q, q.monAdd.period)})` : `إعداد تقارير المراقبة البيئية الدورية (${periodTxt(q, q.monAdd.period)})`),
+    detail:D("mon", en ? `${c.ma.count} reports, payable upon delivery of each report` : `${c.ma.count} تقارير، تُسدد قيمتها عند تسليم كل تقرير`), amount:c.price.mon });
+  c.extras.forEach((x, i) => rows.push({ key:"x" + i, label:x.label || (en ? "Additional item" : "بند إضافي"), detail:"", amount:c.price.extras[i], extra:i }));
   return rows;
 }
 function classText(q){
-  const cat = catOf(q);
-  return q.request === "renew" && !q.modified
-    ? `${cat.name} (معتمدة من ${NCEC})`
-    : `${cat.name} (بناءً على المعطيات الأولية، ويُعتمد التصنيف لاحقاً من ${NCEC})`;
+  const cat = catOf(q), en = isEn(q), name = en ? enOf(cat) : cat.name;
+  const approved = q.service === "mon" || (q.request === "renew" && !q.modified);
+  return en ? (approved ? `${name} (as approved by NCEC)` : `${name} (based on preliminary data; final classification is subject to NCEC approval)`)
+    : (approved ? `${name} (معتمدة من ${NCEC})` : `${name} (بناءً على المعطيات الأولية، ويُعتمد التصنيف لاحقاً من ${NCEC})`);
+}
+function locationText(q){
+  const f = q.facility, en = isEn(q), c = cityOf(f.city);
+  if (en){ const reg = c && f.region === c.region ? enOf(c, "region") : f.region; return [f.district && f.district + " District", enOf(c) || f.city, reg].filter(Boolean).join(", "); }
+  return [f.district && "حي " + f.district, f.city && "مدينة " + f.city, f.region].filter(Boolean).join(" - ");
 }
 function buildModel(q){
-  const co = S.cfg.company, P = S.cfg.pricing, cat = catOf(q), svc = svcOf(q), c = calc(q);
+  const co = S.cfg.company, P = S.cfg.pricing, cat = catOf(q), svc = svcOf(q), c = calc(q), en = isEn(q), Lx = Lq(q);
   const T = k => fill(textOf(k, q), q, c);
+  const scopeLead = lines(T("scopeLead"));
+  const scopeAuto = [];
+  if (c.ma) scopeAuto.push(en ? `Preparation of ${c.ma.count} periodic environmental monitoring reports (${periodTxt(q, q.monAdd.period)}) in accordance with the environmental permit conditions and NCEC's Environmental Monitoring Report Guideline.`
+    : `إعداد تقارير المراقبة البيئية الدورية (${periodTxt(q, q.monAdd.period)}) بعدد ${c.ma.count} تقارير وفق اشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية.`);
   const methodBase = lines(T("methodology")), methodology = methodBase.slice();
-  if (c.labItems.length) methodology.push("القياسات البيئية المشمولة في العرض: " + c.labItems.map(l => `${l.name} (${l.qty} ${l.unit})`).join("، ") + ".");
-  if (c.recItems.length) methodology.push("إعداد السجلات البيئية التالية: " + c.recItems.map(r => r.name).join("، ") + ".");
-  const notes = lines(T("notes"));
-  const govNote = q.gov.include ? `تشمل القيمة الإجمالية الرسوم الحكومية المقدّرة${P.govVat ? "" : " (غير خاضعة لضريبة القيمة المضافة)"}، وأي تغيير فيها من الجهة المختصة يُحمَّل على العميل.` : "لا يشمل العرض الرسوم الحكومية، ويتحملها العميل مباشرة لدى الجهة المختصة.";
-  notes.push(govNote);
-  const pays = (q.payments || []).map((p, i) => ({ i, label:p.label, ord:`${ORD[i] || (i+1)} ${num(p.pct)}%`, amount:c.payAmts[i] }));
-  return { q, co, cat, svc, c, ref:q.number || "مسودة", date:fmtDate(q.date), hijri:hijri(q.date), valid:fmtDate(addDays(q.date, num(q.validity))),
-    intro:T("intro"), scopeLead:lines(T("scopeLead")), methodology, methodAuto:methodology.slice(methodBase.length), durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
-    totalNote:T("totalNote"), notes, govNote, rows:clientRows(q, c), pays };
+  if (c.labItems.length) methodology.push((en ? "Environmental measurements included in this proposal: " : "القياسات البيئية المشمولة في العرض: ") + c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ") + (q.service === "mon" ? (en ? " for each report." : " لكل تقرير.") : "."));
+  if (c.recItems.length) methodology.push((en ? "Preparation of the following environmental registers: " : "إعداد السجلات البيئية التالية: ") + c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ") + ".");
+  const notesBase = lines(T("notes")), notes = notesBase.slice(), notesAuto = [];
+  notesAuto.push(q.gov.include
+    ? (en ? `The total includes the estimated government fees${P.govVat ? "" : " (not subject to VAT)"}; any change in these fees by the competent authority shall be borne by the client.` : `تشمل القيمة الإجمالية الرسوم الحكومية المقدّرة${P.govVat ? "" : " (غير خاضعة لضريبة القيمة المضافة)"}، وأي تغيير فيها من الجهة المختصة يُحمَّل على العميل.`)
+    : (en ? "Government fees are not included in this proposal and shall be paid directly by the client to the competent authority." : "لا يشمل العرض الرسوم الحكومية، ويتحملها العميل مباشرة لدى الجهة المختصة."));
+  if (q.phase === "operation" && q.service !== "mon") notesAuto.push(en ? "This proposal does not include the annual operating permit fee determined by NCEC." : "لا يشمل العرض المقابل المالي السنوي للتصريح البيئي للتشغيل الذي يحدده المركز.");
+  notes.push(...notesAuto);
+  const pays = (q.payments || []).map((p, i) => ({ i, label:payLabel(q, p), ord:`${Lx.ord[i] || (i+1)} ${en ? "– " : ""}${num(p.pct)}%`, amount:c.payAmts[i] }));
+  if (c.price.mon) pays.push({ i:-1, label:`${Lx.monRow} (${periodTxt(q, q.monAdd.period)})`, ord:Lx.monEach, amount:c.price.mon, fixed:true });
+  return { q, co, cat, svc, c, en, L:Lx, ref:q.number || (en ? "Draft" : "مسودة"), date:fmtDate(q.date), valid:fmtDate(addDays(q.date, num(q.validity))),
+    intro:T("intro"), scopeLead:scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:methodology.slice(methodBase.length), durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
+    totalNote:T("totalNote"), notes, notesAuto, rows:clientRows(q, c), pays, cls:classText(q), loc:locationText(q),
+    coName:en ? (co.accountNameEn || co.nameEn || co.name) : (co.accountName || co.name), signName:en ? (co.signNameEn || co.signName) : co.signName,
+    signTitle:en ? (co.signTitleEn || co.signTitle) : co.signTitle, bankName:en ? (co.bankNameEn || co.bankName) : co.bankName };
 }
 
 /* =============== router =============== */
@@ -889,40 +1144,67 @@ function markDirty(){ S.saved = false; $("#dirty").hidden = false; try{ localSto
 function nextSeq(){ let mx = 0; for (const q of S.quotes){ const m = /(\d+)$/.exec(q.number || ""); if (m) mx = Math.max(mx, parseInt(m[1],10)); } return Math.max(num(S.cfg.pricing.nextNo) || 1, mx + 1); }
 function makeNumber(seq){ const P = S.cfg.pricing; return `${P.prefix || ""}${P.addYear ? (S.draft.date || todayISO()).slice(0,4) + "-" : ""}${String(seq).padStart(4,"0")}`; }
 function showNo(){ const q = S.draft; $("#qNo").innerHTML = q.number ? esc(q.number) : `<span class="hint" style="font-family:var(--font-body)">يُعطى عند الحفظ (${esc(makeNumber(nextSeq()))})</span>`; }
-
+function renderHero(){
+  const el = $("#heroStats"); if (!el) return;
+  const all = S.quotes, month = todayISO().slice(0,7), sum = a => a.reduce((s,x) => s + num(x.totals && x.totals.grand), 0);
+  const open = all.filter(x => x.status === "sent" || x.status === "draft"), accM = all.filter(x => x.status === "accepted" && (x.date || "").slice(0,7) === month);
+  const dec = all.filter(x => x.status === "accepted" || x.status === "rejected"), win = dec.length ? Math.round(all.filter(x => x.status === "accepted").length / dec.length * 100) + "%" : "—";
+  el.innerHTML = `<div><b>${open.length}</b><span>عروض مفتوحة</span></div><div><b>${money0(sum(accM))}</b><span>مقبول هذا الشهر</span></div><div><b>${win}</b><span>نسبة القبول</span></div>`;
+}
 function renderEditor(){
-  const q = S.draft;
-  showNo();
+  const q = normQ(S.draft);
+  showNo(); renderHero();
   $("#q-fcity").innerHTML = S.cfg.cities.map(c => `<option>${esc(c.name)}</option>`).join("") + (cityOf(q.facility.city) ? "" : `<option>${esc(q.facility.city)}</option>`);
   $$("#v-quote [data-b]").forEach(el => { const v = getPath(q, el.dataset.b); if (el.type === "checkbox") el.checked = !!v; else el.value = v ?? ""; });
   $("#clientList").innerHTML = S.clients.map(c => `<option value="${esc(c.name)}"></option>`).join("");
-  renderCats(); renderPickers(); renderExtras(); renderTravel(); renderPays(); renderTexts(); recalc();
+  $("#langSeg").innerHTML = [["ar","العربية"],["en","English"]].map(([v,t]) => `<button type="button" data-seg="lang" data-v="${v}" aria-pressed="${q.lang === v}">${t}</button>`).join("");
+  renderCats(); renderPickers(); renderMon(); renderExtras(); renderTravel(); renderPays(); renderGov(); renderTexts(); recalc();
   $("#dirty").hidden = S.saved;
 }
+const CAT_ICON = [
+  `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14Zm0 0 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20V9l5 3V9l5 3V5h4v15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+  `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M4 20v-7l5-3v3l5-3v3l5-3v10M8 6c0-1.5 1-2.5 2.5-2.5S13 2.5 14 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+];
 function renderCats(){
   const q = S.draft, need = v => v === "req" ? "on" : "";
-  $("#catCards").innerHTML = S.cfg.categories.map((c, i) => `<button type="button" class="cat" data-cat="${c.id}" aria-pressed="${q.cat === c.id}">
-    <div class="lvl" aria-hidden="true">${[0,1,2].map(j => `<span class="${j <= i ? "on" : ""}"></span>`).join("")}</div>
+  $("#catCards").innerHTML = S.cfg.categories.map((c, i) => `<button type="button" class="cat lv${i+1}" data-cat="${c.id}" aria-pressed="${q.cat === c.id}">
+    <span class="ic">${CAT_ICON[i] || CAT_ICON[0]}</span>
     <span class="t">${esc(c.name)}</span><span class="i">${esc(c.impact)}</span>
-    <span class="req"><span class="chip on">${c.id === 1 ? "خطة إدارة بيئية" : "دراسة بيئية"}</span>${c.labs !== "no" ? `<span class="chip ${need(c.labs)}">قياسات</span>` : ""}${c.records !== "no" ? `<span class="chip ${need(c.records)}">سجلات${c.records === "opt" ? " حسب النشاط" : ""}</span>` : ""}</span></button>`).join("");
+    <span class="req"><span class="chip on">${c.id === 1 ? "خطة إدارة بيئية" : "دراسة بيئية"}</span>${c.labs !== "no" ? `<span class="chip ${need(c.labs)}">قياسات</span>` : ""}${c.records !== "no" ? `<span class="chip ${need(c.records)}">سجلات</span>` : ""}${c.id > 1 ? `<span class="chip">تقارير مراقبة</span>` : ""}</span></button>`).join("");
   const seg = (name, label, opts, cur) => `<div><span class="lbl">${label}</span><div class="seg" role="group" aria-label="${label}">${opts.map(([v,t]) => `<button type="button" data-seg="${name}" data-v="${v}" aria-pressed="${cur === v}">${t}</button>`).join("")}</div></div>`;
-  $("#segRow").innerHTML = seg("request","الموضوع",[["issue","إصدار التصريح البيئي"],["renew","تجديد تصريح بيئي"]], q.request)
+  const svcOpts = (q.cat === 1 ? [["plan","خطة الإدارة البيئية"]] : [["audit","دراسة تدقيق بيئي"],["eia","دراسة تقييم أثر بيئي"]]).concat([["mon","تقرير مراقبة بيئية"]]);
+  $("#segRow").innerHTML = (q.service === "mon" ? "" : seg("request","الموضوع",[["issue","إصدار التصريح البيئي"],["renew","تجديد تصريح بيئي"]], q.request))
     + seg("phase","مرحلة النشاط",[["construction","إنشائي"],["operation","تشغيلي"]], q.phase)
-    + (q.request === "renew" ? `<div><span class="lbl">تعديل على النشاط</span><label class="switch" style="min-width:260px"><input type="checkbox" data-b="modified" data-t="bool" ${q.modified ? "checked" : ""}> يوجد تعديل أو توسعة أو أنشطة جديدة</label></div>` : "")
-    + seg("service","الخدمة المطلوبة", q.cat === 1 ? [["plan","خطة الإدارة البيئية"]] : [["audit","دراسة تدقيق بيئي"],["eia","دراسة تقييم أثر بيئي"]], q.service);
-  $("#writingLbl").textContent = `تكلفة إعداد ${svcOf(q).title} (كتابة وفريق)`;
+    + (q.request === "renew" && q.service !== "mon" ? `<div><span class="lbl">تعديل على النشاط</span><label class="switch" style="min-width:250px"><input type="checkbox" data-b="modified" data-t="bool" ${q.modified ? "checked" : ""}> يوجد تعديل أو توسعة</label></div>` : "")
+    + seg("service","الخدمة المطلوبة", svcOpts, q.service);
+  $("#writingLbl").textContent = q.service === "mon" ? "تكلفة إعداد التقرير الواحد" : `تكلفة إعداد ${svcOf(q).title} (كتابة وفريق)`;
 }
 const NOTE = { req:`<span class="note req">مطلوبة لهذه الفئة</span>`, opt:`<span class="note opt">حسب نشاط المنشأة</span>`, no:`<span class="note no">غير مطلوبة عادة لهذه الفئة</span>` };
 function renderPickers(){
   const q = S.draft, cat = catOf(q);
-  $("#labNote").innerHTML = NOTE[cat.labs]; $("#recNote").innerHTML = NOTE[cat.records];
+  $("#labNote").innerHTML = q.service === "mon" ? `<span class="note req">تتكرر مع كل تقرير</span>` : NOTE[cat.labs]; $("#recNote").innerHTML = NOTE[cat.records];
   $("#labBox").innerHTML = S.cfg.labs.map(l => { const s = q.labs[l.id] || {}, on = num(s.qty) > 0;
-    return `<div class="pick ${on ? "on" : ""}" data-labpick><div class="nm">${esc(l.name)}<small>العدد (${esc(l.unit)}) · التكلفة للوحدة بالريال</small></div>
+    return `<div class="pick ${on ? "on" : ""}" data-labpick><div class="nm">${esc(l.name)}<small>العدد (${esc(l.unit)}) · التكلفة للوحدة</small></div>
       <div class="stepper"><button type="button" data-step="-1" aria-label="إنقاص">−</button><input class="q" data-lq="${l.id}" value="${on ? num(s.qty) : ""}" placeholder="0" inputmode="numeric" aria-label="عدد ${esc(l.name)}"><button type="button" data-step="1" aria-label="زيادة">+</button></div>
       <input class="c" data-lc="${l.id}" value="${s.cost != null ? num(s.cost) : num(l.cost)}" inputmode="decimal" aria-label="تكلفة ${esc(l.name)}"></div>`; }).join("") || `<p class="hint">أضف القياسات من «الأسعار والإعدادات»</p>`;
   $("#recBox").innerHTML = S.cfg.records.map(r => { const s = q.records[r.id] || {}, on = !!s.on;
     return `<label class="pick ${on ? "on" : ""}"><input type="checkbox" data-ro="${r.id}" ${on ? "checked" : ""}><span class="nm">${esc(r.name)}</span>
       <input class="c" data-rc="${r.id}" value="${s.cost != null ? num(s.cost) : num(r.cost)}" inputmode="decimal" aria-label="تكلفة ${esc(r.name)}"></label>`; }).join("") || `<p class="hint">أضف السجلات من «الأسعار والإعدادات»</p>`;
+}
+const periodSel = (path, v) => `<select data-b="${path}">${Object.entries(PERIODS).map(([k, t]) => `<option value="${k}" ${v === k ? "selected" : ""}>${t[0]}</option>`).join("")}</select>`;
+const cntField = (path, label, v) => `<div class="f"><label>${label}</label><div class="stepper"><button type="button" data-step="-1" aria-label="إنقاص">−</button><input inputmode="numeric" data-b="${path}" data-t="num" value="${esc(num(v))}" aria-label="${label}"><button type="button" data-step="1" aria-label="زيادة">+</button></div></div>`;
+function renderMon(){
+  const q = S.draft, box = $("#monBox");
+  if (q.service === "mon"){
+    box.innerHTML = `<div class="mon-card"><div class="subhead" style="margin-top:0"><h3>تقارير المراقبة البيئية</h3><span class="hint">تكلفة التقرير والقياسات والزيارة تتضاعف بعدد التقارير</span></div>
+      <div class="row"><div class="f"><label>دورية التقارير</label>${periodSel("mon.period", q.mon.period)}</div>${cntField("mon.count", "عدد التقارير في العقد", q.mon.count)}</div></div>`;
+    return;
+  }
+  box.innerHTML = `<div class="mon-card"><label class="switch"><input type="checkbox" data-b="monAdd.on" data-t="bool" ${q.monAdd.on ? "checked" : ""}> إضافة تقارير المراقبة البيئية الدورية مع التصريح</label>
+    ${q.monAdd.on ? `<div class="row" style="margin-top:12px"><div class="f"><label>الدورية</label>${periodSel("monAdd.period", q.monAdd.period)}</div>${cntField("monAdd.count", "عدد التقارير", q.monAdd.count)}
+      <div class="f"><label>تكلفة التقرير الواحد (شاملة القياسات والزيارة)</label><input class="ltr" inputmode="decimal" data-b="monAdd.unit" data-t="num" value="${esc(q.monAdd.unit)}"></div></div>
+      <p class="hint" style="margin:6px 0 0">تظهر في جدول الدفعات كبند مستقل يُسدد عند تسليم كل تقرير.</p>` : `<p class="hint" style="margin:6px 0 0">تُطلب عادة كاشتراط في التصريح البيئي للفئتين الثانية والثالثة، ودوريتها يحددها المركز.</p>`}</div>`;
 }
 function renderExtras(){
   $("#extraBox").innerHTML = (S.draft.extras || []).map((x, i) => `<div class="x"><input class="in" data-b="extras.${i}.label" value="${esc(x.label)}" placeholder="وصف البند (يظهر للعميل عند إظهار التفاصيل)" aria-label="وصف البند الإضافي">
@@ -930,19 +1212,24 @@ function renderExtras(){
     <button type="button" class="btn sm ghost danger" data-xdel="${i}">حذف</button></div>`).join("") || `<p class="hint" style="margin:0">مثل: أعمال إضافية أو خدمات خارج النطاق المعتاد.</p>`;
 }
 function renderPays(){
-  $("#payBox").innerHTML = (S.draft.payments || []).map((p, i) => `<div class="x"><input class="in" data-b="payments.${i}.label" value="${esc(p.label)}" aria-label="وصف الدفعة ${i+1}">
+  const q = S.draft, en = isEn(q);
+  $("#payBox").innerHTML = (q.payments || []).map((p, i) => `<div class="x"><input class="in" data-b="payments.${i}.${en ? "labelEn" : "label"}" value="${esc(en ? p.labelEn || p.label : p.label)}" aria-label="وصف الدفعة ${i+1}" ${en ? 'dir="ltr"' : ""}>
     <input class="in ltr" data-b="payments.${i}.pct" data-t="num" value="${esc(p.pct)}" inputmode="decimal" aria-label="نسبة الدفعة ${i+1}">
     <span class="amt" data-pa="${i}"></span><button type="button" class="btn sm ghost danger" data-pdel="${i}">حذف</button></div>`).join("");
+}
+function renderGov(){
+  const q = S.draft, show = q.service === "c3" || svcOf(q).key === "c3-eia";
+  $("#capexBox").innerHTML = show ? `<div class="f"><label for="q-capex">التكلفة الرأسمالية للمشروع (لرسوم دراسة الفئة الثالثة)</label><select id="q-capex" data-b="capex" data-t="num">${CAPEX.map((t, i) => `<option value="${i}" ${num(q.capex) === i ? "selected" : ""}>${t}</option>`).join("")}</select></div>` : "";
 }
 const MODES = { local:"داخل المدينة", car:"سيارة", train:"قطار", flight:"طيران" };
 function renderTravel(){
   const q = S.draft, t = q.travel, base = isBase(q);
-  $("#travHint").textContent = base ? `النشاط داخل ${S.cfg.pricing.baseCity}` : `من ${S.cfg.pricing.baseCity} إلى ${q.facility.city}`;
+  $("#travHint").textContent = (base ? `النشاط داخل ${S.cfg.pricing.baseCity}` : `من ${S.cfg.pricing.baseCity} إلى ${q.facility.city}`) + (q.service === "mon" ? " · لكل تقرير" : "");
   const fld = (p, label) => `<div class="f"><label for="t-${p}">${label}</label><input id="t-${p}" class="ltr" inputmode="decimal" data-b="travel.${p}" data-t="num" value="${esc(num(t[p]))}"></div>`;
   const cnt = (p, label) => `<div class="f"><label for="t-${p}">${label}</label><div class="stepper"><button type="button" data-step="-1" aria-label="إنقاص">−</button><input id="t-${p}" inputmode="numeric" data-b="travel.${p}" data-t="num" value="${esc(num(t[p]))}"><button type="button" data-step="1" aria-label="زيادة">+</button></div></div>`;
-  $("#travelBox").innerHTML = `
-    <span class="lbl">وسيلة التنقل</span><div class="mode-pick" role="group" aria-label="وسيلة التنقل">${Object.entries(MODES).map(([k,v]) => `<button type="button" data-mode="${k}" aria-pressed="${t.mode === k}">${k === "local" ? "داخل " + esc(S.cfg.pricing.baseCity) : v}</button>`).join("")}</div>
-    <div class="row" style="margin-top:12px">${cnt("visits","عدد الزيارات")}${cnt("persons","عدد الأخصائيين")}${t.mode === "local" ? "" : cnt("days","أيام كل زيارة") + cnt("nights","ليالي كل زيارة")}</div>
+  $("#travelBox").innerHTML = `<span class="lbl">وسيلة التنقل</span>
+    <div class="mode-pick" role="group" aria-label="وسيلة التنقل">${Object.entries(MODES).map(([k,v]) => `<button type="button" data-mode="${k}" aria-pressed="${t.mode === k}">${k === "local" ? "داخل " + esc(S.cfg.pricing.baseCity) : v}</button>`).join("")}</div>
+    <div class="row" style="margin-top:12px">${cnt("visits", q.service === "mon" ? "زيارات لكل تقرير" : "عدد الزيارات")}${cnt("persons","عدد الأخصائيين")}${t.mode === "local" ? "" : cnt("days","أيام كل زيارة") + cnt("nights","ليالي كل زيارة")}</div>
     ${t.mode === "local" ? `<p class="hint">تكلفة الزيارة داخل المدينة للأخصائي: ${money0(S.cfg.pricing.localVisit)} ريال (من الإعدادات العامة)</p>` : `
     <div class="row" style="margin-top:10px">
       ${fld("transport", t.mode === "flight" ? "تذكرة طيران ذهاب وعودة/شخص" : t.mode === "train" ? "تذكرة قطار ذهاب وعودة/شخص" : "تكلفة السيارة ذهاب وعودة (وقود وبدل)")}
@@ -950,24 +1237,29 @@ function renderTravel(){
     <div class="trav-out" id="travOut"></div>`;
 }
 function renderTexts(){
-  const q = S.draft;
-  $("#textFields").innerHTML = TEXT_KEYS.map(([k, label, multi]) => `<div class="f"><div class="tx-head"><label for="tx-${k}">${label}${multi ? " <span class='hint'>(كل سطر نقطة)</span>" : ""}</label>
-    ${q.text[k] != null ? `<button type="button" class="btn sm ghost" data-txreset="${k}">استعادة النص الافتراضي</button>` : ""}</div>
-    <textarea id="tx-${k}" data-tx="${k}" ${multi ? "" : 'style="min-height:60px"'}>${esc(textOf(k, q))}</textarea></div>`).join("") +
+  const q = S.draft, en = isEn(q);
+  $("#textFields").innerHTML = `<p class="hint" style="margin:0">${en ? "تعرض النصوص الإنجليزية لأن لغة العرض English." : "تعرض النصوص العربية. بدّل لغة العرض لتعديل النصوص الإنجليزية."}</p>` + TEXT_KEYS.map(([k, label, multi]) => `<div class="f"><div class="tx-head"><label for="tx-${k}">${label}${multi ? " <span class='hint'>(كل سطر نقطة)</span>" : ""}</label>
+    ${OV(q).text[k] != null ? `<button type="button" class="btn sm ghost" data-txreset="${k}">استعادة النص الافتراضي</button>` : ""}</div>
+    <textarea id="tx-${k}" data-tx="${k}" ${en ? 'dir="ltr"' : ""} ${multi ? "" : 'style="min-height:60px"'}>${esc(textOf(k, q))}</textarea></div>`).join("") +
     `<p class="hint" style="margin:0">المتغيرات مثل {النشاط} و{الفئة} و{الإجمالي} تُستبدل تلقائياً بالبيانات عند إنشاء العرض.</p>`;
 }
 function recalc(){
   const q = S.draft, c = calc(q), t = c.tr;
   const to = $("#travOut");
-  if (to) to.innerHTML = q.travel.mode === "local" ? `<div><span>زيارات داخل المدينة</span><b>${money(t.local)}</b></div>`
-    : `<div><span>التنقل</span><b>${money(t.transport)}</b></div>${q.travel.mode !== "car" ? `<div><span>سيارة بالمدينة</span><b>${money(t.car)}</b></div>` : ""}<div><span>السكن</span><b>${money(t.hotel)}</b></div><div><span>البدلات</span><b>${money(t.perDiem)}</b></div><div style="background:var(--accent-soft)"><span>إجمالي تكلفة السفر</span><b>${money(t.total)}</b></div>`;
+  if (to) to.innerHTML = q.travel.mode === "local" ? `<div><span>زيارات داخل المدينة${c.nRep > 1 ? " (كل التقارير)" : ""}</span><b>${money(t.local)}</b></div>`
+    : `<div><span>التنقل</span><b>${money(t.transport)}</b></div>${q.travel.mode !== "car" ? `<div><span>سيارة بالمدينة</span><b>${money(t.car)}</b></div>` : ""}<div><span>السكن</span><b>${money(t.hotel)}</b></div><div><span>البدلات</span><b>${money(t.perDiem)}</b></div><div><span>إجمالي تكلفة السفر${c.nRep > 1 ? " (كل التقارير)" : ""}</span><b>${money(t.total)}</b></div>`;
   $$("[data-pa]").forEach(el => el.textContent = money(c.payAmts[+el.dataset.pa] || 0));
+  $("#payHint").innerHTML = (Math.abs(c.pctSum - 100) < 0.01 ? "مجموع النسب 100%" : `<span class="pill bad">مجموع النسب ${c.pctSum}% ويجب أن يكون 100%</span>`) + (c.price.mon ? ` · تقارير المراقبة (${money(c.price.mon)}) تُسدد عند تسليم كل تقرير` : "");
+  const ga = govAuto(q);
+  $("#govInfo").innerHTML = q.gov.manual
+    ? `مبلغ يدوي. <button type="button" class="btn sm ghost" id="govAutoBtn">احسبه تلقائياً (${money0(ga.total)})</button>`
+    : `محسوبة تلقائياً حسب الحد الأقصى في لائحة المقابل المالي: ${ga.items.map(([n, v]) => `${esc(n)} ${money0(v)}`).join(" + ")}`;
+  const gi = $("#q-gov"); if (gi && document.activeElement !== gi) gi.value = num(q.gov.amount);
   $("#mbTotal").textContent = money(c.grand);
-  $("#payHint").innerHTML = Math.abs(c.pctSum - 100) < 0.01 ? "مجموع النسب 100%" : `<span class="pill bad">مجموع النسب ${c.pctSum}% ويجب أن يكون 100%</span>`;
-  const rows = clientRows(q, c);
+  const rows = clientRows({ ...q, lang:"ar" }, c);
   $("#ledger").innerHTML = `<dl>
-      <dt>إعداد ${esc(svcOf(q).title)}</dt><dd>${money(c.writing)}</dd><dt>المختبر</dt><dd>${money(c.lab)}</dd><dt>السجلات</dt><dd>${money(c.rec)}</dd>
-      <dt>الزيارات والسفر</dt><dd>${money(t.total)}</dd>${c.extra ? `<dt>بنود إضافية</dt><dd>${money(c.extra)}</dd>` : ""}
+      <dt>${q.service === "mon" ? `إعداد ${c.nRep} تقارير` : "إعداد " + esc(svcOf(q).title)}</dt><dd>${money(c.writing)}</dd><dt>المختبر</dt><dd>${money(c.lab)}</dd><dt>السجلات</dt><dd>${money(c.rec)}</dd>
+      <dt>الزيارات والسفر</dt><dd>${money(t.total)}</dd>${c.maCost ? `<dt>تقارير المراقبة</dt><dd>${money(c.maCost)}</dd>` : ""}${c.extra ? `<dt>بنود إضافية</dt><dd>${money(c.extra)}</dd>` : ""}
       <dt class="strong">إجمالي التكلفة</dt><dd class="strong">${money(c.cost)}</dd></dl>
     <h3>سعر البيع</h3>
     <dl>${rows.map(r => `<dt>${esc(r.label.length > 34 ? r.label.slice(0,34) + "…" : r.label)}</dt><dd>${money(r.amount)}</dd>`).join("")}
@@ -986,17 +1278,21 @@ function recalc(){
 $("#v-quote").addEventListener("input", e => {
   const el = e.target, q = S.draft;
   if (el.dataset.b){
-    setPath(q, el.dataset.b, el.dataset.t === "bool" ? el.checked : el.value);
-    if (el.dataset.b === "facility.city"){ applyCity(q); $("#q-freg").value = q.facility.region || ""; renderTravel(); }
-    if (el.dataset.b === "client.name") clientAutofill();
-    if (el.dataset.b === "date") showNo();
-    if (el.dataset.b === "status" && el.value === "accepted" && !q.acceptedAt) q.acceptedAt = todayISO();
+    setPath(q, el.dataset.b, el.dataset.t === "bool" ? el.checked : el.dataset.t === "num" && el.tagName === "SELECT" ? num(el.value) : el.value);
+    const b = el.dataset.b;
+    if (b === "facility.city"){ applyCity(q); $("#q-freg").value = q.facility.region || ""; renderTravel(); }
+    if (b === "client.name") clientAutofill();
+    if (b === "date") showNo();
+    if (b === "status" && el.value === "accepted" && !q.acceptedAt) q.acceptedAt = todayISO();
+    if (b === "gov.amount") { q.gov.manual = true; }
+    if (b === "monAdd.on") renderMon();
+    if (b === "modified") renderGov();
   }
   if (el.dataset.lq){ const s = q.labs[el.dataset.lq] || (q.labs[el.dataset.lq] = { cost:num(S.cfg.labs.find(l => l.id === el.dataset.lq).cost) }); s.qty = num(el.value); el.closest(".pick").classList.toggle("on", s.qty > 0); }
   if (el.dataset.lc){ const s = q.labs[el.dataset.lc] || (q.labs[el.dataset.lc] = { qty:0 }); s.cost = num(el.value); }
   if (el.dataset.ro){ const r = S.cfg.records.find(x => x.id === el.dataset.ro), s = q.records[r.id] || (q.records[r.id] = { cost:r.cost }); s.on = el.checked; el.closest(".pick").classList.toggle("on", el.checked); }
   if (el.dataset.rc){ const r = S.cfg.records.find(x => x.id === el.dataset.rc), s = q.records[r.id] || (q.records[r.id] = { on:false }); s.cost = num(el.value); }
-  if (el.dataset.tx) q.text[el.dataset.tx] = el.value;
+  if (el.dataset.tx) OV(q).text[el.dataset.tx] = el.value;
   recalc(); markDirty();
 });
 $("#v-quote").addEventListener("change", e => { if (e.target.matches("select[data-b], input[type=checkbox]")) e.target.dispatchEvent(new Event("input", {bubbles:true})); });
@@ -1006,35 +1302,42 @@ $("#v-quote").addEventListener("click", e => {
   if ((b = hit("[data-cat]"))){ applyCategory(q, +b.dataset.cat); renderEditor(); markDirty(); return; }
   if ((b = hit("[data-seg]"))){
     const k = b.dataset.seg, v = b.dataset.v; q[k] = v;
-    if (k === "phase" && q.cat !== 1){ q.service = v === "construction" ? "eia" : "audit"; applyService(q); }
-    if (k === "service") applyService(q);
+    if (k === "phase" && q.cat !== 1 && q.service !== "mon"){ q.service = v === "construction" ? "eia" : "audit"; applyService(q); }
+    if (k === "service"){ if (v === "mon") q.monAdd.on = false; applyService(q); }
     renderEditor(); markDirty(); return;
   }
+  if ((b = hit("#govAutoBtn"))){ q.gov.manual = false; recalc(); markDirty(); return; }
   if ((b = hit("[data-mode]"))){ q.travel.mode = b.dataset.mode; if (b.dataset.mode === "car") q.travel.car = 0; else if (!num(q.travel.car) && b.dataset.mode !== "local") q.travel.car = (cityOf(q.facility.city) || {}).car || 200; renderTravel(); recalc(); markDirty(); return; }
   if ((b = hit("[data-xdel]"))){ q.extras.splice(+b.dataset.xdel, 1); renderExtras(); recalc(); markDirty(); return; }
   if ((b = hit("[data-pdel]"))){ q.payments.splice(+b.dataset.pdel, 1); renderPays(); recalc(); markDirty(); return; }
-  if ((b = hit("[data-txreset]"))){ delete q.text[b.dataset.txreset]; renderTexts(); markDirty(); return; }
+  if ((b = hit("[data-txreset]"))){ delete OV(q).text[b.dataset.txreset]; renderTexts(); markDirty(); return; }
 });
 $("#addExtra").addEventListener("click", () => { S.draft.extras.push({ label:"", cost:"" }); renderExtras(); markDirty(); $(`[data-b="extras.${S.draft.extras.length-1}.label"]`).focus(); });
-$("#addPay").addEventListener("click", () => { S.draft.payments.push({ label:"", pct:0 }); renderPays(); recalc(); markDirty(); });
+$("#addPay").addEventListener("click", () => { S.draft.payments.push({ label:"", labelEn:"", pct:0 }); renderPays(); recalc(); markDirty(); });
 $("#resetPay").addEventListener("click", () => { S.draft.payments = clone(svcOf(S.draft).payments); renderPays(); recalc(); markDirty(); });
 function clientAutofill(){
   const q = S.draft, c = S.clients.find(x => x.name === q.client.name);
-  if (c){ q.clientId = c.id; Object.assign(q.client, { contact:c.contact||"", phone:c.phone||"", email:c.email||"", cr:c.cr||"" });
-    $("#q-ccontact").value = q.client.contact; $("#q-cphone").value = q.client.phone; $("#q-cemail").value = q.client.email; $("#q-ccr").value = q.client.cr; $("#clientHint").textContent = "عميل محفوظ، تم تعبئة بياناته"; }
-  else { q.clientId = ""; $("#clientHint").textContent = q.client.name ? "عميل جديد، سيُحفظ مع العرض" : "اختر عميلاً محفوظاً أو اكتب اسماً جديداً"; }
+  if (c){
+    q.clientId = c.id; Object.assign(q.client, { contact:c.contact||"", phone:c.phone||"", email:c.email||"", cr:c.cr||"" });
+    if (c.facility){ Object.assign(q.facility, { name:c.facility.name || q.facility.name, district:c.facility.district || "", city:c.facility.city || q.facility.city, region:c.facility.region || "" }); applyCity(q); if (c.facility.region) q.facility.region = c.facility.region; }
+    for (const [id, v] of [["q-ccontact", q.client.contact], ["q-cphone", q.client.phone], ["q-cemail", q.client.email], ["q-ccr", q.client.cr], ["q-fname", q.facility.name], ["q-fdist", q.facility.district], ["q-freg", q.facility.region]]) $("#" + id).value = v;
+    $("#q-fcity").value = q.facility.city; renderTravel();
+    $("#clientHint").textContent = "عميل محفوظ، تم تعبئة بياناته (تقدر تعدّلها)";
+  } else { q.clientId = ""; $("#clientHint").textContent = q.client.name ? "عميل جديد، سيُحفظ مع العرض" : "اختر عميلاً محفوظاً أو اكتب اسماً جديداً"; }
 }
 async function saveQuote(silent){
   const q = S.draft;
   if (!q.client.name.trim()){ toast("اكتب اسم العميل أولاً"); location.hash = "quote"; $("#q-cname").focus(); return false; }
-  if (!q.clientId){ const ex = S.clients.find(c => c.name === q.client.name.trim());
-    if (ex) q.clientId = ex.id; else { const id = uid(); S.clients.push({ id, ...q.client, createdAt:Date.now() }); q.clientId = id; } }
+  const cdata = { ...q.client, name:q.client.name.trim(), facility:{ name:q.facility.name, city:q.facility.city, district:q.facility.district, region:q.facility.region } };
+  let cl = S.clients.find(c => c.id === q.clientId) || S.clients.find(c => c.name === cdata.name);
+  if (cl) Object.assign(cl, cdata); else { cl = { id:uid(), ...cdata, createdAt:Date.now() }; S.clients.push(cl); }
+  q.clientId = cl.id;
   if (!q.number){ const seq = nextSeq(); q.number = makeNumber(seq); S.cfg.pricing.nextNo = seq + 1; }
   if (!q.id){ q.id = uid(); q.createdAt = Date.now(); }
   q.updatedAt = Date.now();
   const c = calc(q); q.totals = { grand:c.grand, net:c.net, cost:c.cost, margin:c.margin };
   const i = S.quotes.findIndex(x => x.id === q.id); if (i >= 0) S.quotes[i] = clone(q); else S.quotes.unshift(clone(q));
-  persist(true); S.saved = true; $("#dirty").hidden = true; showNo();
+  persist(true); S.saved = true; $("#dirty").hidden = true; showNo(); renderHero();
   try{ localStorage.removeItem("musaer-env-draft2"); }catch(e){}
   trackQuote(q);
   if (!silent) toast(`تم حفظ العرض ${q.number}`);
@@ -1044,8 +1347,8 @@ $("#bSave").addEventListener("click", () => saveQuote());
 $("#bNew").addEventListener("click", () => { S.draft = newDraft(S.draft.cat); S.saved = true; try{ localStorage.removeItem("musaer-env-draft2"); }catch(e){} renderEditor(); $("#q-cname").focus(); });
 $("#bDup").addEventListener("click", () => duplicate(S.draft));
 function duplicate(src){
-  const q = clone(src); q.id = null; q.number = ""; q.status = "draft"; q.date = todayISO(); delete q.totals; delete q.createdAt;
-  S.draft = q; S.saved = false; location.hash = "quote"; renderEditor(); markDirty();
+  const q = clone(src); q.id = null; q.number = ""; q.status = "draft"; q.date = todayISO(); delete q.totals; delete q.createdAt; delete q.acceptedAt;
+  S.draft = normQ(q); S.saved = false; location.hash = "quote"; renderEditor(); markDirty();
   toast("نسخة جديدة جاهزة. غيّر العميل أو المدينة أو القياسات ثم احفظ");
 }
 
@@ -1069,53 +1372,54 @@ function footerHTML(){
 }
 const cb = (on, t) => `<span class="cbx ${on ? "on" : ""}"><i>${on ? "✓" : ""}</i>${t}</span>`;
 function blocksHTML(m){
-  const q = m.q, c = m.c, co = m.co, B = [], f = q.facility;
+  const q = m.q, c = m.c, co = m.co, B = [], X = m.L, en = m.en;
   const ed = (k, cls = "d-p") => `class="${cls}" data-edit="${k}"`;
   const kv = (k, v, ltr) => `<div><span>${k}:</span> <b>${ltr ? `<bdi dir="ltr">${esc(v)}</bdi>` : esc(v)}</b></div>`;
-  B.push(`<div class="d-meta"><div class="kv">${kv("التاريخ", m.date, 1)}${co.license ? kv("رقم الترخيص البيئي للشركة", co.license, 1) : ""}</div>
-    <div class="kv">${kv("رقم العرض", m.ref, 1)}${kv("صالح حتى", m.valid, 1)}</div></div>`);
-  B.push(`<div><div class="d-greet"><span>المكرمين/ <b>${esc(q.client.name) || "…………………………"}</b></span><span>المحترمين</span><span>السلام عليكم ورحمة الله وبركاته</span><span>وبعد،</span></div>
+  B.push(`<div class="d-meta"><div class="kv">${kv(X.date, m.date, 1)}${co.license ? kv(X.license, co.license, 1) : ""}</div><div class="kv">${kv(X.ref, m.ref, 1)}${kv(X.valid, m.valid, 1)}</div></div>`);
+  const nm = esc(q.client.name) || "…………………………";
+  B.push(`<div>${en ? `<p class="d-to">${X.to} <b>${nm}</b></p><p class="d-salam">${X.salam}</p>`
+    : `<div class="d-greet"><span>${X.to} <b>${nm}</b></span><span>${X.respected}</span><span>${X.salam}</span><span>${X.after}</span></div>`}
     <p ${ed("text.intro")}>${esc(m.intro)}</p></div>`);
-  const loc = [f.district && "حي " + esc(f.district), f.city && "مدينة " + esc(f.city), f.region && esc(f.region)].filter(Boolean).join(" - ");
+  const svcChecks = (q.cat === 1 ? ["plan"] : ["audit","eia"]).concat(["mon"]).map(s => cb(q.service === s || (s === "mon" && c.ma), X[s])).join("");
   B.push(`<table class="d-info"><tbody>
-    <tr><th>الموضوع</th><td>${cb(q.request === "issue","إصدار التصريح البيئي")}${cb(q.request === "renew","تجديد تصريح بيئي")}<span class="cbx-sep"></span>${cb(q.phase === "construction","إنشائي")}${cb(q.phase === "operation","تشغيلي")}</td></tr>
-    <tr><th>الخدمة المطلوبة</th><td>${q.cat === 1 ? cb(true,"خطة الإدارة البيئية") : cb(q.service === "audit","دراسة تدقيق بيئي") + cb(q.service === "eia","دراسة تقييم أثر بيئي")}</td></tr>
-    <tr><th>تصنيف النشاط</th><td>${esc(classText(q))}</td></tr>
-    <tr><th>نوع النشاط</th><td>${esc(f.name)}</td></tr>
-    <tr><th>الموقع</th><td>${loc}</td></tr>
-</tbody></table>`);
-  B.push(`<p class="d-p">واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:</p>`);
+    <tr><th>${X.subject}</th><td>${q.service === "mon" ? "" : cb(q.request === "issue", X.issue) + cb(q.request === "renew", X.renew) + `<span class="cbx-sep"></span>`}${cb(q.phase === "construction", X.construction)}${cb(q.phase === "operation", X.operation)}</td></tr>
+    <tr><th>${X.service}</th><td>${svcChecks}</td></tr>
+    <tr><th>${X.classification}</th><td>${esc(m.cls)}</td></tr>
+    <tr><th>${X.type}</th><td>${esc(q.facility.name)}</td></tr>
+    <tr><th>${X.location}</th><td>${esc(m.loc)}</td></tr></tbody></table>`);
+  B.push(`<p class="d-p">${X.lead}</p>`);
   let n = 0;
-  const H = t => `<h3>${SEC[n++]}: ${t}</h3>`;
+  const H = t => `<h3>${X.sec[n++]}: ${t}</h3>`;
   const list = (k, arr, cls = "") => `<ul class="${cls}" data-edit="${k}" data-split="list">${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
-  B.push(`<div class="d-sec">${H("نطاق العمل")}${list("text.scopeLead", m.scopeLead)}</div>`);
-  B.push(`<div class="d-sec"><h4>المنهجية المتبعة في العمل:</h4>${list("text.methodology", m.methodology, "dash")}</div>`);
-  B.push(`<div class="d-sec">${H("الفترة الزمنية")}${list("text.durations", m.durations)}</div>`);
-  if (q.showBreakdown) B.push(`<div class="d-sec" data-split="table">${H("التكلفة المالية")}<table class="d-tbl"><thead><tr><th class="c">#</th><th>البند</th><th class="m" style="text-align:left">المبلغ (ر.س)</th></tr></thead><tbody>
+  B.push(`<div class="d-sec">${H(X.scope)}${list("text.scopeLead", m.scopeLead)}</div>`);
+  B.push(`<div class="d-sec"><h4>${X.method}</h4>${list("text.methodology", m.methodology, "dash")}</div>`);
+  B.push(`<div class="d-sec">${H(X.timeline)}${list("text.durations", m.durations)}</div>`);
+  if (q.showBreakdown) B.push(`<div class="d-sec" data-split="table">${H(X.financial)}<table class="d-tbl"><thead><tr><th class="c">#</th><th>${X.item}</th><th class="m">${X.amount}</th></tr></thead><tbody>
     ${m.rows.map((r, i) => `<tr><td class="c">${i+1}</td><td><div class="lb" data-edit="${r.extra != null ? "extras." + r.extra + ".label" : "labels." + r.key}">${esc(r.label)}</div>${r.extra == null ? `<div class="dt" data-edit="details.${r.key}">${esc(r.detail)}</div>` : ""}</td><td class="m">${money(r.amount)}</td></tr>`).join("")}
-    ${c.disc ? `<tr class="sum"><td></td><td>الخصم</td><td class="m">−${money(c.disc)}</td></tr>` : ""}<tr class="sum"><td></td><td>قيمة الأعمال قبل الضريبة</td><td class="m">${money(c.net)}</td></tr></tbody></table></div>`);
-  B.push(`<div class="d-sec" data-split="table">${q.showBreakdown ? `<h4>جدول الدفعات:</h4>` : H("التكلفة المالية")}<table class="d-tbl"><thead><tr><th class="c">#</th><th>الأعمال</th><th class="p">الدفعات</th><th class="m" style="text-align:left">التكلفة (ر.س)</th></tr></thead><tbody>
-    ${m.pays.map(p => `<tr><td class="c">${p.i+1}</td><td data-edit="payments.${p.i}.label">${esc(p.label)}</td><td class="p">${esc(p.ord)}</td><td class="m">${money(p.amount)}</td></tr>`).join("")}
-    ${!q.showBreakdown && c.disc ? `<tr class="sum"><td></td><td colspan="2">بعد خصم ${money(c.disc)}</td><td class="m">${money(c.net)}</td></tr>` : ""}
-    <tr class="sum"><td></td><td colspan="2">ضريبة القيمة المضافة (${c.vatRate}%)</td><td class="m">${money(c.vat)}</td></tr>
-    ${c.gov ? `<tr class="gov"><td></td><td colspan="2">الرسوم الحكومية${S.cfg.pricing.govVat ? "" : " (غير خاضعة للضريبة)"}</td><td class="m">${money(c.gov)}</td></tr>` : ""}
-    <tr class="tot"><td></td><td colspan="2">القيمة الإجمالية</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
+    ${c.disc ? `<tr class="sum"><td></td><td>${X.discount}</td><td class="m">−${money(c.disc)}</td></tr>` : ""}<tr class="sum"><td></td><td>${X.net}</td><td class="m">${money(c.net)}</td></tr></tbody></table></div>`);
+  B.push(`<div class="d-sec" data-split="table">${q.showBreakdown ? `<h4>${X.payTable}</h4>` : H(X.financial)}<table class="d-tbl"><thead><tr><th class="c">#</th><th>${X.works}</th><th class="p">${X.payment}</th><th class="m">${X.cost}</th></tr></thead><tbody>
+    ${m.pays.map((p, j) => `<tr><td class="c">${j+1}</td><td ${p.fixed ? "" : `data-edit="payments.${p.i}.label"`}>${esc(p.label)}</td><td class="p">${esc(p.ord)}</td><td class="m">${money(p.amount)}</td></tr>`).join("")}
+    ${!q.showBreakdown && c.disc ? `<tr class="sum"><td></td><td colspan="2">${X.afterDisc} ${money(c.disc)}</td><td class="m">${money(c.net)}</td></tr>` : ""}
+    <tr class="sum"><td></td><td colspan="2">${X.vat} (${c.vatRate}%)</td><td class="m">${money(c.vat)}</td></tr>
+    ${c.gov ? `<tr class="gov"><td></td><td colspan="2">${X.gov}${S.cfg.pricing.govVat ? "" : X.govNoVat}</td><td class="m">${money(c.gov)}</td></tr>` : ""}
+    <tr class="tot"><td></td><td colspan="2">${X.total}</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
   B.push(`<p class="d-words" data-edit="text.totalNote">${esc(m.totalNote)}</p>`);
   B.push(`<div class="d-sec">${list("text.notes", m.notes)}</div>`);
-  if (co.iban) B.push(`<div class="d-sec">${H("بيانات الحساب البنكي")}<div class="d-bank"><div><span>اسم الحساب:</span> <b>${esc(co.accountName || co.name)}</b></div><div><span>البنك:</span> <b>${esc(co.bankName)}</b></div><div><span>رقم الآيبان:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div></div>`);
-  B.push(`<div class="d-sec" style="margin-top:22px"><h4>وفي حال الموافقة:</h4><table class="d-sign"><thead><tr><th>${esc(co.accountName || co.name)}</th><th>العميل: ${esc(q.client.name)}</th></tr></thead><tbody>
-    <tr><td><span>الممثل:</span> ${esc(co.signName)}</td><td><span>الممثل:</span></td></tr>
-    <tr><td><span>الصفة:</span> ${esc(co.signTitle)}</td><td><span>الصفة:</span></td></tr>
-    <tr><td class="stamp"><span>الختم:</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp" ${co.signLine ? 'rowspan="2"' : ""}><span>الختم والتوقيع:</span></td></tr>
-    ${co.signLine ? `<tr><td><span>التوقيع:</span></td></tr>` : ""}</tbody></table></div>`);
+  if (co.iban) B.push(`<div class="d-sec">${H(X.bank)}<div class="d-bank"><div><span>${X.accName}:</span> <b>${esc(m.coName)}</b></div><div><span>${X.bankName}:</span> <b>${esc(m.bankName)}</b></div><div><span>${X.iban}:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div></div>`);
+  B.push(`<div class="d-sec" style="margin-top:22px"><h4>${X.accept}</h4><table class="d-sign"><thead><tr><th>${esc(m.coName)}</th><th>${X.client}: ${esc(q.client.name)}</th></tr></thead><tbody>
+    <tr><td><span>${X.rep}</span> ${esc(m.signName)}</td><td><span>${X.rep}</span></td></tr>
+    <tr><td><span>${X.title}</span> ${esc(m.signTitle)}</td><td><span>${X.title}</span></td></tr>
+    <tr><td class="stamp"><span>${X.stamp}</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp" ${co.signLine ? 'rowspan="2"' : ""}><span>${X.stampSign}</span></td></tr>
+    ${co.signLine ? `<tr><td><span>${X.signature}</span></td></tr>` : ""}</tbody></table></div>`);
   return B;
 }
 async function renderPages(){
   const host = $("#pages"); host.innerHTML = "";
   const m = buildModel(S.draft), co = S.cfg.company, pages = [];
   const newPage = () => {
-    const pg = document.createElement("div"); pg.className = "pg" + (hasLH() ? " lh" : "");
-    pg.style.setProperty("--brand", co.brand || "#002840"); pg.style.setProperty("--brand2", co.brand2 || "#1898d0");
+    const pg = document.createElement("div"); pg.className = "pg" + (hasLH() ? " lh" : "") + (m.en ? " en" : "");
+    pg.setAttribute("dir", m.en ? "ltr" : "rtl"); pg.setAttribute("lang", m.en ? "en" : "ar");
+    pg.style.setProperty("--brand", co.brand || "#012c41"); pg.style.setProperty("--brand2", co.brand2 || "#0099d9");
     pg.style.setProperty("--mt", num(co.mt) + "px"); pg.style.setProperty("--mb", num(co.mb) + "px"); pg.style.setProperty("--mx", num(co.mx) + "px");
     if (hasLH()) pg.style.backgroundImage = `url("${co.letterhead}")`;
     pg.innerHTML = `<div class="pg-h">${headerHTML()}</div><div class="pg-b"></div><div class="pg-f">${footerHTML()}</div><span class="pno"></span>`;
@@ -1151,7 +1455,7 @@ async function renderPages(){
     }
   }
   for (const html of blocksHTML(m)) place(toEl(html));
-  pages.forEach((p, i) => p.querySelector(".pno").textContent = `صفحة ${i+1} من ${pages.length}`);
+  pages.forEach((p, i) => p.querySelector(".pno").textContent = m.L.page(i + 1, pages.length));
   return pages;
 }
 
@@ -1172,7 +1476,7 @@ function setEditing(on){
 $("#mEdit").addEventListener("click", () => { setEditing(true); const f = $("#pages [data-edit]"); if (f) f.focus(); });
 $("#mEditCancel").addEventListener("click", async () => { setEditing(false); await renderPages(); });
 $("#mEditSave").addEventListener("click", async () => {
-  const q = S.draft, seen = {};
+  const q = S.draft, O = OV(q), en = isEn(q), seen = {};
   for (const el of $$("#pages [data-edit]")){
     const k = el.dataset.edit, isList = el.tagName === "UL";
     const val = isList ? $$("li", el).map(li => li.innerText.trim()).filter(Boolean).join("\n") : el.innerText.replace(/\n{3,}/g, "\n\n").trim();
@@ -1181,16 +1485,19 @@ $("#mEditSave").addEventListener("click", async () => {
   const m = buildModel(q);
   const orig = { "text.intro":m.intro, "text.scopeLead":m.scopeLead.join("\n"), "text.methodology":m.methodology.join("\n"), "text.durations":m.durations.join("\n"), "text.totalNote":m.totalNote, "text.notes":m.notes.join("\n") };
   m.rows.forEach(r => { orig[r.extra != null ? "extras." + r.extra + ".label" : "labels." + r.key] = r.label; if (r.extra == null) orig["details." + r.key] = r.detail; });
-  m.pays.forEach(p => orig[`payments.${p.i}.label`] = p.label);
+  m.pays.forEach(p => { if (!p.fixed) orig[`payments.${p.i}.label`] = p.label; });
   let changed = 0;
   for (const [k, v] of Object.entries(seen)){
     if (orig[k] !== undefined && orig[k].trim() === v) continue;
     changed++;
-    if (k === "text.durations"){ const ls = v.split("\n"); q.text.validity = ls[0] || ""; q.text.duration = ls.slice(1).join("\n"); continue; }
-    if (k === "text.methodology"){ q.text.methodology = v.split("\n").filter(x => !m.methodAuto.includes(x.trim())).join("\n"); continue; }
-    if (k === "text.notes"){ q.text.notes = v.split("\n").filter(x => x.trim() !== m.govNote).join("\n"); continue; }
-    if (k === "text.totalNote"){ q.text.totalNote = v.replace(money(m.c.grand), "{الإجمالي}").replace(tafqeet(m.c.grand), "{كتابة}"); continue; }
-    setPath(q, k, v);
+    if (k === "text.durations"){ const ls = v.split("\n"); O.text.validity = ls[0] || ""; O.text.duration = ls.slice(1).join("\n"); continue; }
+    if (k === "text.scopeLead"){ O.text.scopeLead = v.split("\n").filter(x => !m.scopeAuto.includes(x.trim())).join("\n"); continue; }
+    if (k === "text.methodology"){ O.text.methodology = v.split("\n").filter(x => !m.methodAuto.includes(x.trim())).join("\n"); continue; }
+    if (k === "text.notes"){ O.text.notes = v.split("\n").filter(x => !m.notesAuto.includes(x.trim())).join("\n"); continue; }
+    if (k === "text.totalNote"){ O.text.totalNote = v.replace(money(m.c.grand), "{الإجمالي}").replace(words(q, m.c.grand), "{كتابة}"); continue; }
+    if (k.startsWith("payments.")){ setPath(q, en ? k + "En" : k, v); continue; }
+    if (k.startsWith("extras.")){ setPath(q, k, v); continue; }
+    setPath(O, k, v);
   }
   setEditing(false);
   if (changed){ markDirty(); if (q.id) await saveQuote(true); toast("تم حفظ التعديلات على هذا العرض"); }
@@ -1198,7 +1505,7 @@ $("#mEditSave").addEventListener("click", async () => {
 });
 
 async function ensureSaved(){ if (S.saved && S.draft.number) return true; return await saveQuote(true); }
-const fileBase = () => "Quotation-" + String(S.draft.number || "draft").replace(/[^A-Za-z0-9_-]/g, "-");
+const fileBase = () => (isEn(S.draft) ? "Proposal-" : "Quotation-") + String(S.draft.number || "draft").replace(/[^A-Za-z0-9_-]/g, "-");
 $("#mPdf").addEventListener("click", async () => {
   const b = $("#mPdf"), old = b.textContent; b.disabled = true; b.textContent = "جارٍ التجهيز…";
   try{
@@ -1233,11 +1540,11 @@ $("#mWord").addEventListener("click", async () => {
   finally{ b.disabled = false; b.textContent = old; }
 });
 async function buildDocx(q){
-  const X = window.docx, m = buildModel(q), co = m.co, c = m.c, f = q.facility;
-  const brand = (co.brand || "#002840").replace("#", "").toUpperCase(), brand2 = (co.brand2 || "#1898d0").replace("#", "").toUpperCase();
+  const X = window.docx, m = buildModel(q), co = m.co, c = m.c, Lx = m.L, ar = !m.en;
+  const brand = (co.brand || "#012c41").replace("#", "").toUpperCase(), brand2 = (co.brand2 || "#0099d9").replace("#", "").toUpperCase();
   const FONT = "Arial", PAGE_W = 11906, PAGE_H = 16838, MX = Math.round(num(co.mx) * 15) || 1080, CW = PAGE_W - 2 * MX;
-  const R = (t, o = {}) => new X.TextRun({ text:String(t), rightToLeft:true, font:o.font || FONT, size:o.size || 21, sizeComplexScript:o.size || 21, bold:!!o.bold, boldComplexScript:!!o.bold, color:o.color });
-  const Pg = (kids, o = {}) => new X.Paragraph({ bidirectional:true, alignment:o.align, keepNext:o.keepNext, spacing:o.line === null ? { after:o.after ?? 100, before:o.before ?? 0 } : { after:o.after ?? 100, before:o.before ?? 0, line:o.line ?? 300 },
+  const R = (t, o = {}) => new X.TextRun({ text:String(t), rightToLeft:ar, font:o.font || FONT, size:o.size || 21, sizeComplexScript:o.size || 21, bold:!!o.bold, boldComplexScript:!!o.bold, color:o.color });
+  const Pg = (kids, o = {}) => new X.Paragraph({ bidirectional:ar, alignment:o.align, keepNext:o.keepNext, spacing:o.line === null ? { after:o.after ?? 100, before:o.before ?? 0 } : { after:o.after ?? 100, before:o.before ?? 0, line:o.line ?? 300 },
     bullet:o.bullet ? { level:0 } : undefined, indent:o.indent, border:o.border, children:Array.isArray(kids) ? kids : [kids] });
   const H = t => Pg(R(t, { bold:true, size:25, color:brand }), { before:200, after:80, keepNext:true, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:12, color:brand2, space:2 } } });
   const H4 = t => Pg(R(t, { bold:true, size:22 }), { before:60, after:40, keepNext:true });
@@ -1245,18 +1552,18 @@ async function buildDocx(q){
   const dashes = arr => arr.map(t => Pg([R("–  ", { color:brand2, bold:true }), R(t)], { after:40, indent:{ start:500, hanging:250 }, align:X.AlignmentType.BOTH }));
   const BD = { style:X.BorderStyle.SINGLE, size:4, color:"D3DEE6" }, ALLB = { top:BD, bottom:BD, left:BD, right:BD };
   const NONE = { style:X.BorderStyle.NONE, size:0, color:"FFFFFF" }, NOB = { top:NONE, bottom:NONE, left:NONE, right:NONE };
-  const cell = (kids, o = {}) => new X.TableCell({ children:Array.isArray(kids) ? kids : [kids], width:o.w ? { size:o.w, type:X.WidthType.DXA } : undefined, columnSpan:o.span,
-    shading:o.fill ? { type:X.ShadingType.CLEAR, color:"auto", fill:o.fill } : undefined, borders:o.borders || ALLB, margins:{ top:70, bottom:70, left:110, right:110 } });
-  const tbl = (rows, widths) => new X.Table({ visuallyRightToLeft:true, width:{ size:CW, type:X.WidthType.DXA }, columnWidths:widths, rows });
+  const cell = (kids, o = {}) => new X.TableCell({ children:Array.isArray(kids) ? kids : [kids], width:o.w ? { size:o.w, type:X.WidthType.DXA } : undefined, columnSpan:o.span, rowSpan:o.rowSpan,
+    shading:o.fill ? { type:X.ShadingType.CLEAR, color:"auto", fill:o.fill } : undefined, borders:o.borders || ALLB, margins:o.margins || { top:70, bottom:70, left:110, right:110 } });
+  const tbl = (rows, widths) => new X.Table({ visuallyRightToLeft:ar, width:{ size:CW, type:X.WidthType.DXA }, columnWidths:widths, rows });
   const CB = (on, t) => [R(on ? "☑ " : "☐ ", { font:"Segoe UI Symbol", color:on ? brand2 : "8A99A5", size:22 }), R(t + "      ", { bold:on })];
-  const pnoRuns = () => [R("صفحة ", { size:15, color:"6D7C88" }), new X.TextRun({ children:[X.PageNumber.CURRENT], size:15, font:FONT, color:"6D7C88" }), R(" من ", { size:15, color:"6D7C88" }), new X.TextRun({ children:[X.PageNumber.TOTAL_PAGES], size:15, font:FONT, color:"6D7C88" })];
+  const pnoRuns = () => { const parts = Lx.page("§", "¤").split(/(§|¤)/); return parts.filter(Boolean).map(p => p === "§" ? new X.TextRun({ children:[X.PageNumber.CURRENT], size:15, font:FONT, color:"6D7C88" }) : p === "¤" ? new X.TextRun({ children:[X.PageNumber.TOTAL_PAGES], size:15, font:FONT, color:"6D7C88" }) : R(p, { size:15, color:"6D7C88" })); };
   const floatImg = (u, w, h, y) => new X.ImageRun({ type:imgType(u), data:dataUrlBytes(u), transformation:{ width:w, height:h },
     floating:{ horizontalPosition:{ relative:X.HorizontalPositionRelativeFrom.PAGE, offset:0 }, verticalPosition:{ relative:X.VerticalPositionRelativeFrom.PAGE, offset:y }, behindDocument:true, allowOverlap:true } });
 
   const headerKids = [], footerKids = [];
   let top = 1300, bottom = 1300, hdrDist = 500, ftrDist = 400;
   if (hasLH()){
-    headerKids.push(new X.Paragraph({ bidirectional:true, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0), ...pnoRuns() ] }));
+    headerKids.push(new X.Paragraph({ bidirectional:ar, alignment:X.AlignmentType.END, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0), ...pnoRuns() ] }));
     top = Math.round(num(co.mt) * 15); bottom = Math.round(num(co.mb) * 15); hdrDist = 620; ftrDist = 0;
     footerKids.push(new X.Paragraph({ children:[] }));
   } else {
@@ -1266,83 +1573,87 @@ async function buildDocx(q){
       if (co.logo){ const s = await imgSize(co.logo), lh = 54, lw = Math.round(lh * s.w / s.h); kids.push(new X.ImageRun({ type:imgType(co.logo), data:dataUrlBytes(co.logo), transformation:{ width:lw, height:lh } }), R("   ")); }
       kids.push(R(co.name, { bold:true, size:30, color:brand }));
       headerKids.push(Pg(kids, { after:0 }));
-      headerKids.push(Pg(R([co.tagline, co.ncecClass && `مؤهلة لدى ${NCEC} (فئة ${co.ncecClass})`].filter(Boolean).join(" · ") || " ", { size:17, color:"5D6A75" }), { after:0, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:18, color:brand, space:6 } } }));
     }
     if (co.footer){ const s = await imgSize(co.footer), h = Math.round(794 * s.h / s.w); footerKids.push(new X.Paragraph({ children:[ floatImg(co.footer, 794, h, Math.round((1123 - h) * 9525)) ] })); bottom = h * 15 + 350; ftrDist = 0; }
-    else footerKids.push(Pg(R([co.name, co.address, co.phone && "هاتف: " + co.phone, co.email, co.cr && "س.ت: " + co.cr, co.vat && "الرقم الضريبي: " + co.vat].filter(Boolean).join(" · "), { size:15, color:"5D6A75" }), { align:X.AlignmentType.CENTER, after:0, border:{ top:{ style:X.BorderStyle.SINGLE, size:6, color:brand2, space:4 } } }));
-    footerKids.push(new X.Paragraph({ bidirectional:true, alignment:X.AlignmentType.END, spacing:{ after:0 }, children:pnoRuns() }));
+    else footerKids.push(Pg(R([co.name, co.address, co.phone, co.email, co.cr && "CR: " + co.cr].filter(Boolean).join(" · "), { size:15, color:"5D6A75" }), { align:X.AlignmentType.CENTER, after:0 }));
+    footerKids.push(new X.Paragraph({ bidirectional:ar, alignment:X.AlignmentType.END, spacing:{ after:0 }, children:pnoRuns() }));
   }
 
   const B = [], half = Math.round(CW / 2);
   const kvCell = (pairs, w) => cell(pairs.map(([k, v]) => Pg([R(k + ": ", { color:"6D7C88", size:19 }), R(v, { bold:true, size:19 })], { after:20 })), { w, borders:NOB });
   B.push(tbl([ new X.TableRow({ children:[
-    kvCell([["التاريخ", m.date], ...(co.license ? [["رقم الترخيص البيئي للشركة", co.license]] : [])], half),
-    kvCell([["رقم العرض", m.ref], ["صالح حتى", m.valid]], CW - half) ] }) ], [half, CW - half]));
+    kvCell([[Lx.date, m.date], ...(co.license ? [[Lx.license, co.license]] : [])], half),
+    kvCell([[Lx.ref, m.ref], [Lx.valid, m.valid]], CW - half) ] }) ], [half, CW - half]));
   B.push(Pg(R(""), { after:60, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:4, color:"D9E2E8", space:2 } } }));
-  const meas = (t, font) => { const x = (meas.c || (meas.c = document.createElement("canvas"))).getContext("2d"); x.font = font; return x.measureText(t).width; };
   const nm = q.client.name || "…………………………";
-  const w1 = Math.min(CW - 1800, Math.round(Math.max(meas("المكرمين/ ", "14px Arial") + meas(nm, "bold 15.4px Arial"), meas("السلام عليكم ورحمة الله وبركاته", "14px Arial")) * 15) + 260 + 960);
-  const gcell = (kids, w) => new X.TableCell({ children:[Pg(kids, { after:60 })], width:{ size:w, type:X.WidthType.DXA }, borders:NOB, margins:{ top:20, bottom:20, left:0, right:0 } });
+  if (ar){
+    const meas = (t, font) => { const x = (meas.c || (meas.c = document.createElement("canvas"))).getContext("2d"); x.font = font; return x.measureText(t).width; };
+    const w1 = Math.min(CW - 1800, Math.round(Math.max(meas(Lx.to + " ", "14px Arial") + meas(nm, "bold 15.4px Arial"), meas(Lx.salam, "14px Arial")) * 15) + 260 + 960);
+    const gcell = (kids, w) => new X.TableCell({ children:[Pg(kids, { after:60 })], width:{ size:w, type:X.WidthType.DXA }, borders:NOB, margins:{ top:20, bottom:20, left:0, right:0 } });
+    B.push(Pg(R(""), { after:40 }));
+    B.push(tbl([ new X.TableRow({ children:[ gcell([R(Lx.to + " "), R(nm, { bold:true, size:23 })], w1), gcell([R(Lx.respected)], CW - w1) ] }),
+                 new X.TableRow({ children:[ gcell([R(Lx.salam)], w1), gcell([R(Lx.after)], CW - w1) ] }) ], [w1, CW - w1]));
+  } else {
+    B.push(Pg([R(Lx.to + " "), R(nm, { bold:true, size:23 })], { before:120, after:60 }));
+    B.push(Pg(R(Lx.salam), { after:40 }));
+  }
+  m.intro.split(/\n+/).filter(t => t.trim()).forEach((t, i) => B.push(Pg(R(t.trim()), { align:X.AlignmentType.BOTH, before:i ? 0 : 140, after:60 })));
   B.push(Pg(R(""), { after:40 }));
-  B.push(tbl([ new X.TableRow({ children:[ gcell([R("المكرمين/ "), R(nm, { bold:true, size:23 })], w1), gcell([R("المحترمين")], CW - w1) ] }),
-               new X.TableRow({ children:[ gcell([R("السلام عليكم ورحمة الله وبركاته")], w1), gcell([R("وبعد،")], CW - w1) ] }) ], [w1, CW - w1]));
-  m.intro.split(/\n\s*\n/).forEach((t, i) => B.push(Pg(R(t.trim()), { align:X.AlignmentType.BOTH, before:i ? 0 : 140, after:120 })));
-  const iw = 2000, ir = (k, kids) => new X.TableRow({ children:[ cell(Pg(R(k, { bold:true, color:brand, size:20 }), { after:0 }), { w:iw, fill:"EEF4F8" }), cell(Pg(kids, { after:0 }), { w:CW - iw }) ] });
-  const loc = [f.district && "حي " + f.district, f.city && "مدينة " + f.city, f.region].filter(Boolean).join(" - ");
+  const iw = 2200, ir = (k, kids) => new X.TableRow({ children:[ cell(Pg(R(k, { bold:true, color:brand, size:20 }), { after:0 }), { w:iw, fill:"EEF4F8" }), cell(Pg(kids, { after:0 }), { w:CW - iw }) ] });
+  const svcList = (q.cat === 1 ? ["plan"] : ["audit","eia"]).concat(["mon"]).flatMap(s => CB(q.service === s || (s === "mon" && !!c.ma), Lx[s]));
   B.push(tbl([
-    ir("الموضوع", [...CB(q.request === "issue","إصدار التصريح البيئي"), ...CB(q.request === "renew","تجديد تصريح بيئي"), R("|      ", { color:"C5D1DA" }), ...CB(q.phase === "construction","إنشائي"), ...CB(q.phase === "operation","تشغيلي")]),
-    ir("الخدمة المطلوبة", q.cat === 1 ? CB(true, "خطة الإدارة البيئية") : [...CB(q.service === "audit","دراسة تدقيق بيئي"), ...CB(q.service === "eia","دراسة تقييم أثر بيئي")]),
-    ir("تصنيف النشاط", [R(classText(q))]), ir("نوع النشاط", [R(f.name || " ")]), ir("الموقع", [R(loc || " ")])
+    ir(Lx.subject, [...(q.service === "mon" ? [] : [...CB(q.request === "issue", Lx.issue), ...CB(q.request === "renew", Lx.renew), R("|      ", { color:"C5D1DA" })]), ...CB(q.phase === "construction", Lx.construction), ...CB(q.phase === "operation", Lx.operation)]),
+    ir(Lx.service, svcList), ir(Lx.classification, [R(m.cls)]), ir(Lx.type, [R(q.facility.name || " ")]), ir(Lx.location, [R(m.loc || " ")])
   ], [iw, CW - iw]));
-  B.push(Pg(R("واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:"), { before:140, after:60 }));
+  B.push(Pg(R(Lx.lead), { before:140, after:60 }));
   let n = 0;
-  B.push(H(`${SEC[n++]}: نطاق العمل`), ...bullets(m.scopeLead), H4("المنهجية المتبعة في العمل:"), ...dashes(m.methodology));
-  B.push(H(`${SEC[n++]}: الفترة الزمنية`), ...bullets(m.durations));
-  B.push(H(`${SEC[n++]}: التكلفة المالية`));
+  B.push(H(`${Lx.sec[n++]}: ${Lx.scope}`), ...bullets(m.scopeLead), H4(Lx.method), ...dashes(m.methodology));
+  B.push(H(`${Lx.sec[n++]}: ${Lx.timeline}`), ...bullets(m.durations));
+  B.push(H(`${Lx.sec[n++]}: ${Lx.financial}`));
   const HB = { top:{...BD,color:brand}, bottom:{...BD,color:brand}, left:{...BD,color:brand}, right:{...BD,color:brand} };
   const HC = (t, w, al) => cell(Pg(R(t, { bold:true, color:"FFFFFF", size:19 }), { after:0, align:al }), { w, fill:brand, borders:HB });
   const CEN = X.AlignmentType.CENTER;
   if (q.showBreakdown){
     const w1 = 600, w3 = 2200, w2 = CW - w1 - w3;
     const sumR = (label, val) => new X.TableRow({ children:[ cell(Pg(R("")), { w:w1, fill:"F3F7FA" }), cell(Pg(R(label, { bold:true }), { after:0 }), { w:w2, fill:"F3F7FA" }), cell(Pg(R(val, { bold:true }), { after:0, align:CEN }), { w:w3, fill:"F3F7FA" }) ] });
-    B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", w1, CEN), HC("البند", w2), HC("المبلغ (ر.س)", w3, CEN)] }),
+    B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", w1, CEN), HC(Lx.item, w2), HC(Lx.amount, w3, CEN)] }),
       ...m.rows.map((r, i) => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R(String(i+1)), { after:0, align:CEN }), { w:w1 }),
         cell([Pg(R(r.label, { bold:true }), { after:r.detail ? 20 : 0 }), ...(r.detail ? [Pg(R(r.detail, { size:18, color:"5D6A75" }), { after:0 })] : [])], { w:w2 }),
         cell(Pg(R(money(r.amount), { bold:true }), { after:0, align:CEN }), { w:w3 }) ] })),
-      ...(c.disc ? [sumR("الخصم", "−" + money(c.disc))] : []), sumR("قيمة الأعمال قبل الضريبة", money(c.net))
+      ...(c.disc ? [sumR(Lx.discount, "−" + money(c.disc))] : []), sumR(Lx.net, money(c.net))
     ], [w1, w2, w3]));
-    B.push(H4("جدول الدفعات:"));
+    B.push(H4(Lx.payTable));
   }
-  const p1 = 600, p3 = 1700, p4 = 2200, p2 = CW - p1 - p3 - p4;
+  const p1 = 600, p3 = 1900, p4 = 2100, p2 = CW - p1 - p3 - p4;
   const sumRow = (label, val, fill, color, size) => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R("")), { w:p1, fill }), cell(Pg(R(label, { bold:true, color, size }), { after:0 }), { w:p2 + p3, span:2, fill }), cell(Pg(R(val, { bold:true, color, size }), { after:0, align:CEN }), { w:p4, fill }) ] });
-  B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", p1, CEN), HC("الأعمال", p2), HC("الدفعات", p3, CEN), HC("التكلفة (ر.س)", p4, CEN)] }),
-    ...m.pays.map(p => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R(String(p.i+1)), { after:0, align:CEN }), { w:p1 }), cell(Pg(R(p.label), { after:0 }), { w:p2 }),
+  B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", p1, CEN), HC(Lx.works, p2), HC(Lx.payment, p3, CEN), HC(Lx.cost, p4, CEN)] }),
+    ...m.pays.map((p, j) => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R(String(j+1)), { after:0, align:CEN }), { w:p1 }), cell(Pg(R(p.label), { after:0 }), { w:p2 }),
       cell(Pg(R(p.ord), { after:0, align:CEN }), { w:p3 }), cell(Pg(R(money(p.amount), { bold:true }), { after:0, align:CEN }), { w:p4 }) ] })),
-    ...(!q.showBreakdown && c.disc ? [sumRow(`بعد خصم ${money(c.disc)}`, money(c.net), "F3F7FA")] : []),
-    sumRow(`ضريبة القيمة المضافة (${c.vatRate}%)`, money(c.vat), "F3F7FA"),
-    ...(c.gov ? [sumRow(`الرسوم الحكومية${S.cfg.pricing.govVat ? "" : " (غير خاضعة للضريبة)"}`, money(c.gov), "FBF7EE")] : []),
-    sumRow("القيمة الإجمالية", money(c.grand) + " ر.س", brand, "FFFFFF", 23)
+    ...(!q.showBreakdown && c.disc ? [sumRow(`${Lx.afterDisc} ${money(c.disc)}`, money(c.net), "F3F7FA")] : []),
+    sumRow(`${Lx.vat} (${c.vatRate}%)`, money(c.vat), "F3F7FA"),
+    ...(c.gov ? [sumRow(`${Lx.gov}${S.cfg.pricing.govVat ? "" : Lx.govNoVat}`, money(c.gov), "FBF7EE")] : []),
+    sumRow(Lx.total, money(c.grand) + " " + Lx.sar, brand, "FFFFFF", 23)
   ], [p1, p2, p3, p4]));
-  B.push(Pg(R(m.totalNote, { bold:true }), { before:140, after:100, align:X.AlignmentType.BOTH, border:{ right:{ style:X.BorderStyle.SINGLE, size:18, color:brand2, space:8 } } }));
+  B.push(Pg(R(m.totalNote, { bold:true }), { before:140, after:100, align:X.AlignmentType.BOTH, border:{ [ar ? "right" : "left"]:{ style:X.BorderStyle.SINGLE, size:18, color:brand2, space:8 } } }));
   B.push(...bullets(m.notes));
-  if (co.iban){ B.push(H(`${SEC[n++]}: بيانات الحساب البنكي`));
-    [["اسم الحساب", co.accountName || co.name], ["البنك", co.bankName], ["رقم الآيبان", co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
+  if (co.iban){ B.push(H(`${Lx.sec[n++]}: ${Lx.bank}`));
+    [[Lx.accName, m.coName], [Lx.bankName, m.bankName], [Lx.iban, co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
   B.push(Pg(R(""), { after:160 }));
-  B.push(H4("وفي حال الموافقة:"));
+  B.push(H4(Lx.accept));
   const sr = (a, b2, o = {}) => new X.TableRow({ cantSplit:true, children:[ cell(a, { w:half, fill:o.fill }), cell(b2, { w:CW - half, fill:o.fill }) ] });
   const lv = (k, v, last) => Pg([R(k + " ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
-  const stampKids = co.stamp && co.showStamp ? [lv("الختم:", ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:72, height:72 } })], { after:0, keepNext:true, line:null, align:X.AlignmentType.CENTER })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
+  const stampKids = co.stamp && co.showStamp ? [lv(Lx.stamp, ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null, align:CEN })] : [lv(Lx.stamp, ""), Pg(R(""), { after:900, keepNext:true })];
   B.push(tbl([
-    sr([Pg(R(co.accountName || co.name, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R("العميل: " + (q.client.name || ""), { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
-    sr([lv("الممثل:", co.signName)], [lv("الممثل:", "")]), sr([lv("الصفة:", co.signTitle)], [lv("الصفة:", "")]),
+    sr([Pg(R(m.coName, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R(`${Lx.client}: ${q.client.name || ""}`, { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
+    sr([lv(Lx.rep, m.signName)], [lv(Lx.rep, "")]), sr([lv(Lx.title, m.signTitle)], [lv(Lx.title, "")]),
     ...(co.signLine
-      ? [new X.TableRow({ cantSplit:true, children:[ cell(stampKids, { w:half }), new X.TableCell({ children:[lv("الختم والتوقيع:", ""), Pg(R(""), { after:300 })], rowSpan:2, width:{ size:CW - half, type:X.WidthType.DXA }, borders:ALLB, margins:{ top:70, bottom:70, left:110, right:110 } }) ] }),
-         new X.TableRow({ cantSplit:true, children:[ cell([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], { w:half }) ] })]
-      : [sr(stampKids, [lv("الختم والتوقيع:", "", true), Pg(R(""), { after:600 })])])
+      ? [new X.TableRow({ cantSplit:true, children:[ cell(stampKids, { w:half }), cell([lv(Lx.stampSign, ""), Pg(R(""), { after:300 })], { w:CW - half, rowSpan:2 }) ] }),
+         new X.TableRow({ cantSplit:true, children:[ cell([lv(Lx.signature, "", true), Pg(R(""), { after:300 })], { w:half }) ] })]
+      : [sr(stampKids, [lv(Lx.stampSign, "", true), Pg(R(""), { after:600 })])])
   ], [half, CW - half]));
 
-  const doc = new X.Document({ creator:co.name, title:`عرض سعر ${m.ref}`,
-    styles:{ default:{ document:{ run:{ font:FONT, size:21, rightToLeft:true }, paragraph:{ bidirectional:true } } } },
+  const doc = new X.Document({ creator:co.name, title:`${m.en ? "Proposal" : "عرض سعر"} ${m.ref}`,
+    styles:{ default:{ document:{ run:{ font:FONT, size:21, rightToLeft:ar }, paragraph:{ bidirectional:ar } } } },
     sections:[{ properties:{ page:{ size:{ width:PAGE_W, height:PAGE_H }, margin:{ top, bottom, left:MX, right:MX, header:hdrDist, footer:ftrDist } } },
       headers:{ default:new X.Header({ children:headerKids }) }, footers:{ default:new X.Footer({ children:footerKids }) }, children:B }] });
   return X.Packer.toBlob(doc);
@@ -1438,6 +1749,7 @@ function renderSettings(){
     <div class="row">${inp("company.name","اسم الشركة")}${inp("company.legalName","اسم الشركة في نص العرض")}${inp("company.accountName","الاسم في الحساب البنكي والتوقيع")}${inp("company.nameEn","الاسم بالإنجليزي",{ltr:1})}</div>
     <div class="row">${inp("company.license","رقم الترخيص البيئي للشركة",{ltr:1})}${inp("company.ncecClass","فئة التأهيل لدى المركز")}${inp("company.cr","السجل التجاري",{ltr:1})}${inp("company.vat","الرقم الضريبي",{ltr:1})}</div>
     <div class="row">${inp("company.phone","الهاتف",{ltr:1})}${inp("company.email","البريد",{ltr:1})}${inp("company.website","الموقع الإلكتروني",{ltr:1})}${inp("company.address","العنوان")}</div>
+    <div class="row">${inp("company.accountNameEn","Account / company name (English)",{ltr:1})}${inp("company.signNameEn","Representative (English)",{ltr:1})}${inp("company.signTitleEn","Position (English)",{ltr:1})}${inp("company.bankNameEn","Bank (English)",{ltr:1})}</div>
     <div class="row">${inp("company.signName","اسم الممثل في التوقيع")}${inp("company.signTitle","الصفة")}${inp("company.bankName","البنك")}${inp("company.iban","رقم الآيبان",{ltr:1})}</div>
     <h2 style="margin-top:6px">الترويسة والهوية</h2>
     <p class="hint" style="margin:0">أفضل خيار: صورة الورق الرسمي كاملة (صفحة A4 فيها الشعار أعلى والبيانات أسفل) وتصير خلفية لكل صفحة في PDF و Word. إذا ما رفعتها، تُبنى ترويسة تلقائية من الشعار والبيانات.</p>
@@ -1447,26 +1759,30 @@ function renderSettings(){
     <p class="hint" style="margin:0">الهوامش تضبط مكان النص بحيث ما يغطي الشعار أعلى الصفحة أو البيانات أسفلها. الصفحة 794 × 1123.</p>
   </div>`;
   if (setTab === "services") el.innerHTML = `<div class="card" style="max-width:1100px">
-    <div class="ph">متغيرات تقدر تستخدمها في النصوص: ${["العميل","للعميل","بسجل","الشركة_الرسمي","الغرض","التصريح_السابق","النشاط","المدينة","الشركة","الخدمة","الفئة","التأثير","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
-    ${C.services.map((s, i) => { const cat = S.cfg.categories.find(c => "c" + c.id === s.key.split("-")[0]) || {};
-      return `<div class="cat-edit"><h3>${esc(cat.name || "")}: ${esc(s.title)}</h3>
-      <div class="row">${inp(`services.${i}.title`,"اسم الخدمة")}${inp(`services.${i}.writing`,"تكلفة الإعداد",{t:"num"})}${inp(`services.${i}.durationShort`,"المدة المختصرة")}</div>
-      <div class="row" style="margin-top:10px">${inp(`services.${i}.scope`,"نطاق العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:110})}${inp(`services.${i}.methodology`,"المنهجية المتبعة في العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:150})}${inp(`services.${i}.duration`,"الفترة الزمنية (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:80})}</div>
+    <div class="ph">متغيرات تقدر تستخدمها في النصوص العربية والإنجليزية: ${["العميل","للعميل","بسجل","الشركة_الرسمي","الغرض","التصريح_السابق","النشاط","المدينة","الشركة","الخدمة","الفئة","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
+    ${C.services.map((s, i) => { const cat = S.cfg.categories.find(c => "c" + c.id === s.key.split("-")[0]);
+      return `<div class="cat-edit"><h3>${cat ? esc(cat.name) + ": " : ""}${esc(s.title)}</h3>
+      <div class="row">${inp(`services.${i}.title`,"اسم الخدمة")}${inp(`services.${i}.writing`, s.key === "mon" ? "تكلفة التقرير الواحد" : "تكلفة الإعداد",{t:"num"})}${inp(`services.${i}.durationShort`,"المدة المختصرة")}</div>
+      <div class="row" style="margin-top:10px">${s.key === "mon" ? inp(`services.${i}.intro`,"الفقرة الافتتاحية الخاصة بالخدمة",{area:1,style:"flex-basis:100%",h:110}) : ""}${inp(`services.${i}.scope`,"نطاق العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:110})}${inp(`services.${i}.methodology`,"المنهجية المتبعة في العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:150})}${inp(`services.${i}.duration`,"الفترة الزمنية (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:80})}</div>
       <div class="subhead"><h3>الدفعات</h3><button type="button" class="btn sm" data-addpay="${i}">+ دفعة</button></div>
-      ${s.payments.map((p, j) => `<div class="row" style="margin-bottom:6px">${inp(`services.${i}.payments.${j}.label`,`الدفعة ${ORD[j] || j+1}`)}<div class="f" style="flex:0 0 110px"><label for="c-services.${i}.payments.${j}.pct">النسبة %</label><input id="c-services.${i}.payments.${j}.pct" class="ltr" data-c="services.${i}.payments.${j}.pct" data-t="num" value="${esc(p.pct)}"></div><div class="f" style="flex:0 0 auto;align-self:flex-end"><button type="button" class="btn sm ghost danger" data-delpay="${i}.${j}">حذف</button></div></div>`).join("")}
-      </div>`; }).join("")}
+      ${s.payments.map((p, j) => `<div class="row" style="margin-bottom:6px">${inp(`services.${i}.payments.${j}.label`,`الدفعة ${ORD[j] || j+1}`)}${inp(`services.${i}.payments.${j}.labelEn`,"English",{ltr:1})}<div class="f" style="flex:0 0 100px"><label for="c-services.${i}.payments.${j}.pct">النسبة %</label><input id="c-services.${i}.payments.${j}.pct" class="ltr" data-c="services.${i}.payments.${j}.pct" data-t="num" value="${esc(p.pct)}"></div><div class="f" style="flex:0 0 auto;align-self:flex-end"><button type="button" class="btn sm ghost danger" data-delpay="${i}.${j}">حذف</button></div></div>`).join("")}
+      <details class="en-fields"><summary>النصوص الإنجليزية لهذه الخدمة</summary>
+        <div class="row">${inp(`services.${i}.titleEn`,"Service title",{ltr:1})}${inp(`services.${i}.durationShortEn`,"Short duration",{ltr:1})}</div>
+        <div class="row" style="margin-top:10px">${s.key === "mon" ? inp(`services.${i}.introEn`,"Opening paragraph",{area:1,style:"flex-basis:100%;direction:ltr",h:110}) : ""}${inp(`services.${i}.scopeEn`,"Scope of work (one item per line)",{area:1,style:"flex-basis:100%;direction:ltr",h:110})}${inp(`services.${i}.methodologyEn`,"Methodology (one item per line)",{area:1,style:"flex-basis:100%;direction:ltr",h:150})}${inp(`services.${i}.durationEn`,"Timeline (one item per line)",{area:1,style:"flex-basis:100%;direction:ltr",h:80})}</div>
+      </details></div>`; }).join("")}
     <h2 style="margin:6px 0 10px">النصوص العامة</h2>
-    <div class="stack" style="gap:10px">${inp("texts.intro","الفقرة الافتتاحية",{area:1,h:140})}${inp("texts.validity","سطر الصلاحية")}${inp("texts.totalNote","سطر القيمة الإجمالية",{area:1,h:70})}${inp("texts.notes","الملاحظات بعد الجدول المالي (كل سطر نقطة)",{area:1,h:90})}</div>
+    <div class="stack" style="gap:10px">${inp("texts.intro","الفقرة الافتتاحية",{area:1,h:120})}${inp("texts.validity","سطر الصلاحية")}${inp("texts.totalNote","سطر القيمة الإجمالية",{area:1,h:70})}${inp("texts.notes","الملاحظات بعد الجدول المالي (كل سطر نقطة)",{area:1,h:90})}</div>
+    <details class="en-fields"><summary>النصوص العامة بالإنجليزي</summary><div class="stack" style="gap:10px;direction:ltr">${inp("textsEn.intro","Opening paragraph",{area:1,h:120})}${inp("textsEn.validity","Validity line")}${inp("textsEn.totalNote","Total amount line",{area:1,h:70})}${inp("textsEn.notes","Notes after the financial table (one per line)",{area:1,h:90})}</div></details>
   </div>`;
   if (setTab === "cats") el.innerHTML = `<div class="card" style="max-width:1100px">${C.categories.map((c, i) => `<div class="cat-edit"><h3>${esc(c.name)}</h3>
-      <div class="row">${inp(`categories.${i}.name`,"الاسم")}${inp(`categories.${i}.impact`,"درجة التأثير")}${inp(`categories.${i}.gov`,"الرسوم الحكومية التقديرية",{t:"num"})}</div>
+      <div class="row">${inp(`categories.${i}.name`,"الاسم")}${inp(`categories.${i}.nameEn`,"English name",{ltr:1})}${inp(`categories.${i}.impact`,"درجة التأثير (للاستخدام الداخلي)")}</div>
       <div class="row" style="margin-top:10px">${inp(`categories.${i}.visits`,"عدد الزيارات",{t:"num"})}${inp(`categories.${i}.persons`,"عدد الأخصائيين",{t:"num"})}${inp(`categories.${i}.days`,"أيام الزيارة",{t:"num"})}${inp(`categories.${i}.nights`,"ليالي الزيارة",{t:"num"})}
       ${inp(`categories.${i}.labs`,"القياسات",{sel:[["no","غير مطلوبة"],["opt","حسب النشاط"],["req","مطلوبة"]]})}${inp(`categories.${i}.records`,"السجلات",{sel:[["no","غير مطلوبة"],["opt","حسب النشاط"],["req","مطلوبة"]]})}</div></div>`).join("")}</div>`;
   if (setTab === "cities") el.innerHTML = `<div class="card" style="max-width:1150px">
     <div class="sec-head"><h2>المدن وتكاليف السفر</h2><button class="btn sm" type="button" data-add="cities">+ مدينة</button></div>
     <p class="hint" style="margin-top:0">الأرقام المبدئية تقديرية، عدّلها حسب أسعاركم الفعلية. «التنقل» = تذكرة ذهاب وعودة للشخص (طيران/قطار) أو تكلفة السيارة للرحلة.</p>
-    <div class="tbl-wrap"><table class="list"><thead><tr><th>المدينة</th><th>المنطقة</th><th>الوسيلة</th><th>التنقل ذهاب وعودة</th><th>سيارة في المدينة/يوم</th><th>السكن/ليلة</th><th></th></tr></thead><tbody>
-    ${C.cities.map((c, i) => `<tr><td><input class="in" data-c="cities.${i}.name" value="${esc(c.name)}" aria-label="اسم المدينة"></td><td><input class="in" data-c="cities.${i}.region" value="${esc(c.region)}" aria-label="المنطقة"></td>
+    <div class="tbl-wrap"><table class="list"><thead><tr><th>المدينة</th><th>English</th><th>المنطقة</th><th>Region (English)</th><th>الوسيلة</th><th>التنقل ذهاب وعودة</th><th>سيارة في المدينة/يوم</th><th>السكن/ليلة</th><th></th></tr></thead><tbody>
+    ${C.cities.map((c, i) => `<tr><td><input class="in" data-c="cities.${i}.name" value="${esc(c.name)}" aria-label="اسم المدينة"></td><td><input class="in ltr" style="width:120px" data-c="cities.${i}.nameEn" value="${esc(c.nameEn)}" aria-label="City in English"></td><td><input class="in" data-c="cities.${i}.region" value="${esc(c.region)}" aria-label="المنطقة"></td><td><input class="in ltr" style="width:150px" data-c="cities.${i}.regionEn" value="${esc(c.regionEn)}" aria-label="Region in English"></td>
       <td><select class="in" data-c="cities.${i}.mode" aria-label="الوسيلة">${Object.entries(MODES).map(([k,v]) => `<option value="${k}" ${c.mode === k ? "selected" : ""}>${v}</option>`).join("")}</select></td>
       <td><input class="in n" data-c="cities.${i}.transport" data-t="num" value="${esc(c.transport)}" inputmode="decimal" aria-label="التنقل"></td>
       <td><input class="in n" data-c="cities.${i}.car" data-t="num" value="${esc(c.car)}" inputmode="decimal" aria-label="السيارة"></td>
@@ -1474,12 +1790,12 @@ function renderSettings(){
       <td><button type="button" class="btn sm ghost danger" data-del="cities.${i}">حذف</button></td></tr>`).join("")}</tbody></table></div></div>`;
   if (setTab === "labs") el.innerHTML = `<div class="two" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
     <div class="card"><div class="sec-head"><h2>القياسات البيئية (تكلفة المختبر)</h2><button class="btn sm" type="button" data-add="labs">+ قياس</button></div>
-    <div class="tbl-wrap"><table class="list"><thead><tr><th>القياس</th><th>الوحدة</th><th>التكلفة للوحدة</th><th></th></tr></thead><tbody>
-    ${C.labs.map((l, i) => `<tr><td><input class="in" data-c="labs.${i}.name" value="${esc(l.name)}" aria-label="اسم القياس"></td><td><input class="in" style="width:90px" data-c="labs.${i}.unit" value="${esc(l.unit)}" aria-label="الوحدة"></td>
+    <div class="tbl-wrap"><table class="list"><thead><tr><th>القياس</th><th>English</th><th>الوحدة</th><th>Unit</th><th>التكلفة للوحدة</th><th></th></tr></thead><tbody>
+    ${C.labs.map((l, i) => `<tr><td><input class="in" data-c="labs.${i}.name" value="${esc(l.name)}" aria-label="اسم القياس"></td><td><input class="in ltr" data-c="labs.${i}.nameEn" value="${esc(l.nameEn)}" aria-label="Measurement in English"></td><td><input class="in" style="width:80px" data-c="labs.${i}.unit" value="${esc(l.unit)}" aria-label="الوحدة"></td><td><input class="in ltr" style="width:80px" data-c="labs.${i}.unitEn" value="${esc(l.unitEn)}" aria-label="Unit in English"></td>
       <td><input class="in n" data-c="labs.${i}.cost" data-t="num" value="${esc(l.cost)}" inputmode="decimal" aria-label="التكلفة"></td><td><button type="button" class="btn sm ghost danger" data-del="labs.${i}">حذف</button></td></tr>`).join("")}</tbody></table></div></div>
     <div class="card"><div class="sec-head"><h2>السجلات البيئية</h2><button class="btn sm" type="button" data-add="records">+ سجل</button></div>
-    <div class="tbl-wrap"><table class="list"><thead><tr><th>السجل</th><th>تكلفة الإعداد</th><th></th></tr></thead><tbody>
-    ${C.records.map((r, i) => `<tr><td><input class="in" data-c="records.${i}.name" value="${esc(r.name)}" aria-label="اسم السجل"></td><td><input class="in n" data-c="records.${i}.cost" data-t="num" value="${esc(r.cost)}" inputmode="decimal" aria-label="التكلفة"></td>
+    <div class="tbl-wrap"><table class="list"><thead><tr><th>السجل</th><th>English</th><th>تكلفة الإعداد</th><th></th></tr></thead><tbody>
+    ${C.records.map((r, i) => `<tr><td><input class="in" data-c="records.${i}.name" value="${esc(r.name)}" aria-label="اسم السجل"></td><td><input class="in ltr" data-c="records.${i}.nameEn" value="${esc(r.nameEn)}" aria-label="Register in English"></td><td><input class="in n" data-c="records.${i}.cost" data-t="num" value="${esc(r.cost)}" inputmode="decimal" aria-label="التكلفة"></td>
       <td><button type="button" class="btn sm ghost danger" data-del="records.${i}">حذف</button></td></tr>`).join("")}</tbody></table></div></div></div>`;
   if (setTab === "cloud"){ const m = cloudMeta(), cc = C.cloud, acct = Cloud.account;
     el.innerHTML = `<div class="card stack" style="max-width:1050px">
@@ -1507,6 +1823,10 @@ function renderSettings(){
     <div class="row">${inp("pricing.risk","هامش المخاطر الافتراضي %",{t:"num"})}${inp("pricing.profit","هامش الربح الافتراضي %",{t:"num"})}${inp("pricing.labProfit","هامش الربح على المختبر %",{t:"num"})}${inp("pricing.vat","ضريبة القيمة المضافة %",{t:"num"})}</div>
     <div class="row">${inp("pricing.roundTo","تقريب الأسعار للأعلى إلى",{sel:[[0,"بدون"],[10,"10"],[50,"50"],[100,"100"],[500,"500"]],t:"num"})}${inp("pricing.govVat","الرسوم الحكومية",{sel:[["false","لا تخضع للضريبة"],["true","تخضع للضريبة"]],t:"bool"})}
       ${inp("pricing.showBreakdown","تفاصيل البنود في العرض افتراضياً",{sel:[["false","جدول الدفعات فقط"],["true","البنود + جدول الدفعات"]],t:"bool"})}${inp("pricing.travelSeparate","تكاليف السفر",{sel:[["false","مدمجة في بند الإعداد"],["true","بند مستقل"]],t:"bool"})}</div>
+    <h2>الرسوم الحكومية (لائحة المقابل المالي، الحد الأقصى)</h2>
+    <div class="row">${inp("fees.form","مراجعة استمارة التصنيف البيئي",{t:"num"})}${inp("fees.plan","خطة الإدارة البيئية (الفئة الأولى)",{t:"num"})}${inp("fees.eia2","دراسة تقييم الأثر (الفئة الثانية)",{t:"num"})}${inp("fees.audit","دراسة التدقيق البيئي",{t:"num"})}${inp("fees.mon","تقرير المراقبة البيئية",{t:"num"})}</div>
+    <div class="row">${CAPEX.map((t, j) => inp(`fees.eia3.${j}`, `الفئة الثالثة: ${t}`, {t:"num"})).join("")}</div>
+    <p class="hint" style="margin:0">تُحسب الرسوم تلقائياً في كل عرض، وتقدر تكتب مبلغاً يدوياً للعرض نفسه. المقابل المالي السنوي لتصريح التشغيل يحدده المركز ولا يدخل في الحساب.</p>
     <h2>السفر والزيارات</h2>
     <div class="row">${inp("pricing.baseCity","مدينة المقر")}${inp("pricing.localVisit","تكلفة زيارة داخل المدينة/أخصائي",{t:"num"})}${inp("pricing.perDiem","البدل اليومي للأخصائي",{t:"num"})}</div>
     <h2>الترقيم والصلاحية</h2>
@@ -1532,7 +1852,7 @@ $("#setBody").addEventListener("click", e => {
   if ((b = e.target.closest("[data-add]"))){ const k = b.dataset.add;
     S.cfg[k].push(k === "cities" ? { id:uid(), name:"", region:"", mode:"flight", transport:0, car:0, hotel:0 } : k === "labs" ? { id:uid(), name:"", unit:"نقطة", cost:0 } : { id:uid(), name:"", cost:0 });
     persist(); renderSettings(); const ins = $$(`[data-c^="${k}."][data-c$=".name"]`); if (ins.length) ins[ins.length-1].focus(); return; }
-  if ((b = e.target.closest("[data-addpay]"))){ S.cfg.services[+b.dataset.addpay].payments.push({ label:"", pct:0 }); persist(); renderSettings(); return; }
+  if ((b = e.target.closest("[data-addpay]"))){ S.cfg.services[+b.dataset.addpay].payments.push({ label:"", labelEn:"", pct:0 }); persist(); renderSettings(); return; }
   if ((b = e.target.closest("[data-delpay]"))){ const [i, j] = b.dataset.delpay.split(".").map(Number); S.cfg.services[i].payments.splice(j, 1); persist(); renderSettings(); return; }
   if ((b = e.target.closest("[data-del]"))){ if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
     const [k, i] = b.dataset.del.split("."); S.cfg[k].splice(+i, 1); persist(); renderSettings(); return; }
