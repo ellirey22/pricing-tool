@@ -214,14 +214,14 @@ table.list td .in.n{width:100px;direction:ltr;text-align:left}
 .gf{margin:0 var(--mx);border-top:1px solid var(--brand2);padding:8px 0 24px;font-size:10px;color:#5d6a75;text-align:center;line-height:1.6}
 .gf b{color:var(--brand);font-weight:600}
 .d-meta{display:flex;justify-content:space-between;gap:16px;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid #d9e2e8;font-size:11.5px}
-.d-meta .kv{display:grid;grid-template-columns:auto auto;gap:1px 10px;align-content:start}
-.d-meta .kv span:nth-child(odd){color:#6d7c88}
-.d-meta .kv span:nth-child(even){font-weight:600}
-.d-meta .ltrv{direction:ltr;text-align:right}
-.d-to{font-size:13.5px;margin:0 0 4px;display:flex;justify-content:space-between}
+.d-meta .kv{display:flex;flex-direction:column;gap:1px}
+.d-meta .kv div{white-space:nowrap}
+.d-meta .kv span{color:#6d7c88}
+.d-meta .kv b{font-weight:600}
+.d-to{font-size:13.5px;margin:0 0 4px}
 .d-to b{font-size:14px}
 .d-att{font-size:11.5px;color:#4c5a66;margin:0 0 8px}
-.d-salam{display:flex;justify-content:space-between;margin:0 0 6px}
+.d-salam{margin:0 0 6px}
 .d-p{margin:0 0 9px;white-space:pre-line;text-align:justify}
 .d-info{width:100%;border-collapse:collapse;margin:4px 0 12px;font-size:12px}
 .d-info th{width:120px;text-align:right;background:#eef4f8;color:var(--brand);font-weight:600;padding:6px 10px;border:1px solid #d3dee6;vertical-align:top}
@@ -250,12 +250,13 @@ table.list td .in.n{width:100px;direction:ltr;text-align:left}
 .d-tbl tr.tot td{background:var(--brand);color:#fff;font-weight:700;font-size:13.5px;border-color:var(--brand)}
 .d-tbl tr.gov td{background:#fbf7ee}
 .d-words{font-size:12px;background:#f3f7fa;border-inline-start:3px solid var(--brand2);border-radius:4px;padding:8px 12px;margin:10px 0 8px}
-.d-bank{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:12px}
-.d-bank span:nth-child(odd){color:#6d7c88}
+.d-bank{display:flex;flex-direction:column;gap:2px;font-size:12px}
+.d-bank span{color:#6d7c88}
+.d-bank b{font-weight:600}
 .d-sign{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px}
 .d-sign th{background:#eef4f8;color:var(--brand);padding:6px 10px;border:1px solid #d3dee6;text-align:right;width:50%}
 .d-sign td{padding:5px 10px;border:1px solid #d3dee6;vertical-align:top;height:28px}
-.d-sign td span{color:#6d7c88;display:inline-block;min-width:52px}
+.d-sign td span{color:#6d7c88}
 .d-sign td.stamp{height:96px;position:relative}
 .d-sign td.stamp img{position:absolute;top:2px;left:40%;width:118px;height:118px;opacity:.95;transform:rotate(-8deg)}
 #pages.editing [data-edit]{outline:1.5px dashed #c98a1b;outline-offset:2px;border-radius:3px;cursor:text;background:#fffbea}
@@ -900,11 +901,12 @@ const cb = (on, t) => `<span class="cbx ${on ? "on" : ""}"><i>${on ? "✓" : ""}
 function blocksHTML(m){
   const q = m.q, c = m.c, co = m.co, B = [], f = q.facility;
   const ed = (k, cls = "d-p") => `class="${cls}" data-edit="${k}"`;
-  B.push(`<div class="d-meta"><div class="kv"><span>التاريخ</span><span class="ltrv">${m.date}</span><span>الموافق</span><span>${esc(m.hijri)}</span>${co.license ? `<span>رقم الترخيص البيئي للشركة</span><span class="ltrv">${esc(co.license)}</span>` : ""}</div>
-    <div class="kv"><span>رقم العرض</span><span class="ltrv">${esc(m.ref)}</span><span>صالح حتى</span><span class="ltrv">${m.valid}</span></div></div>`);
-  B.push(`<div><p class="d-to"><span>المكرمين/ <b>${esc(q.client.name)}</b></span><span>المحترمين</span></p>
+  const kv = (k, v, ltr) => `<div><span>${k}:</span> <b>${ltr ? `<bdi dir="ltr">${esc(v)}</bdi>` : esc(v)}</b></div>`;
+  B.push(`<div class="d-meta"><div class="kv">${kv("التاريخ", m.date, 1)}${kv("الموافق", m.hijri)}${co.license ? kv("رقم الترخيص البيئي للشركة", co.license, 1) : ""}</div>
+    <div class="kv">${kv("رقم العرض", m.ref, 1)}${kv("صالح حتى", m.valid, 1)}</div></div>`);
+  B.push(`<div><p class="d-to">المكرمين/ <b>${esc(q.client.name) || "…………………………"}</b>&nbsp;&nbsp;&nbsp;المحترمين</p>
     ${q.client.contact || q.client.phone ? `<p class="d-att">${[q.client.contact && "عناية: " + esc(q.client.contact), q.client.phone && `<span dir="ltr">${esc(q.client.phone)}</span>`, q.client.email && `<span dir="ltr">${esc(q.client.email)}</span>`].filter(Boolean).join(" · ")}</p>` : ""}
-    <p class="d-salam"><span>السلام عليكم ورحمة الله وبركاته</span><span>وبعد،</span></p>
+    <p class="d-salam">السلام عليكم ورحمة الله وبركاته، وبعد،</p>
     <p ${ed("text.intro")}>${esc(m.intro)}</p></div>`);
   const loc = [f.district && "حي " + esc(f.district), f.city && "مدينة " + esc(f.city), f.region && esc(f.region)].filter(Boolean).join(" - ");
   B.push(`<table class="d-info"><tbody>
@@ -932,7 +934,7 @@ function blocksHTML(m){
     <tr class="tot"><td></td><td colspan="2">القيمة الإجمالية</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
   B.push(`<p class="d-words" data-edit="text.totalNote">${esc(m.totalNote)}</p>`);
   B.push(`<div class="d-sec">${list("text.notes", m.notes)}</div>`);
-  if (co.iban) B.push(`<div class="d-sec">${H("بيانات الحساب البنكي")}<div class="d-bank"><span>اسم الحساب</span><span>${esc(co.accountName || co.name)}</span><span>البنك</span><span>${esc(co.bankName)}</span><span>رقم الآيبان</span><span dir="ltr" style="text-align:right">${esc(co.iban)}</span></div></div>`);
+  if (co.iban) B.push(`<div class="d-sec">${H("بيانات الحساب البنكي")}<div class="d-bank"><div><span>اسم الحساب:</span> <b>${esc(co.accountName || co.name)}</b></div><div><span>البنك:</span> <b>${esc(co.bankName)}</b></div><div><span>رقم الآيبان:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div></div>`);
   B.push(`<div class="d-sec"><h4>وفي حال الموافقة:</h4><table class="d-sign"><thead><tr><th>${esc(co.accountName || co.name)}</th><th>العميل: ${esc(q.client.name)}</th></tr></thead><tbody>
     <tr><td><span>الممثل:</span> ${esc(co.signName)}</td><td><span>الممثل:</span></td></tr>
     <tr><td><span>الصفة:</span> ${esc(co.signTitle)}</td><td><span>الصفة:</span></td></tr>
@@ -1104,12 +1106,12 @@ async function buildDocx(q){
   }
 
   const B = [], half = Math.round(CW / 2);
-  const kvCell = (pairs, w) => cell(pairs.map(([k, v]) => Pg([R(k + ":  ", { color:"6D7C88", size:19 }), R(v, { bold:true, size:19 })], { after:20 })), { w, borders:NOB });
+  const kvCell = (pairs, w) => cell(pairs.map(([k, v]) => Pg([R(k + ": ", { color:"6D7C88", size:19 }), R(v, { bold:true, size:19 })], { after:20 })), { w, borders:NOB });
   B.push(tbl([ new X.TableRow({ children:[
     kvCell([["التاريخ", m.date], ["الموافق", m.hijri], ...(co.license ? [["رقم الترخيص البيئي للشركة", co.license]] : [])], half),
     kvCell([["رقم العرض", m.ref], ["صالح حتى", m.valid]], CW - half) ] }) ], [half, CW - half]));
   B.push(Pg(R(""), { after:60, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:4, color:"D9E2E8", space:2 } } }));
-  B.push(Pg([R("المكرمين/ "), R(q.client.name, { bold:true, size:23 }), R("        المحترمين")], { before:120, after:40 }));
+  B.push(Pg([R("المكرمين/ "), R(q.client.name || "…………………………", { bold:true, size:23 }), R("   المحترمين")], { before:120, after:40 }));
   if (q.client.contact || q.client.phone) B.push(Pg(R([q.client.contact && "عناية: " + q.client.contact, q.client.phone, q.client.email].filter(Boolean).join(" · "), { size:19, color:"4C5A66" }), { after:60 }));
   B.push(Pg(R("السلام عليكم ورحمة الله وبركاته، وبعد،"), { after:80 }));
   B.push(Pg(R(m.intro), { align:X.AlignmentType.BOTH, after:120 }));
@@ -1152,10 +1154,10 @@ async function buildDocx(q){
   B.push(Pg(R(m.totalNote, { bold:true }), { before:140, after:100, align:X.AlignmentType.BOTH, border:{ right:{ style:X.BorderStyle.SINGLE, size:18, color:brand2, space:8 } } }));
   B.push(...bullets(m.notes));
   if (co.iban){ B.push(H(`${SEC[n++]}: بيانات الحساب البنكي`));
-    [["اسم الحساب", co.accountName || co.name], ["البنك", co.bankName], ["رقم الآيبان", co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ":  ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
+    [["اسم الحساب", co.accountName || co.name], ["البنك", co.bankName], ["رقم الآيبان", co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
   B.push(H4("وفي حال الموافقة:"));
   const sr = (a, b2, o = {}) => new X.TableRow({ cantSplit:true, children:[ cell(a, { w:half, fill:o.fill }), cell(b2, { w:CW - half, fill:o.fill }) ] });
-  const lv = (k, v, last) => Pg([R(k + "  ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
+  const lv = (k, v, last) => Pg([R(k + " ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
   const stampKids = co.stamp && co.showStamp ? [Pg([R("الختم:  ", { color:"6D7C88" }), new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
   B.push(tbl([
     sr([Pg(R(co.accountName || co.name, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R("العميل: " + (q.client.name || ""), { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
