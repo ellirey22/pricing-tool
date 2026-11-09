@@ -330,6 +330,8 @@ table.list a{font-weight:700;text-decoration:none}
 .d-to b{font-size:14px}
 .d-att{font-size:11.5px;color:#4c5a66;margin:0 0 8px}
 .d-salam{margin:0 0 6px}
+.d-greet{display:grid;grid-template-columns:minmax(0,max-content) max-content;justify-content:start;column-gap:64px;row-gap:5px;font-size:13.5px;margin:2px 0 14px}
+.d-greet b{font-size:14px}
 .d-p{margin:0 0 9px;white-space:pre-line;text-align:justify}
 .d-info{width:100%;border-collapse:collapse;margin:4px 0 12px;font-size:12px}
 .d-info th{width:120px;text-align:right;background:#eef4f8;color:var(--brand);font-weight:600;padding:6px 10px;border:1px solid #d3dee6;vertical-align:top}
@@ -365,7 +367,7 @@ table.list a{font-weight:700;text-decoration:none}
 .d-sign th{background:#eef4f8;color:var(--brand);padding:6px 10px;border:1px solid #d3dee6;text-align:right;width:50%}
 .d-sign td{padding:5px 10px;border:1px solid #d3dee6;vertical-align:top;height:28px}
 .d-sign td span{color:#6d7c88}
-.d-sign td.stamp{height:96px;position:relative}
+.d-sign td.stamp{height:128px;position:relative}
 .d-sign td.stamp img{position:absolute;top:2px;left:40%;width:118px;height:118px;opacity:.95;transform:rotate(-8deg)}
 #pages.editing [data-edit]{outline:1.5px dashed #c98a1b;outline-offset:2px;border-radius:3px;cursor:text;background:#fffbea}
 #pages.editing [data-edit]:focus{outline:2px solid #c98a1b;background:#fff6d6}
@@ -430,6 +432,7 @@ table.list a{font-weight:700;text-decoration:none}
             <div class="f"><label for="q-ccontact">الشخص المسؤول</label><input id="q-ccontact" data-b="client.contact"></div>
             <div class="f"><label for="q-cphone">الجوال</label><input id="q-cphone" class="ltr" inputmode="tel" data-b="client.phone"></div>
             <div class="f"><label for="q-cemail">البريد</label><input id="q-cemail" class="ltr" data-b="client.email"></div>
+            <div class="f"><label for="q-ccr">السجل التجاري للعميل</label><input id="q-ccr" class="ltr" inputmode="numeric" data-b="client.cr"></div>
           </div>
           <div class="row" style="margin-top:10px">
             <div class="f" style="flex-basis:260px"><label for="q-fname">اسم النشاط</label><input id="q-fname" data-b="facility.name" placeholder="مثال: مصنع … لإنتاج …"></div>
@@ -528,6 +531,9 @@ table.list a{font-weight:700;text-decoration:none}
           <div class="row">
             <div class="f"><label for="clPhone">الجوال</label><input id="clPhone" class="ltr"></div>
             <div class="f"><label for="clEmail">البريد</label><input id="clEmail" class="ltr"></div>
+          </div>
+          <div class="row">
+            <div class="f"><label for="clCr">السجل التجاري</label><input id="clCr" class="ltr" inputmode="numeric"></div>
           </div>
           <div class="btns"><button class="btn primary" type="submit">حفظ العميل</button><button class="btn ghost" type="button" id="clCancel" hidden>إلغاء التعديل</button></div>
         </div>
@@ -643,16 +649,41 @@ const M_DELIVER = "تسليم التصريح البيئي للعميل.";
 const DUR = d => `عند اكتمال الحصول على المستندات الرسمية المطلوبة للنشاط من العميل، يتم تقديم طلب المعاملة إلى موقع ${NCEC} في مدة زمنية لا تتعدى ${d} من تاريخ سداد الدفعات المالية المطلوبة وفقاً للجدول المالي أدناه.`;
 const PAY3 = doc => [{label:"عند توقيع العقد",pct:50},{label:`قبل رفع ${doc} إلى المركز الوطني`,pct:40},{label:"بعد صدور التصريح البيئي",pct:10}];
 const STUDY = n => [`إعداد الدراسة البيئية المطلوبة للفئة ${n} بما يتوافق مع اللوائح والأنظمة والاشتراطات البيئية الصادرة عن ${NCEC}.`, M_ANALYZE, M_MEASURE, "المراجعة النهائية للدراسة البيئية ورفع الطلب على موقع المركز الوطني للحصول على الموافقة.", M_DELIVER].join("\n");
+const S_REVIEW = "مراجعة بيانات النشاط الواردة من العميل والتأكد من مطابقتها للوضع البيئي الراهن للنشاط.";
+const P_REVIEW = "مراجعة بيانات المشروع الواردة من العميل ووصف النشاط ومراحله.";
+const SUBMIT = `المراجعة النهائية ورفع الطلب على منصة ${NCEC}، ومتابعته والرد على ملاحظات المركز حتى الحصول على الموافقة.`;
+const M_LAB = "عمل القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة، ومقارنة نتائجها بالمعايير البيئية الوطنية.";
+const M_NC = "تحديد أوجه عدم الالتزام وتحليل أسبابها، ووضع خطة إجراءات تصحيحية بجدول زمني محدد.";
+const J = a => a.join("\n");
 const DEFAULT_SERVICES = [
   { key:"c1-plan", title:"خطة الإدارة البيئية", doc:"الخطة", writing:3500, durationShort:"7 أيام عمل",
-    methodology:[`إعداد خطة الإدارة البيئية بما يتوافق مع اللوائح والأنظمة والاشتراطات البيئية الصادرة عن ${NCEC}.`, M_ANALYZE, "المراجعة النهائية ورفع الطلب على موقع المركز الوطني للحصول على الموافقة.", M_DELIVER].join("\n"),
+    scope:J([S_REVIEW, "تحديد الجوانب البيئية للنشاط (الانبعاثات، والنفايات، والمياه، والضوضاء، والمواد الكيميائية) والاشتراطات البيئية المنطبقة عليه.", "إعداد خطة الإدارة البيئية للنشاط ومتابعة اعتمادها لدى المركز حتى صدور التصريح البيئي."]),
+    methodology:J(["استلام ومراجعة مستندات النشاط (السجل التجاري، والرخص، والمخططات، وبيانات التشغيل).", "زيارة ميدانية لموقع النشاط لحصر مصادر التأثير البيئي والتحقق من البيانات.", "تحديد الجوانب والتأثيرات البيئية للنشاط وتقييم أهميتها.",
+      `إعداد خطة الإدارة البيئية متضمنةً إجراءات التحكم والتخفيف، وخطة إدارة النفايات، وبرنامج الرصد الذاتي، والمسؤوليات، وإجراءات الطوارئ البيئية، بما يتوافق مع اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     duration:DUR("7 أيام عمل"), payments:PAY3("الخطة") },
-  { key:"c2-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:9000, durationShort:"7 أيام عمل", methodology:STUDY("الثانية"), duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
-  { key:"c2-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:11000, durationShort:"7 أيام عمل", methodology:STUDY("الثانية"), duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
-  { key:"c3-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:16000, durationShort:"20 يوم عمل", methodology:STUDY("الثالثة"), duration:DUR("20 يوم عمل"), payments:PAY3("الدراسة") },
+  { key:"c2-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:9000, durationShort:"7 أيام عمل",
+    scope:J([S_REVIEW, "تقييم مدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodology:J(["استلام ومراجعة مستندات النشاط والتصاريح السابقة وسجلات التشغيل والسجلات البيئية.", "زيارة ميدانية تدقيقية للموقع ومقابلة المسؤولين، وحصر مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB, M_NC,
+      `إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
+    duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
+  { key:"c2-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:11000, durationShort:"7 أيام عمل",
+    scope:J([P_REVIEW, "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه.", "تقييم التأثيرات البيئية المتوقعة خلال مرحلتي الإنشاء والتشغيل.", "إعداد دراسة تقييم الأثر البيئي للفئة الثانية وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodology:J(["جمع ومراجعة بيانات المشروع (المخططات، والطاقة الإنتاجية، والمواد الخام، واستهلاك المياه والطاقة).", "زيارة ميدانية لموقع المشروع لتوصيف الوضع الراهن والمستقبلات الحساسة المحيطة.",
+      "عمل القياسات البيئية اللازمة للوضع الراهن (خط الأساس) عبر مختبر معتمد لمرة واحدة.", "تحديد التأثيرات البيئية المتوقعة وتقييم أهميتها خلال مرحلتي الإنشاء والتشغيل.", "اقتراح إجراءات التحكم والتخفيف، وإعداد خطة الإدارة والرصد البيئي.",
+      `إعداد دراسة تقييم الأثر البيئي للفئة الثانية وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
+    duration:DUR("7 أيام عمل"), payments:PAY3("الدراسة") },
+  { key:"c3-audit", title:"دراسة تدقيق بيئي", doc:"الدراسة", writing:16000, durationShort:"20 يوم عمل",
+    scope:J([S_REVIEW, "تقييم شامل لمدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية وبشروط التصريح السابق.", "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", "إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodology:J(["استلام ومراجعة مستندات النشاط والتصاريح السابقة ونتائج الرصد الذاتي والسجلات البيئية.", "زيارة ميدانية تدقيقية شاملة للموقع ومقابلة المسؤولين، وحصر جميع مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB,
+      "تقييم الأداء البيئي للنشاط، والتأثيرات التي قد تمتد خارج حدود الموقع.", M_NC, `إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
+    duration:DUR("20 يوم عمل"), payments:PAY3("الدراسة") },
   { key:"c3-eia", title:"دراسة تقييم أثر بيئي", doc:"الدراسة", writing:22000, durationShort:"10 أيام لتقرير النطاق + 20 يوم للدراسة",
-    methodology:[`إعداد تقرير النطاق للنشاط ورفعه على موقع ${NCEC}، وبعد الحصول على الموافقة يتم البدء في إعداد الدراسة البيئية للفئة الثالثة.`, `إعداد الدراسة البيئية المطلوبة للفئة الثالثة بما يتوافق مع اللوائح والأنظمة والاشتراطات البيئية الصادرة عن ${NCEC}.`, M_ANALYZE, "عمل القياسات البيئية اللازمة وفقاً لتأثيرات النشاط البيئية الإنشائية للوضع الراهن لمرة واحدة.", "المراجعة النهائية للدراسة البيئية ورفع الطلب على موقع المركز الوطني للحصول على الموافقة.", M_DELIVER].join("\n"),
-    duration:[DUR("10 أيام عمل لتقرير النطاق"), `بعد الحصول على موافقة ${NCEC} على تقرير النطاق، يتم إعداد دراسة تقييم الأثر البيئي في مدة زمنية لا تتعدى 20 يوم عمل.`].join("\n"),
+    scope:J([P_REVIEW, "إعداد تقرير تحديد النطاق ورفعه إلى المركز للحصول على الموافقة.", "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه، وتقييم التأثيرات البيئية المتوقعة بما فيها التأثيرات التي قد تتجاوز حدود المشروع.",
+      "إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
+    methodology:J(["جمع ومراجعة بيانات المشروع، وزيارة استطلاعية لموقعه ومحيطه.", "إعداد تقرير النطاق (حدود الدراسة، والعناصر البيئية المتأثرة، ومنهجية التقييم، وخطة القياسات) ورفعه على منصة المركز.",
+      "بعد الموافقة على تقرير النطاق: عمل القياسات البيئية للوضع الراهن عبر مختبر معتمد لمرة واحدة وفق ما ورد في التقرير.", "وصف الوضع البيئي الراهن، وتقييم التأثيرات المتوقعة وأهميتها خلال مرحلتي الإنشاء والتشغيل، بما فيها التأثيرات التراكمية.",
+      "دراسة البدائل واقتراح إجراءات التخفيف، وإعداد خطة الإدارة والرصد البيئي وخطة الاستجابة للطوارئ.", `إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
+    duration:J([DUR("10 أيام عمل لتقرير النطاق"), `بعد الحصول على موافقة ${NCEC} على تقرير النطاق، يتم إعداد دراسة تقييم الأثر البيئي في مدة زمنية لا تتعدى 20 يوم عمل.`]),
     payments:[{label:"عند توقيع العقد",pct:50},{label:"قبل رفع تقرير النطاق إلى المركز الوطني",pct:20},{label:"قبل رفع الدراسة البيئية إلى المركز الوطني",pct:20},{label:"بعد صدور التصريح البيئي",pct:10}] }
 ];
 const R_MK = "منطقة مكة المكرمة", R_MD = "منطقة المدينة المنورة", R_SH = "المنطقة الشرقية";
@@ -683,12 +714,13 @@ const DEFAULT_CFG = {
     ["سجل استهلاك المياه والصرف",600],["سجل الضوضاء",500],["سجل الحوادث والطوارئ البيئية",500],["سجل صيانة معدات التحكم البيئي",500]
   ].map(([name,cost]) => ({ id:uid(), name, cost })),
   texts:{
-    intro:`يسعدنا أن نتقدم بعرض السعر للنشاط ({النشاط}) – المصنف إلى {الفئة} حسب اللوائح والأنظمة والاشتراطات البيئية الصادرة عن ${NCEC}.`,
+    intro:`يسعدنا نحن {الشركة_الرسمي} بتقديم هذا العرض الفني والمالي الخاص بإعداد المتطلبات البيئية اللازمة {الغرض} وفقاً للوائح والأنظمة الصادرة عن ${NCEC} {للعميل}{بسجل}.\n\nونظراً لطبيعة موقع النشاط، فإننا نؤكد التزامنا بتنفيذ كافة الأعمال البيئية اللازمة، وتقديم الدعم الفني الكامل لإصدار التصريح البيئي من ${NCEC}.`,
     scopeLead:REVIEW,
     validity:"صلاحية هذا العرض {الصلاحية} يوماً من تاريخه.",
     totalNote:"القيمة الإجمالية للأعمال المذكورة في العرض ({الإجمالي} ريال)، {كتابة}، وفي حال الموافقة الرجاء إرسال هذا العرض بعد التوقيع والختم عليه.",
     notes:`تم إعداد عرض السعر بناءً على المعلومات الواردة من العميل، ولا يشمل العرض أي متطلبات إضافية أو إلزامية يطلبها ${NCEC} وفقاً للرد الأولي على الطلب.`
   },
+  tv:3,
   cloud:{ clientId:"", tenantId:"", folder:"مسعر العروض", autoBackup:true, tracker:true }
 };
 
@@ -705,7 +737,8 @@ function persist(now){
   if (now) go(); else persistT = setTimeout(go, 350);
 }
 function mergeCfg(c){
-  const base = clone(DEFAULT_CFG); c = c || {};
+  const base = clone(DEFAULT_CFG); c = c ? clone(c) : {};
+  if ((c.tv || 0) < 3){ (c.services || []).forEach(x => { delete x.methodology; delete x.scope; }); if (c.texts){ delete c.texts.intro; delete c.texts.scopeLead; } c.tv = 3; }
   return { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, texts:{...base.texts, ...c.texts}, cloud:{...base.cloud, ...c.cloud},
     services: base.services.map(s => ({ ...s, ...((c.services || []).find(x => x.key === s.key) || {}) })) };
 }
@@ -725,7 +758,7 @@ const isBase = q => (q.facility.city || S.cfg.pricing.baseCity) === S.cfg.pricin
 function newDraft(catId = 2){
   const P = S.cfg.pricing;
   const q = { id:null, number:"", status:"draft", date:todayISO(), validity:P.validity,
-    client:{ name:"", contact:"", phone:"", email:"" }, clientId:"",
+    client:{ name:"", contact:"", phone:"", email:"", cr:"" }, clientId:"",
     facility:{ name:"", city:P.baseCity, district:"", region:"", coords:"" },
     cat:catId, request:"issue", phase:"operation", service:"audit",
     writing:0, duration:"", labs:{}, records:{}, extras:[], payments:[],
@@ -784,18 +817,21 @@ function calc(q){
   let acc = 0; const payAmts = pays.map((p, i) => { if (i === pays.length - 1 && Math.abs(pctSum - 100) < 0.01) return r2(net - acc); const a = r2(net * num(p.pct) / 100); acc += a; return a; });
   return { writing, lab, labItems, rec, recItems, tr, extra, extras, price, sub, disc, net, gov, vat, grand, cost, riskAmt, profit, margin: net > 0 ? profit / net * 100 : null, vatRate:num(P.vat), payAmts, pctSum };
 }
+const lam = n => n.startsWith("ال") ? "ل" + n.slice(1) : "ل" + n;
 function vars(q, c){
   const cat = catOf(q), s = svcOf(q), co = S.cfg.company;
   return { "العميل":q.client.name || "…", "النشاط":q.facility.name || "…", "المدينة":q.facility.city || "…", "الشركة":co.name, "فئة_التأهيل":co.ncecClass,
     "الخدمة":s.title, "الفئة":cat.name, "التأثير":cat.impact, "الصلاحية":String(num(q.validity)), "المدة":q.duration || s.durationShort,
-    "الإجمالي": c ? money(c.grand) : "", "كتابة": c ? tafqeet(c.grand) : "" };
+    "الإجمالي": c ? money(c.grand) : "", "كتابة": c ? tafqeet(c.grand) : "",
+    "الشركة_الرسمي": co.accountName || co.name, "للعميل": lam(q.client.name || "…"), "بسجل": q.client.cr ? ` بسجل رقم (${q.client.cr})` : "",
+    "الغرض": (q.request === "renew" ? "لتجديد" : "لعمل") + " التصريح البيئي " + (q.phase === "construction" ? "الإنشائي" : "التشغيلي") };
 }
 function fill(str, q, c){ const V = vars(q, c); return String(str || "").replace(/\{([^{}]+)\}/g, (m, k) => V[k] !== undefined ? V[k] : m); }
 const TEXT_KEYS = [
   ["intro","الفقرة الافتتاحية",false], ["scopeLead","نطاق العمل",true], ["methodology","المنهجية المتبعة في العمل",true],
   ["validity","سطر صلاحية العرض",false], ["duration","الفترة الزمنية",true], ["totalNote","سطر القيمة الإجمالية",false], ["notes","الملاحظات بعد الجدول المالي",true]
 ];
-function tplText(k, q){ const s = svcOf(q); if (k === "methodology") return s.methodology; if (k === "duration") return s.duration; return S.cfg.texts[k] || ""; }
+function tplText(k, q){ const s = svcOf(q); if (k === "methodology") return s.methodology; if (k === "duration") return s.duration; if (k === "scopeLead") return s.scope || S.cfg.texts.scopeLead || ""; return S.cfg.texts[k] || ""; }
 const textOf = (k, q) => q.text[k] != null ? q.text[k] : tplText(k, q);
 
 function clientRows(q, c){
@@ -970,8 +1006,8 @@ $("#addPay").addEventListener("click", () => { S.draft.payments.push({ label:"",
 $("#resetPay").addEventListener("click", () => { S.draft.payments = clone(svcOf(S.draft).payments); renderPays(); recalc(); markDirty(); });
 function clientAutofill(){
   const q = S.draft, c = S.clients.find(x => x.name === q.client.name);
-  if (c){ q.clientId = c.id; Object.assign(q.client, { contact:c.contact||"", phone:c.phone||"", email:c.email||"" });
-    $("#q-ccontact").value = q.client.contact; $("#q-cphone").value = q.client.phone; $("#q-cemail").value = q.client.email; $("#clientHint").textContent = "عميل محفوظ، تم تعبئة بياناته"; }
+  if (c){ q.clientId = c.id; Object.assign(q.client, { contact:c.contact||"", phone:c.phone||"", email:c.email||"", cr:c.cr||"" });
+    $("#q-ccontact").value = q.client.contact; $("#q-cphone").value = q.client.phone; $("#q-cemail").value = q.client.email; $("#q-ccr").value = q.client.cr; $("#clientHint").textContent = "عميل محفوظ، تم تعبئة بياناته"; }
   else { q.clientId = ""; $("#clientHint").textContent = q.client.name ? "عميل جديد، سيُحفظ مع العرض" : "اختر عميلاً محفوظاً أو اكتب اسماً جديداً"; }
 }
 async function saveQuote(silent){
@@ -1024,9 +1060,7 @@ function blocksHTML(m){
   const kv = (k, v, ltr) => `<div><span>${k}:</span> <b>${ltr ? `<bdi dir="ltr">${esc(v)}</bdi>` : esc(v)}</b></div>`;
   B.push(`<div class="d-meta"><div class="kv">${kv("التاريخ", m.date, 1)}${kv("الموافق", m.hijri)}${co.license ? kv("رقم الترخيص البيئي للشركة", co.license, 1) : ""}</div>
     <div class="kv">${kv("رقم العرض", m.ref, 1)}${kv("صالح حتى", m.valid, 1)}</div></div>`);
-  B.push(`<div><p class="d-to">المكرمين/ <b>${esc(q.client.name) || "…………………………"}</b>&nbsp;&nbsp;&nbsp;المحترمين</p>
-    ${q.client.contact || q.client.phone ? `<p class="d-att">${[q.client.contact && "عناية: " + esc(q.client.contact), q.client.phone && `<span dir="ltr">${esc(q.client.phone)}</span>`, q.client.email && `<span dir="ltr">${esc(q.client.email)}</span>`].filter(Boolean).join(" · ")}</p>` : ""}
-    <p class="d-salam">السلام عليكم ورحمة الله وبركاته، وبعد،</p>
+  B.push(`<div><div class="d-greet"><span>المكرمين/ <b>${esc(q.client.name) || "…………………………"}</b></span><span>المحترمين</span><span>السلام عليكم ورحمة الله وبركاته</span><span>وبعد،</span></div>
     <p ${ed("text.intro")}>${esc(m.intro)}</p></div>`);
   const loc = [f.district && "حي " + esc(f.district), f.city && "مدينة " + esc(f.city), f.region && esc(f.region)].filter(Boolean).join(" - ");
   B.push(`<table class="d-info"><tbody>
@@ -1055,11 +1089,11 @@ function blocksHTML(m){
   B.push(`<p class="d-words" data-edit="text.totalNote">${esc(m.totalNote)}</p>`);
   B.push(`<div class="d-sec">${list("text.notes", m.notes)}</div>`);
   if (co.iban) B.push(`<div class="d-sec">${H("بيانات الحساب البنكي")}<div class="d-bank"><div><span>اسم الحساب:</span> <b>${esc(co.accountName || co.name)}</b></div><div><span>البنك:</span> <b>${esc(co.bankName)}</b></div><div><span>رقم الآيبان:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div></div>`);
-  B.push(`<div class="d-sec"><h4>وفي حال الموافقة:</h4><table class="d-sign"><thead><tr><th>${esc(co.accountName || co.name)}</th><th>العميل: ${esc(q.client.name)}</th></tr></thead><tbody>
+  B.push(`<div class="d-sec" style="margin-top:22px"><h4>وفي حال الموافقة:</h4><table class="d-sign"><thead><tr><th>${esc(co.accountName || co.name)}</th><th>العميل: ${esc(q.client.name)}</th></tr></thead><tbody>
     <tr><td><span>الممثل:</span> ${esc(co.signName)}</td><td><span>الممثل:</span></td></tr>
     <tr><td><span>الصفة:</span> ${esc(co.signTitle)}</td><td><span>الصفة:</span></td></tr>
-    <tr><td class="stamp" ${co.signLine ? "" : 'rowspan="2"'}><span>الختم:</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp"><span>الختم:</span></td></tr>
-    <tr>${co.signLine ? `<td><span>التوقيع:</span></td>` : ""}<td><span>التوقيع:</span></td></tr></tbody></table></div>`);
+    <tr><td class="stamp"><span>الختم:</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp" ${co.signLine ? 'rowspan="2"' : ""}><span>الختم والتوقيع:</span></td></tr>
+    ${co.signLine ? `<tr><td><span>التوقيع:</span></td></tr>` : ""}</tbody></table></div>`);
   return B;
 }
 async function renderPages(){
@@ -1231,10 +1265,14 @@ async function buildDocx(q){
     kvCell([["التاريخ", m.date], ["الموافق", m.hijri], ...(co.license ? [["رقم الترخيص البيئي للشركة", co.license]] : [])], half),
     kvCell([["رقم العرض", m.ref], ["صالح حتى", m.valid]], CW - half) ] }) ], [half, CW - half]));
   B.push(Pg(R(""), { after:60, border:{ bottom:{ style:X.BorderStyle.SINGLE, size:4, color:"D9E2E8", space:2 } } }));
-  B.push(Pg([R("المكرمين/ "), R(q.client.name || "…………………………", { bold:true, size:23 }), R("   المحترمين")], { before:120, after:40 }));
-  if (q.client.contact || q.client.phone) B.push(Pg(R([q.client.contact && "عناية: " + q.client.contact, q.client.phone, q.client.email].filter(Boolean).join(" · "), { size:19, color:"4C5A66" }), { after:60 }));
-  B.push(Pg(R("السلام عليكم ورحمة الله وبركاته، وبعد،"), { after:80 }));
-  B.push(Pg(R(m.intro), { align:X.AlignmentType.BOTH, after:120 }));
+  const meas = (t, font) => { const x = (meas.c || (meas.c = document.createElement("canvas"))).getContext("2d"); x.font = font; return x.measureText(t).width; };
+  const nm = q.client.name || "…………………………";
+  const w1 = Math.min(CW - 1800, Math.round(Math.max(meas("المكرمين/ ", "14px Arial") + meas(nm, "bold 15.4px Arial"), meas("السلام عليكم ورحمة الله وبركاته", "14px Arial")) * 15) + 260 + 960);
+  const gcell = (kids, w) => new X.TableCell({ children:[Pg(kids, { after:60 })], width:{ size:w, type:X.WidthType.DXA }, borders:NOB, margins:{ top:20, bottom:20, left:0, right:0 } });
+  B.push(Pg(R(""), { after:40 }));
+  B.push(tbl([ new X.TableRow({ children:[ gcell([R("المكرمين/ "), R(nm, { bold:true, size:23 })], w1), gcell([R("المحترمين")], CW - w1) ] }),
+               new X.TableRow({ children:[ gcell([R("السلام عليكم ورحمة الله وبركاته")], w1), gcell([R("وبعد،")], CW - w1) ] }) ], [w1, CW - w1]));
+  m.intro.split(/\n\s*\n/).forEach((t, i) => B.push(Pg(R(t.trim()), { align:X.AlignmentType.BOTH, before:i ? 0 : 140, after:120 })));
   const iw = 2000, ir = (k, kids) => new X.TableRow({ children:[ cell(Pg(R(k, { bold:true, color:brand, size:20 }), { after:0 }), { w:iw, fill:"EEF4F8" }), cell(Pg(kids, { after:0 }), { w:CW - iw }) ] });
   const loc = [f.district && "حي " + f.district, f.city && "مدينة " + f.city, f.region].filter(Boolean).join(" - ");
   B.push(tbl([
@@ -1275,17 +1313,18 @@ async function buildDocx(q){
   B.push(...bullets(m.notes));
   if (co.iban){ B.push(H(`${SEC[n++]}: بيانات الحساب البنكي`));
     [["اسم الحساب", co.accountName || co.name], ["البنك", co.bankName], ["رقم الآيبان", co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
+  B.push(Pg(R(""), { after:160 }));
   B.push(H4("وفي حال الموافقة:"));
   const sr = (a, b2, o = {}) => new X.TableRow({ cantSplit:true, children:[ cell(a, { w:half, fill:o.fill }), cell(b2, { w:CW - half, fill:o.fill }) ] });
   const lv = (k, v, last) => Pg([R(k + " ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
-  const stampKids = co.stamp && co.showStamp ? [Pg([R("الختم:  ", { color:"6D7C88" }), new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
+  const stampKids = co.stamp && co.showStamp ? [lv("الختم:", ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null, align:X.AlignmentType.CENTER })] : [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })];
   B.push(tbl([
     sr([Pg(R(co.accountName || co.name, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R("العميل: " + (q.client.name || ""), { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
     sr([lv("الممثل:", co.signName)], [lv("الممثل:", "")]), sr([lv("الصفة:", co.signTitle)], [lv("الصفة:", "")]),
     ...(co.signLine
-      ? [sr(stampKids, [lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })]), sr([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], [lv("التوقيع:", "", true), Pg(R(""), { after:300 })])]
-      : [new X.TableRow({ cantSplit:true, children:[ new X.TableCell({ children:stampKids, rowSpan:2, width:{ size:half, type:X.WidthType.DXA }, borders:ALLB, margins:{ top:70, bottom:70, left:110, right:110 } }), cell([lv("الختم:", ""), Pg(R(""), { after:900, keepNext:true })], { w:CW - half }) ] }),
-         new X.TableRow({ cantSplit:true, children:[ cell([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], { w:CW - half }) ] })])
+      ? [new X.TableRow({ cantSplit:true, children:[ cell(stampKids, { w:half }), new X.TableCell({ children:[lv("الختم والتوقيع:", ""), Pg(R(""), { after:300 })], rowSpan:2, width:{ size:CW - half, type:X.WidthType.DXA }, borders:ALLB, margins:{ top:70, bottom:70, left:110, right:110 } }) ] }),
+         new X.TableRow({ cantSplit:true, children:[ cell([lv("التوقيع:", "", true), Pg(R(""), { after:300 })], { w:half }) ] })]
+      : [sr(stampKids, [lv("الختم والتوقيع:", "", true), Pg(R(""), { after:1300 })])])
   ], [half, CW - half]));
 
   const doc = new X.Document({ creator:co.name, title:`عرض سعر ${m.ref}`,
@@ -1351,7 +1390,7 @@ function resetCl(){ clEdit = null; $("#clForm").reset(); $("#clFormT").textConte
 $("#clCancel").addEventListener("click", resetCl);
 $("#clForm").addEventListener("submit", e => {
   e.preventDefault();
-  const c = { name:$("#clName").value.trim(), contact:$("#clContact").value.trim(), phone:$("#clPhone").value.trim(), email:$("#clEmail").value.trim() };
+  const c = { name:$("#clName").value.trim(), contact:$("#clContact").value.trim(), phone:$("#clPhone").value.trim(), email:$("#clEmail").value.trim(), cr:$("#clCr").value.trim() };
   if (!c.name) return;
   if (clEdit) Object.assign(S.clients.find(x => x.id === clEdit), c); else S.clients.push({ id:uid(), ...c, createdAt:Date.now() });
   persist(true); resetCl(); renderClients(); toast("تم حفظ العميل");
@@ -1359,8 +1398,8 @@ $("#clForm").addEventListener("submit", e => {
 $("#clList").addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const id = b.closest("tr").dataset.id, c = S.clients.find(x => x.id === id); if (!c) return;
-  if (b.dataset.act === "quote"){ S.draft = newDraft(); S.draft.clientId = c.id; Object.assign(S.draft.client, { name:c.name, contact:c.contact||"", phone:c.phone||"", email:c.email||"" }); S.saved = true; location.hash = "quote"; }
-  if (b.dataset.act === "edit"){ clEdit = id; $("#clName").value = c.name; $("#clContact").value = c.contact||""; $("#clPhone").value = c.phone||""; $("#clEmail").value = c.email||""; $("#clFormT").textContent = "تعديل عميل"; $("#clCancel").hidden = false; $("#clName").focus(); }
+  if (b.dataset.act === "quote"){ S.draft = newDraft(); S.draft.clientId = c.id; Object.assign(S.draft.client, { name:c.name, contact:c.contact||"", phone:c.phone||"", email:c.email||"", cr:c.cr||"" }); S.saved = true; location.hash = "quote"; }
+  if (b.dataset.act === "edit"){ clEdit = id; $("#clName").value = c.name; $("#clContact").value = c.contact||""; $("#clPhone").value = c.phone||""; $("#clEmail").value = c.email||""; $("#clCr").value = c.cr||""; $("#clFormT").textContent = "تعديل عميل"; $("#clCancel").hidden = false; $("#clName").focus(); }
   if (b.dataset.act === "del"){
     if (!b.dataset.confirm){ b.dataset.confirm = "1"; b.textContent = "تأكيد"; setTimeout(() => { if (b.isConnected){ delete b.dataset.confirm; b.textContent = "حذف"; } }, 3000); return; }
     S.clients = S.clients.filter(x => x.id !== id); persist(true); renderClients();
@@ -1394,16 +1433,16 @@ function renderSettings(){
     <p class="hint" style="margin:0">الهوامش تضبط مكان النص بحيث ما يغطي الشعار أعلى الصفحة أو البيانات أسفلها. الصفحة 794 × 1123.</p>
   </div>`;
   if (setTab === "services") el.innerHTML = `<div class="card" style="max-width:1100px">
-    <div class="ph">متغيرات تقدر تستخدمها في النصوص: ${["العميل","النشاط","المدينة","الشركة","الخدمة","الفئة","التأثير","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
+    <div class="ph">متغيرات تقدر تستخدمها في النصوص: ${["العميل","للعميل","بسجل","الشركة_الرسمي","الغرض","النشاط","المدينة","الشركة","الخدمة","الفئة","التأثير","المدة","الصلاحية","الإجمالي","كتابة"].map(x => `<code>{${x}}</code>`).join(" ")}</div>
     ${C.services.map((s, i) => { const cat = S.cfg.categories.find(c => "c" + c.id === s.key.split("-")[0]) || {};
       return `<div class="cat-edit"><h3>${esc(cat.name || "")}: ${esc(s.title)}</h3>
       <div class="row">${inp(`services.${i}.title`,"اسم الخدمة")}${inp(`services.${i}.writing`,"تكلفة الإعداد",{t:"num"})}${inp(`services.${i}.durationShort`,"المدة المختصرة")}</div>
-      <div class="row" style="margin-top:10px">${inp(`services.${i}.methodology`,"المنهجية المتبعة في العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:150})}${inp(`services.${i}.duration`,"الفترة الزمنية (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:80})}</div>
+      <div class="row" style="margin-top:10px">${inp(`services.${i}.scope`,"نطاق العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:110})}${inp(`services.${i}.methodology`,"المنهجية المتبعة في العمل (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:150})}${inp(`services.${i}.duration`,"الفترة الزمنية (كل سطر نقطة)",{area:1,style:"flex-basis:100%",h:80})}</div>
       <div class="subhead"><h3>الدفعات</h3><button type="button" class="btn sm" data-addpay="${i}">+ دفعة</button></div>
       ${s.payments.map((p, j) => `<div class="row" style="margin-bottom:6px">${inp(`services.${i}.payments.${j}.label`,`الدفعة ${ORD[j] || j+1}`)}<div class="f" style="flex:0 0 110px"><label for="c-services.${i}.payments.${j}.pct">النسبة %</label><input id="c-services.${i}.payments.${j}.pct" class="ltr" data-c="services.${i}.payments.${j}.pct" data-t="num" value="${esc(p.pct)}"></div><div class="f" style="flex:0 0 auto;align-self:flex-end"><button type="button" class="btn sm ghost danger" data-delpay="${i}.${j}">حذف</button></div></div>`).join("")}
       </div>`; }).join("")}
     <h2 style="margin:6px 0 10px">النصوص العامة</h2>
-    <div class="stack" style="gap:10px">${inp("texts.intro","الفقرة الافتتاحية",{area:1,h:80})}${inp("texts.scopeLead","نطاق العمل (قبل المنهجية)",{area:1,h:70})}${inp("texts.validity","سطر الصلاحية")}${inp("texts.totalNote","سطر القيمة الإجمالية",{area:1,h:70})}${inp("texts.notes","الملاحظات بعد الجدول المالي (كل سطر نقطة)",{area:1,h:90})}</div>
+    <div class="stack" style="gap:10px">${inp("texts.intro","الفقرة الافتتاحية",{area:1,h:140})}${inp("texts.validity","سطر الصلاحية")}${inp("texts.totalNote","سطر القيمة الإجمالية",{area:1,h:70})}${inp("texts.notes","الملاحظات بعد الجدول المالي (كل سطر نقطة)",{area:1,h:90})}</div>
   </div>`;
   if (setTab === "cats") el.innerHTML = `<div class="card" style="max-width:1100px">${C.categories.map((c, i) => `<div class="cat-edit"><h3>${esc(c.name)}</h3>
       <div class="row">${inp(`categories.${i}.name`,"الاسم")}${inp(`categories.${i}.impact`,"درجة التأثير")}${inp(`categories.${i}.gov`,"الرسوم الحكومية التقديرية",{t:"num"})}</div>
