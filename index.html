@@ -779,24 +779,24 @@ const M_NC_EN = "Identifying non-compliances and their root causes, and developi
 const LAB1 = "تنفيذ القياسات البيئية اللازمة عبر مختبر معتمد لمرة واحدة.", LAB1_EN = "Conducting the required environmental measurements through an accredited laboratory (one round).";
 const DEFAULT_SERVICES = [
   { key:"c1-plan", title:"خطة الإدارة البيئية", titleEn:"Environmental Management Plan", writing:3500, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
-    scope:J([S_REVIEW, "تحديد الجوانب البيئية للنشاط (الانبعاثات، والنفايات، والمياه، والضوضاء، والمواد الكيميائية) والاشتراطات البيئية المنطبقة عليه.", "إعداد خطة الإدارة البيئية للنشاط ومتابعة اعتمادها لدى المركز حتى صدور التصريح البيئي."]),
-    scopeEn:J([S_REVIEW_EN, "Identification of the activity's environmental aspects (emissions, waste, water, noise and chemicals) and the applicable environmental requirements.", "Preparation of the Environmental Management Plan and follow-up with NCEC until the environmental permit is issued."]),
+    scope:J(["إعداد خطة الإدارة البيئية للنشاط وفق اشتراطات المركز.", "متابعة الطلب لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J(["Preparation of the activity's Environmental Management Plan in line with NCEC requirements.", "Follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} (السجل التجاري، والرخص، والمخططات، وبيانات التشغيل).", "زيارة ميدانية لموقع النشاط لحصر مصادر التأثير البيئي والتحقق من البيانات.", "تحديد الجوانب والتأثيرات البيئية للنشاط وتقييم أهميتها.",
       `إعداد خطة الإدارة البيئية متضمنةً إجراءات التحكم والتخفيف، وخطة إدارة النفايات، وبرنامج الرصد الذاتي، والمسؤوليات، وإجراءات الطوارئ البيئية، بما يتوافق مع اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق} (commercial registration, licenses, layouts and operational data).", "Site visit to identify sources of environmental impact and verify the data provided.", "Identification and significance assessment of the activity's environmental aspects and impacts.",
       "Preparation of the Environmental Management Plan, including control and mitigation measures, a waste management plan, a self-monitoring program, responsibilities and environmental emergency procedures, in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
     duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الخطة", "plan") },
   { key:"c2-audit", title:"دراسة تدقيق بيئي", titleEn:"Environmental Audit Study", writing:9000, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
-    scope:J([S_REVIEW, "تقييم مدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية.", LAB1, "إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    scopeEn:J([S_REVIEW_EN, "Assessment of the existing activity's compliance with national environmental requirements and standards.", LAB1_EN, "Preparation of the Category 2 Environmental Audit Study and corrective action plan, with follow-up until the environmental permit is issued."]),
+    scope:J(["إعداد دراسة التدقيق البيئي للفئة الثانية، متضمنةً خطة الإجراءات التصحيحية وخطة الإدارة والرصد البيئي للتشغيل.", "متابعة الطلب لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J(["Preparation of the Category 2 Environmental Audit Study, including the corrective action plan and the operational Environmental Management and Monitoring Plan.", "Follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} وسجلات التشغيل والسجلات البيئية.", "زيارة ميدانية تدقيقية للموقع ومقابلة المسؤولين، وحصر مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB, M_NC,
       `إعداد دراسة التدقيق البيئي للفئة الثانية وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق}, operational records and environmental registers.", "Audit site visit, interviews with responsible personnel, and identification of emission, waste, water and noise sources.", M_LAB_EN, M_NC_EN,
       "Preparation of the Category 2 Environmental Audit Study and the operational Environmental Management and Monitoring Plan in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
     duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الدراسة", "study") },
   { key:"c2-eia", title:"دراسة تقييم أثر بيئي", titleEn:"Environmental Impact Assessment Study", writing:11000, durationShort:"7 أيام عمل", durationShortEn:"7 working days",
-    scope:J([P_REVIEW, "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه.", "تقييم التأثيرات البيئية المتوقعة خلال مرحلتي الإنشاء والتشغيل.", "إعداد دراسة تقييم الأثر البيئي للفئة الثانية وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    scopeEn:J([P_REVIEW_EN, "Study of the environmental baseline of the project site and its surroundings.", "Assessment of the expected environmental impacts during the construction and operation phases.", "Preparation of the Category 2 Environmental Impact Assessment study and the Environmental Management and Monitoring Plan, with follow-up until the environmental permit is issued."]),
+    scope:J(["إعداد دراسة تقييم الأثر البيئي للفئة الثانية، متضمنةً خطة الإدارة والرصد البيئي.", "متابعة الطلب لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J(["Preparation of the Category 2 Environmental Impact Assessment study, including the Environmental Management and Monitoring Plan.", "Follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق} (المخططات، والطاقة الإنتاجية، والمواد الخام، واستهلاك المياه والطاقة).", "زيارة ميدانية لموقع المشروع لتوصيف الوضع الراهن والمستقبلات الحساسة المحيطة.",
       "عمل القياسات البيئية اللازمة للوضع الراهن (خط الأساس) عبر مختبر معتمد لمرة واحدة.", "تحديد التأثيرات البيئية المتوقعة وتقييم أهميتها خلال مرحلتي الإنشاء والتشغيل.", "اقتراح إجراءات التحكم والتخفيف، وإعداد خطة الإدارة والرصد البيئي.",
       `إعداد دراسة تقييم الأثر البيئي للفئة الثانية وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
@@ -805,18 +805,16 @@ const DEFAULT_SERVICES = [
       "Preparation of the Category 2 Environmental Impact Assessment study in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
     duration:DUR("7 أيام عمل"), durationEn:DUR_EN("7 working days"), payments:PAY3("الدراسة", "study") },
   { key:"c3-audit", title:"دراسة تدقيق بيئي", titleEn:"Environmental Audit Study", writing:16000, durationShort:"20 يوم عمل", durationShortEn:"20 working days",
-    scope:J([S_REVIEW, "تقييم شامل لمدى التزام النشاط القائم بالاشتراطات والمعايير البيئية الوطنية وبشروط التصريح السابق.", LAB1, "إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإجراءات التصحيحية، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    scopeEn:J([S_REVIEW_EN, "Comprehensive assessment of the existing activity's compliance with national environmental requirements and standards and with the conditions of its previous permit.", LAB1_EN, "Preparation of the Category 3 Environmental Audit Study and corrective action plan, with follow-up until the environmental permit is issued."]),
+    scope:J(["إعداد دراسة التدقيق البيئي للفئة الثالثة، متضمنةً خطة الإجراءات التصحيحية وخطة الإدارة والرصد البيئي للتشغيل.", "متابعة الطلب لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J(["Preparation of the Category 3 Environmental Audit Study, including the corrective action plan and the operational Environmental Management and Monitoring Plan.", "Follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["استلام ومراجعة مستندات النشاط{التصريح_السابق} ونتائج الرصد الذاتي والسجلات البيئية.", "زيارة ميدانية تدقيقية شاملة للموقع ومقابلة المسؤولين، وحصر جميع مصادر الانبعاثات والنفايات والمياه والضوضاء.", M_LAB,
       "تقييم الأداء البيئي للنشاط، والتأثيرات التي قد تمتد خارج حدود الموقع.", M_NC, `إعداد دراسة التدقيق البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي للتشغيل وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
     methodologyEn:J(["Receipt and review of the activity documents{التصريح_السابق}, self-monitoring results and environmental registers.", "Comprehensive audit site visit, interviews with responsible personnel, and identification of all emission, waste, water and noise sources.", M_LAB_EN,
       "Assessment of the activity's environmental performance and of impacts that may extend beyond the site boundary.", M_NC_EN, "Preparation of the Category 3 Environmental Audit Study and the operational Environmental Management and Monitoring Plan in line with NCEC requirements.", SUBMIT_EN, M_DELIVER_EN]),
     duration:DUR("20 يوم عمل"), durationEn:DUR_EN("20 working days"), payments:PAY3("الدراسة", "study") },
   { key:"c3-eia", title:"دراسة تقييم أثر بيئي", titleEn:"Environmental Impact Assessment Study", writing:22000, durationShort:"10 أيام لتقرير النطاق + 20 يوم للدراسة", durationShortEn:"10 days (scoping report) + 20 days (study)",
-    scope:J([P_REVIEW, "إعداد تقرير تحديد النطاق ورفعه إلى المركز للحصول على الموافقة.", "دراسة الوضع البيئي الراهن لموقع المشروع ومحيطه، وتقييم التأثيرات البيئية المتوقعة بما فيها التأثيرات التي قد تتجاوز حدود المشروع.",
-      "إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وخطة الإدارة والرصد البيئي، ومتابعة اعتمادها حتى صدور التصريح البيئي."]),
-    scopeEn:J([P_REVIEW_EN, "Preparation of the scoping report and its submission to NCEC for approval.", "Study of the environmental baseline of the project site and its surroundings, and assessment of expected impacts, including those that may extend beyond the project boundary.",
-      "Preparation of the Category 3 Environmental Impact Assessment study and the Environmental Management and Monitoring Plan, with follow-up until the environmental permit is issued."]),
+    scope:J(["إعداد تقرير تحديد النطاق والحصول على موافقة المركز عليه.", "إعداد دراسة تقييم الأثر البيئي للفئة الثالثة، متضمنةً خطة الإدارة والرصد البيئي وخطة الاستجابة للطوارئ.", "متابعة الطلب لدى المركز حتى صدور التصريح البيئي."]),
+    scopeEn:J(["Preparation of the scoping report and obtaining NCEC's approval of it.", "Preparation of the Category 3 Environmental Impact Assessment study, including the Environmental Management and Monitoring Plan and the emergency response plan.", "Follow-up with NCEC until the environmental permit is issued."]),
     methodology:J(["جمع ومراجعة بيانات المشروع{التصريح_السابق}، وزيارة استطلاعية لموقعه ومحيطه.", "إعداد تقرير النطاق (حدود الدراسة، والعناصر البيئية المتأثرة، ومنهجية التقييم، وخطة القياسات) ورفعه على منصة المركز.",
       "بعد الموافقة على تقرير النطاق: عمل القياسات البيئية للوضع الراهن عبر مختبر معتمد لمرة واحدة وفق ما ورد في التقرير.", "وصف الوضع البيئي الراهن، وتقييم التأثيرات المتوقعة وأهميتها خلال مرحلتي الإنشاء والتشغيل، بما فيها التأثيرات التراكمية.",
       "دراسة البدائل واقتراح إجراءات التخفيف، وإعداد خطة الإدارة والرصد البيئي وخطة الاستجابة للطوارئ.", `إعداد دراسة تقييم الأثر البيئي للفئة الثالثة وفق اشتراطات ${NCEC}.`, SUBMIT, M_DELIVER]),
@@ -830,8 +828,8 @@ const DEFAULT_SERVICES = [
   { key:"mon", title:"تقرير المراقبة البيئية", titleEn:"Environmental Monitoring Report", writing:3000, durationShort:"10 أيام عمل لكل تقرير", durationShortEn:"10 working days per report",
     intro:`يسعدنا نحن {الشركة_الرسمي} بتقديم هذا العرض الفني والمالي الخاص بإعداد تقارير المراقبة البيئية الدورية {للعميل}{بسجل} وفقاً لاشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية الصادر عن ${NCEC}.\nونؤكد التزامنا بتنفيذ أعمال الرصد والقياسات البيئية وإعداد التقارير ورفعها في مواعيدها، وتقديم الدعم الفني الكامل حتى قبولها من ${NCEC}.`,
     introEn:"{الشركة_الرسمي} is pleased to submit this technical and financial proposal for the preparation of periodic environmental monitoring reports for {للعميل}{بسجل}, in accordance with the environmental permit conditions and the Environmental Monitoring Report Guideline issued by the National Center for Environmental Compliance (NCEC).\nWe are fully committed to carrying out the required environmental monitoring and measurements, preparing and submitting the reports on schedule, and providing complete technical support until they are accepted by NCEC.",
-    scope:J(["إعداد تقارير المراقبة البيئية الدورية للنشاط وفق اشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية الصادر عن المركز.", "تنفيذ أعمال الرصد والقياسات البيئية المطلوبة عبر مختبر معتمد لكل فترة تقرير.", "رفع التقارير على منصة المركز ومتابعتها حتى قبولها."]),
-    scopeEn:J(["Preparation of the activity's periodic environmental monitoring reports in accordance with the environmental permit conditions and NCEC's Environmental Monitoring Report Guideline.", "Conducting the required environmental monitoring and measurements through an accredited laboratory for each reporting period.", "Submission of the reports on the NCEC platform and follow-up until acceptance."]),
+    scope:J(["إعداد تقارير المراقبة البيئية الدورية وفق اشتراطات التصريح البيئي والدليل الاسترشادي الصادر عن المركز.", "رفع التقارير على منصة المركز ومتابعتها حتى قبولها."]),
+    scopeEn:J(["Preparation of periodic environmental monitoring reports in line with the environmental permit conditions and NCEC's guideline.", "Submission of the reports on the NCEC platform and follow-up until acceptance."]),
     methodology:J(["مراجعة التصريح البيئي واشتراطاته وخطة الإدارة والرصد البيئي المعتمدة.", "زيارة ميدانية للموقع خلال كل فترة تقرير وجمع بيانات التشغيل.", "تنفيذ الرصد والقياسات البيئية المحددة في اشتراطات التصريح عبر مختبر معتمد، ومقارنة النتائج بالمقاييس البيئية الوطنية.",
       "جمع وتحليل بيانات الإدارة البيئية: النفايات الخطرة وغير الخطرة والمعاد تدويرها والمقاولين المرخصين، واستهلاك الموارد والمواد الخام والطاقة والمياه.", "توثيق الحوادث البيئية وحالات عدم الالتزام والإجراءات التصحيحية، ونتائج عمليات التفتيش والتدقيق والتدريب البيئي.",
       "إعداد التقرير وفق متطلبات الدليل الاسترشادي (صفحة العنوان، والملخص التنفيذي، ووصف النشاط، والأداء والإدارة البيئية، والنتائج والتوصيات).", "رفع التقرير على منصة المركز ومتابعة الملاحظات حتى قبوله."]),
@@ -895,7 +893,7 @@ const DEFAULT_CFG = {
     totalNote:"The total value of the works described in this proposal is SAR {الإجمالي} ({كتابة}). Upon acceptance, kindly return this proposal signed and stamped.",
     notes:"This proposal has been prepared based on the information provided by the client and does not include any additional or mandatory requirements that NCEC may request in its initial response to the application."
   },
-  tv:5,
+  tv:6,
   cloud:{ clientId:"", tenantId:"", folder:"مسعر العروض", autoBackup:true, tracker:true }
 };
 const CAPEX = ["أقل من 10 ملايين ريال","من 10 إلى أقل من 25 مليون","من 25 إلى أقل من 50 مليون","من 50 إلى أقل من 100 مليون","من 100 إلى أقل من 250 مليون","250 مليون ريال فأكثر"];
@@ -931,7 +929,8 @@ function mergeCfg(c){
       co.signNameEn = co.signNameEn || "Hani Ibrahim Alem"; co.signTitleEn = co.signTitleEn || "Chief Executive Officer"; co.bankNameEn = co.bankNameEn || "Saudi National Bank (SNB)";
     }
   }
-  c.tv = 5;
+  if ((c.tv || 0) < 6) (c.services || []).forEach(x => { delete x.scope; delete x.scopeEn; });
+  c.tv = 6;
   const out = { ...base, ...c, company:{...base.company, ...c.company}, pricing:{...base.pricing, ...c.pricing}, fees:{...base.fees, ...c.fees}, texts:{...base.texts, ...c.texts}, textsEn:{...base.textsEn, ...c.textsEn}, cloud:{...base.cloud, ...c.cloud} };
   out.services = base.services.map(s => {
     const sv = (c.services || []).find(x => x.key === s.key) || {};
@@ -1083,7 +1082,7 @@ function clientRows(q, c){
     : (en ? `Preparation of the ${s.titleEn} and follow-up with NCEC until permit issuance` : `إعداد ${s.title} ومتابعتها لدى ${NCEC} حتى صدور التصريح`);
   const mainDetail = sep || !v ? "" : en ? `Including ${vt} to the activity site${isBase(q) ? "" : " in " + city} and associated travel costs` : `شاملة ${vt} لموقع النشاط${isBase(q) ? "" : " في " + city} وتكاليف التنقل`;
   rows.push({ key:"main", label:Lb("main", mainLabel), detail:D("main", mainDetail), amount:c.price.main });
-  const labList = c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ");
+  const labList = c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")}${l.qty > 1 ? "s" : ""})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ");
   if (c.price.lab) rows.push({ key:"lab", label:Lb("lab", en ? "Environmental measurements by an accredited laboratory" : "القياسات البيئية بواسطة مختبر معتمد"), detail:D("lab", labList + (c.nRep > 1 ? (en ? ` × ${c.nRep} reports` : ` × ${c.nRep} تقارير`) : "")), amount:c.price.lab });
   if (c.price.rec) rows.push({ key:"rec", label:Lb("rec", en ? "Preparation of environmental registers" : "إعداد السجلات البيئية"), detail:D("rec", c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ")), amount:c.price.rec });
   if (c.price.travel) rows.push({ key:"travel", label:Lb("travel", en ? "Site visits and travel" : "الزيارات الميدانية والتنقل"), detail:D("travel", en ? `${vt} to the activity site in ${city}` : `${vt} إلى موقع النشاط في ${city}`), amount:c.price.travel });
@@ -1115,8 +1114,8 @@ function buildModel(q){
   if (isPrelim(q)) classStep.push(en ? "Completing the NCEC environmental classification form for the activity and submitting it on the NCEC platform to determine its environmental category and applicable requirements."
     : "تعبئة استمارة التصنيف البيئي للنشاط ورفعها على منصة المركز لتحديد الفئة البيئية والمتطلبات اللازمة.");
   const methodology = classStep.concat(methodBase), methodTail = [];
-  if (c.labItems.length) methodology.push((en ? "Environmental measurements included in this proposal: " : "القياسات البيئية المشمولة في العرض: ") + c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ") + (q.service === "mon" ? (en ? " for each report." : " لكل تقرير.") : "."));
-  if (c.recItems.length) methodology.push((en ? "Preparation of the following environmental registers: " : "إعداد السجلات البيئية التالية: ") + c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ") + ".");
+  if (c.labItems.length) scopeAuto.unshift((en ? "Environmental measurements through an accredited laboratory" + (q.service === "mon" ? " for each report: " : " (one round): ") : "القياسات البيئية عبر مختبر معتمد" + (q.service === "mon" ? " لكل تقرير: " : " (مرة واحدة): ")) + c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")}${l.qty > 1 ? "s" : ""})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ") + ".");
+  if (c.recItems.length) scopeAuto.splice(c.labItems.length ? 1 : 0, 0, (en ? "Preparation of the following environmental registers: " : "إعداد السجلات البيئية التالية: ") + c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ") + ".");
   const notesBase = lines(T("notes")), notes = notesBase.slice(), notesAuto = [];
   notesAuto.push(q.gov.include
     ? (en ? `The total includes the estimated government fees${P.govVat ? "" : " (not subject to VAT)"}; any change in these fees by the competent authority shall be borne by the client.` : `تشمل القيمة الإجمالية الرسوم الحكومية المقدّرة${P.govVat ? "" : " (غير خاضعة لضريبة القيمة المضافة)"}، وأي تغيير فيها من الجهة المختصة يُحمَّل على العميل.`)
@@ -1128,7 +1127,7 @@ function buildModel(q){
   const pays = (q.payments || []).map((p, i) => ({ i, label:payLabel(q, p), ord:`${Lx.ord[i] || (i+1)} ${en ? "– " : ""}${num(p.pct)}%`, amount:c.payAmts[i] }));
   if (c.price.mon) pays.push({ i:-1, label:`${Lx.monRow} (${periodTxt(q, q.monAdd.period)})`, ord:Lx.monEach, amount:c.price.mon, fixed:true });
   return { q, co, cat, svc, c, en, L:Lx, ref:q.number || (en ? "Draft" : "مسودة"), date:fmtDate(q.date), valid:fmtDate(addDays(q.date, num(q.validity))),
-    intro:T("intro"), scopeLead:scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:classStep.concat(methodology.slice(classStep.length + methodBase.length)), durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
+    intro:T("intro"), scopeLead:scopeLead.length > 1 ? [...scopeLead.slice(0, -1), ...scopeAuto, scopeLead[scopeLead.length - 1]] : scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:classStep, durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
     totalNote:T("totalNote"), notes, notesAuto, rows:clientRows(q, c), pays, cls:classText(q), loc:locationText(q),
     coName:en ? (co.accountNameEn || co.nameEn || co.name) : (co.accountName || co.name), signName:en ? (co.signNameEn || co.signName) : co.signName,
     signTitle:en ? (co.signTitleEn || co.signTitle) : co.signTitle, bankName:en ? (co.bankNameEn || co.bankName) : co.bankName };
