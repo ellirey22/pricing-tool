@@ -1092,6 +1092,7 @@ function clientRows(q, c){
   c.extras.forEach((x, i) => rows.push({ key:"x" + i, label:x.label || (en ? "Additional item" : "بند إضافي"), detail:"", amount:c.price.extras[i], extra:i }));
   return rows;
 }
+const isPrelim = q => !(q.service === "mon" || (q.request === "renew" && !q.modified));
 function classText(q){
   const cat = catOf(q), en = isEn(q), name = en ? enOf(cat) : cat.name;
   const approved = q.service === "mon" || (q.request === "renew" && !q.modified);
@@ -1110,19 +1111,24 @@ function buildModel(q){
   const scopeAuto = [];
   if (c.ma) scopeAuto.push(en ? `Preparation of ${c.ma.count} periodic environmental monitoring reports (${periodTxt(q, q.monAdd.period)}) in accordance with the environmental permit conditions and NCEC's Environmental Monitoring Report Guideline.`
     : `إعداد تقارير المراقبة البيئية الدورية (${periodTxt(q, q.monAdd.period)}) بعدد ${c.ma.count} تقارير وفق اشتراطات التصريح البيئي والدليل الاسترشادي لتقرير المراقبة البيئية.`);
-  const methodBase = lines(T("methodology")), methodology = methodBase.slice();
+  const methodBase = lines(T("methodology")), classStep = [];
+  if (isPrelim(q)) classStep.push(en ? "Completing the NCEC environmental classification form for the activity and submitting it on the NCEC platform to determine its environmental category and applicable requirements."
+    : "تعبئة استمارة التصنيف البيئي للنشاط ورفعها على منصة المركز لتحديد الفئة البيئية والمتطلبات اللازمة.");
+  const methodology = classStep.concat(methodBase), methodTail = [];
   if (c.labItems.length) methodology.push((en ? "Environmental measurements included in this proposal: " : "القياسات البيئية المشمولة في العرض: ") + c.labItems.map(l => en ? `${enOf(l)} (${l.qty} ${enOf(l, "unit")})` : `${l.name} (${l.qty} ${l.unit})`).join(en ? ", " : "، ") + (q.service === "mon" ? (en ? " for each report." : " لكل تقرير.") : "."));
   if (c.recItems.length) methodology.push((en ? "Preparation of the following environmental registers: " : "إعداد السجلات البيئية التالية: ") + c.recItems.map(r => en ? enOf(r) : r.name).join(en ? ", " : "، ") + ".");
   const notesBase = lines(T("notes")), notes = notesBase.slice(), notesAuto = [];
   notesAuto.push(q.gov.include
     ? (en ? `The total includes the estimated government fees${P.govVat ? "" : " (not subject to VAT)"}; any change in these fees by the competent authority shall be borne by the client.` : `تشمل القيمة الإجمالية الرسوم الحكومية المقدّرة${P.govVat ? "" : " (غير خاضعة لضريبة القيمة المضافة)"}، وأي تغيير فيها من الجهة المختصة يُحمَّل على العميل.`)
     : (en ? "Government fees are not included in this proposal and shall be paid directly by the client to the competent authority." : "لا يشمل العرض الرسوم الحكومية، ويتحملها العميل مباشرة لدى الجهة المختصة."));
+  if (isPrelim(q)) notesAuto.push(en ? "Should NCEC classify the activity under a higher category or require additional requirements, a revised proposal will be issued, from which the first installment already paid will be deducted."
+    : "في حال صنّف المركز النشاط ضمن فئة أعلى أو طلب متطلبات إضافية، يُعد عرض سعر جديد تُخصم منه قيمة الدفعة الأولى المسددة.");
   if (q.phase === "operation" && q.service !== "mon") notesAuto.push(en ? "This proposal does not include the annual operating permit fee determined by NCEC." : "لا يشمل العرض المقابل المالي السنوي للتصريح البيئي للتشغيل الذي يحدده المركز.");
   notes.push(...notesAuto);
   const pays = (q.payments || []).map((p, i) => ({ i, label:payLabel(q, p), ord:`${Lx.ord[i] || (i+1)} ${en ? "– " : ""}${num(p.pct)}%`, amount:c.payAmts[i] }));
   if (c.price.mon) pays.push({ i:-1, label:`${Lx.monRow} (${periodTxt(q, q.monAdd.period)})`, ord:Lx.monEach, amount:c.price.mon, fixed:true });
   return { q, co, cat, svc, c, en, L:Lx, ref:q.number || (en ? "Draft" : "مسودة"), date:fmtDate(q.date), valid:fmtDate(addDays(q.date, num(q.validity))),
-    intro:T("intro"), scopeLead:scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:methodology.slice(methodBase.length), durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
+    intro:T("intro"), scopeLead:scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:classStep.concat(methodology.slice(classStep.length + methodBase.length)), durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
     totalNote:T("totalNote"), notes, notesAuto, rows:clientRows(q, c), pays, cls:classText(q), loc:locationText(q),
     coName:en ? (co.accountNameEn || co.nameEn || co.name) : (co.accountName || co.name), signName:en ? (co.signNameEn || co.signName) : co.signName,
     signTitle:en ? (co.signTitleEn || co.signTitle) : co.signTitle, bankName:en ? (co.bankNameEn || co.bankName) : co.bankName };
