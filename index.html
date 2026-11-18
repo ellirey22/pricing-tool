@@ -1428,7 +1428,7 @@ async function renderPages(){
     pg.style.setProperty("--brand", co.brand || "#012c41"); pg.style.setProperty("--brand2", co.brand2 || "#0099d9");
     pg.style.setProperty("--mt", num(co.mt) + "px"); pg.style.setProperty("--mb", num(co.mb) + "px"); pg.style.setProperty("--mx", num(co.mx) + "px");
     if (hasLH()) pg.style.backgroundImage = `url("${co.letterhead}")`;
-    pg.innerHTML = `<div class="pg-h">${headerHTML()}</div><div class="pg-b"></div><div class="pg-f">${footerHTML()}</div><span class="pno"></span>`;
+    pg.innerHTML = `<div class="pg-h">${headerHTML()}</div><div class="pg-b"></div><div class="pg-f">${footerHTML()}</div>`;
     host.appendChild(pg); pages.push(pg); return pg;
   };
   let pg = newPage();
@@ -1461,7 +1461,6 @@ async function renderPages(){
     }
   }
   for (const html of blocksHTML(m)) place(toEl(html));
-  pages.forEach((p, i) => p.querySelector(".pno").textContent = m.L.page(i + 1, pages.length));
   return pages;
 }
 
@@ -1569,7 +1568,7 @@ async function buildDocx(q){
   const headerKids = [], footerKids = [];
   let top = 1300, bottom = 1300, hdrDist = 500, ftrDist = 400;
   if (hasLH()){
-    headerKids.push(new X.Paragraph({ bidirectional:ar, alignment:ar ? X.AlignmentType.START : X.AlignmentType.END, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0), ...pnoRuns() ] }));
+    headerKids.push(new X.Paragraph({ bidirectional:ar, alignment:ar ? X.AlignmentType.START : X.AlignmentType.END, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0) ] }));
     top = Math.round(num(co.mt) * 15); bottom = Math.round(num(co.mb) * 15); hdrDist = 620; ftrDist = 0;
     footerKids.push(new X.Paragraph({ children:[] }));
   } else {
@@ -1582,7 +1581,6 @@ async function buildDocx(q){
     }
     if (co.footer){ const s = await imgSize(co.footer), h = Math.round(794 * s.h / s.w); footerKids.push(new X.Paragraph({ children:[ floatImg(co.footer, 794, h, Math.round((1123 - h) * 9525)) ] })); bottom = h * 15 + 350; ftrDist = 0; }
     else footerKids.push(Pg(R([co.name, co.address, co.phone, co.email, co.cr && "CR: " + co.cr].filter(Boolean).join(" · "), { size:15, color:"5D6A75" }), { align:X.AlignmentType.CENTER, after:0 }));
-    footerKids.push(new X.Paragraph({ bidirectional:ar, alignment:X.AlignmentType.END, spacing:{ after:0 }, children:pnoRuns() }));
   }
 
   const B = [], half = Math.round(CW / 2);
