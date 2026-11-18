@@ -445,6 +445,9 @@ details.en-fields[open] summary{margin-bottom:10px}
 .d-tbl tr.sum td{background:#f3f7fa;font-weight:600}
 .d-tbl tr.tot td{background:var(--brand);color:#fff;font-weight:700;font-size:13.5px;border-color:var(--brand)}
 .d-tbl tr.gov td{background:#fbf7ee}
+.d-tbl.pay{table-layout:fixed;font-size:11.5px}
+.d-tbl.pay .m{width:auto;font-size:11.5px}
+.d-tbl.pay td,.d-tbl.pay th{padding:6px 7px}
 .d-words{font-size:12px;background:#f3f7fa;border-inline-start:3px solid var(--brand2);border-radius:4px;padding:8px 12px;margin:10px 0 8px}
 .d-bank{display:flex;flex-direction:column;gap:2px;font-size:12px}
 .d-bank span{color:#6d7c88}
@@ -738,14 +741,14 @@ const L = {
     subject:"الموضوع", issue:"إصدار التصريح البيئي", renew:"تجديد تصريح بيئي", construction:"إنشائي", operation:"تشغيلي", service:"الخدمة المطلوبة", classification:"تصنيف النشاط", type:"نوع النشاط", location:"الموقع",
     lead:"واعتماداً على نطاق العمل، يشمل العرض النقاط التالية:", sec:SEC, scope:"نطاق العمل", method:"المنهجية المتبعة في العمل:", timeline:"الفترة الزمنية", financial:"التكلفة المالية", bank:"بيانات الحساب البنكي",
     payTable:"جدول الدفعات:", item:"البند", amount:"المبلغ (ر.س)", works:"الأعمال", payment:"الدفعات", cost:"التكلفة (ر.س)", discount:"الخصم", afterDisc:"بعد خصم", net:"قيمة الأعمال قبل الضريبة",
-    vat:"ضريبة القيمة المضافة", gov:"الرسوم الحكومية", govNoVat:" (غير خاضعة للضريبة)", total:"القيمة الإجمالية", sar:"ر.س", accName:"اسم الحساب", bankName:"البنك", iban:"رقم الآيبان",
+    vat:"ضريبة القيمة المضافة", exVat:"قبل الضريبة", vatCol:"الضريبة", incVat:"شامل الضريبة", govFirst:"الرسوم الحكومية (تُسدد مع الدفعة الأولى)", afterDiscN:"بعد خصم", gov:"الرسوم الحكومية", govNoVat:" (غير خاضعة للضريبة)", total:"القيمة الإجمالية", sar:"ر.س", accName:"اسم الحساب", bankName:"البنك", iban:"رقم الآيبان",
     accept:"وفي حال الموافقة:", client:"العميل", rep:"الممثل:", title:"الصفة:", stamp:"الختم:", stampSign:"الختم والتوقيع:", signature:"التوقيع:", page:(i, n) => `صفحة ${i} من ${n}`,
     ord:ORD, monEach:"عند تسليم كل تقرير", monRow:"تقارير المراقبة البيئية", report:"تقارير", plan:"خطة الإدارة البيئية", audit:"دراسة تدقيق بيئي", eia:"دراسة تقييم أثر بيئي", mon:"تقرير المراقبة البيئية" },
   en:{ dir:"ltr", date:"Date", ref:"Quotation No.", valid:"Valid Until", license:"Company Environmental License No.", to:"To:", respected:"", salam:"Dear Sir/Madam,", after:"",
     subject:"Subject", issue:"Issuance of Environmental Permit", renew:"Renewal of Environmental Permit", construction:"Construction", operation:"Operation", service:"Required Service", classification:"Activity Classification", type:"Activity Type", location:"Location",
     lead:"Based on the scope of work, this proposal covers the following:", sec:["First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth"], scope:"Scope of Work", method:"Methodology:", timeline:"Timeline", financial:"Financial Proposal", bank:"Bank Details",
     payTable:"Payment Schedule:", item:"Item", amount:"Amount (SAR)", works:"Milestone", payment:"Installment", cost:"Amount (SAR)", discount:"Discount", afterDisc:"After a discount of", net:"Total before VAT",
-    vat:"VAT", gov:"Government Fees", govNoVat:" (not subject to VAT)", total:"Total Amount", sar:"SAR", accName:"Account Name", bankName:"Bank", iban:"IBAN",
+    vat:"VAT", exVat:"Excl. VAT", vatCol:"VAT", incVat:"Incl. VAT", govFirst:"Government fees (payable with the first installment)", afterDiscN:"after a discount of", gov:"Government Fees", govNoVat:" (not subject to VAT)", total:"Total Amount", sar:"SAR", accName:"Account Name", bankName:"Bank", iban:"IBAN",
     accept:"Upon Acceptance:", client:"Client", rep:"Representative:", title:"Position:", stamp:"Stamp:", stampSign:"Stamp & Signature:", signature:"Signature:", page:(i, n) => `Page ${i} of ${n}`,
     ord:["1st","2nd","3rd","4th","5th","6th","7th","8th"], monEach:"Upon delivery of each report", monRow:"Environmental monitoring reports", report:"reports", plan:"Environmental Management Plan", audit:"Environmental Audit Study", eia:"Environmental Impact Assessment Study", mon:"Environmental Monitoring Report" }
 };
@@ -1126,6 +1129,11 @@ function buildModel(q){
   notes.push(...notesAuto);
   const pays = (q.payments || []).map((p, i) => ({ i, label:payLabel(q, p), ord:`${Lx.ord[i] || (i+1)} ${en ? "– " : ""}${num(p.pct)}%`, amount:c.payAmts[i] }));
   if (c.price.mon) pays.push({ i:-1, label:`${Lx.monRow} (${periodTxt(q, q.monAdd.period)})`, ord:Lx.monEach, amount:c.price.mon, fixed:true });
+  const rate = c.vatRate / 100, govVat = P.govVat ? r2(c.gov * rate) : 0;
+  pays.forEach(x => x.vat = r2(x.amount * rate));
+  if (pays.length){ const others = pays.slice(0, -1).reduce((a, x) => a + x.vat, 0); pays[pays.length - 1].vat = r2(c.vat - govVat - others); }
+  if (c.gov) pays.push({ i:-2, label:Lx.govFirst + (P.govVat ? "" : Lx.govNoVat), ord:"—", amount:c.gov, vat:govVat, fixed:true, gov:true });
+  pays.forEach(x => x.total = r2(x.amount + x.vat));
   return { q, co, cat, svc, c, en, L:Lx, ref:q.number || (en ? "Draft" : "مسودة"), date:fmtDate(q.date), valid:fmtDate(addDays(q.date, num(q.validity))),
     intro:T("intro"), scopeLead:scopeLead.length > 1 ? [...scopeLead.slice(0, -1), ...scopeAuto, scopeLead[scopeLead.length - 1]] : scopeLead.concat(scopeAuto), scopeAuto, methodology, methodAuto:classStep, durations:[T("validity"), ...lines(T("duration"))].filter(Boolean),
     totalNote:T("totalNote"), notes, notesAuto, rows:clientRows(q, c), pays, cls:classText(q), loc:locationText(q),
@@ -1253,7 +1261,7 @@ function recalc(){
   const to = $("#travOut");
   if (to) to.innerHTML = q.travel.mode === "local" ? `<div><span>زيارات داخل المدينة${c.nRep > 1 ? " (كل التقارير)" : ""}</span><b>${money(t.local)}</b></div>`
     : `<div><span>التنقل</span><b>${money(t.transport)}</b></div>${q.travel.mode !== "car" ? `<div><span>سيارة بالمدينة</span><b>${money(t.car)}</b></div>` : ""}<div><span>السكن</span><b>${money(t.hotel)}</b></div><div><span>البدلات</span><b>${money(t.perDiem)}</b></div><div><span>إجمالي تكلفة السفر${c.nRep > 1 ? " (كل التقارير)" : ""}</span><b>${money(t.total)}</b></div>`;
-  $$("[data-pa]").forEach(el => el.textContent = money(c.payAmts[+el.dataset.pa] || 0));
+  $$("[data-pa]").forEach(el => el.textContent = money((c.payAmts[+el.dataset.pa] || 0) * (1 + c.vatRate / 100)) + " شامل");
   $("#payHint").innerHTML = (Math.abs(c.pctSum - 100) < 0.01 ? "مجموع النسب 100%" : `<span class="pill bad">مجموع النسب ${c.pctSum}% ويجب أن يكون 100%</span>`) + (c.price.mon ? ` · تقارير المراقبة (${money(c.price.mon)}) تُسدد عند تسليم كل تقرير` : "");
   const ga = govAuto(q);
   $("#govInfo").innerHTML = q.gov.manual
@@ -1402,12 +1410,10 @@ function blocksHTML(m){
   if (q.showBreakdown) B.push(`<div class="d-sec" data-split="table">${H(X.financial)}<table class="d-tbl"><thead><tr><th class="c">#</th><th>${X.item}</th><th class="m">${X.amount}</th></tr></thead><tbody>
     ${m.rows.map((r, i) => `<tr><td class="c">${i+1}</td><td><div class="lb" data-edit="${r.extra != null ? "extras." + r.extra + ".label" : "labels." + r.key}">${esc(r.label)}</div>${r.extra == null ? `<div class="dt" data-edit="details.${r.key}">${esc(r.detail)}</div>` : ""}</td><td class="m">${money(r.amount)}</td></tr>`).join("")}
     ${c.disc ? `<tr class="sum"><td></td><td>${X.discount}</td><td class="m">−${money(c.disc)}</td></tr>` : ""}<tr class="sum"><td></td><td>${X.net}</td><td class="m">${money(c.net)}</td></tr></tbody></table></div>`);
-  B.push(`<div class="d-sec" data-split="table">${q.showBreakdown ? `<h4>${X.payTable}</h4>` : H(X.financial)}<table class="d-tbl"><thead><tr><th class="c">#</th><th>${X.works}</th><th class="p">${X.payment}</th><th class="m">${X.cost}</th></tr></thead><tbody>
-    ${m.pays.map((p, j) => `<tr><td class="c">${j+1}</td><td ${p.fixed ? "" : `data-edit="payments.${p.i}.label"`}>${esc(p.label)}</td><td class="p">${esc(p.ord)}</td><td class="m">${money(p.amount)}</td></tr>`).join("")}
-    ${!q.showBreakdown && c.disc ? `<tr class="sum"><td></td><td colspan="2">${X.afterDisc} ${money(c.disc)}</td><td class="m">${money(c.net)}</td></tr>` : ""}
-    <tr class="sum"><td></td><td colspan="2">${X.vat} (${c.vatRate}%)</td><td class="m">${money(c.vat)}</td></tr>
-    ${c.gov ? `<tr class="gov"><td></td><td colspan="2">${X.gov}${S.cfg.pricing.govVat ? "" : X.govNoVat}</td><td class="m">${money(c.gov)}</td></tr>` : ""}
-    <tr class="tot"><td></td><td colspan="2">${X.total}</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
+  B.push(`<div class="d-sec" data-split="table">${q.showBreakdown ? `<h4>${X.payTable}</h4>` : H(X.financial)}<table class="d-tbl pay"><colgroup><col style="width:28px"><col><col style="width:78px"><col style="width:92px"><col style="width:76px"><col style="width:100px"></colgroup>
+    <thead><tr><th class="c">#</th><th>${X.works}</th><th class="p">${X.payment}</th><th class="m"><bdi>${X.exVat}</bdi></th><th class="m"><bdi>${X.vatCol} ${c.vatRate}%</bdi></th><th class="m"><bdi>${X.incVat}</bdi></th></tr></thead><tbody>
+    ${m.pays.map((p, j) => `<tr${p.gov ? ' class="gov"' : ""}><td class="c">${j+1}</td><td ${p.fixed ? "" : `data-edit="payments.${p.i}.label"`}>${esc(p.label)}</td><td class="p">${esc(p.ord)}</td><td class="m">${money(p.amount)}</td><td class="m">${money(p.vat)}</td><td class="m">${money(p.total)}</td></tr>`).join("")}
+    <tr class="tot"><td></td><td colspan="2">${X.total}${c.disc ? ` <span style="font-weight:400;font-size:11px">(${X.afterDiscN} ${money(c.disc)})</span>` : ""}</td><td class="m">${money(c.net + c.gov)}</td><td class="m">${money(c.vat)}</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
   B.push(`<p class="d-words" data-edit="text.totalNote">${esc(m.totalNote)}</p>`);
   B.push(`<div class="d-sec">${list("text.notes", m.notes)}</div>`);
   const bankHTML = co.iban ? `${H(X.bank)}<div class="d-bank"><div><span>${X.accName}:</span> <b>${esc(m.coName)}</b></div><div><span>${X.bankName}:</span> <b>${esc(m.bankName)}</b></div><div><span>${X.iban}:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div>` : "";
@@ -1627,16 +1633,14 @@ async function buildDocx(q){
     ], [w1, w2, w3]));
     B.push(H4(Lx.payTable));
   }
-  const p1 = 600, p3 = 1900, p4 = 2100, p2 = CW - p1 - p3 - p4;
-  const sumRow = (label, val, fill, color, size) => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R("")), { w:p1, fill }), cell(Pg(R(label, { bold:true, color, size }), { after:0 }), { w:p2 + p3, span:2, fill }), cell(Pg(R(val, { bold:true, color, size }), { after:0, align:CEN }), { w:p4, fill }) ] });
-  B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", p1, CEN), HC(Lx.works, p2), HC(Lx.payment, p3, CEN), HC(Lx.cost, p4, CEN)] }),
-    ...m.pays.map((p, j) => new X.TableRow({ cantSplit:true, children:[ cell(Pg(R(String(j+1)), { after:0, align:CEN }), { w:p1 }), cell(Pg(R(p.label), { after:0 }), { w:p2 }),
-      cell(Pg(R(p.ord), { after:0, align:CEN }), { w:p3 }), cell(Pg(R(money(p.amount), { bold:true }), { after:0, align:CEN }), { w:p4 }) ] })),
-    ...(!q.showBreakdown && c.disc ? [sumRow(`${Lx.afterDisc} ${money(c.disc)}`, money(c.net), "F3F7FA")] : []),
-    sumRow(`${Lx.vat} (${c.vatRate}%)`, money(c.vat), "F3F7FA"),
-    ...(c.gov ? [sumRow(`${Lx.gov}${S.cfg.pricing.govVat ? "" : Lx.govNoVat}`, money(c.gov), "FBF7EE")] : []),
-    sumRow(Lx.total, money(c.grand) + " " + Lx.sar, brand, "FFFFFF", 23)
-  ], [p1, p2, p3, p4]));
+  const p1 = 480, p3 = 1250, p4 = 1450, p5 = 1200, p6 = 1550, p2 = CW - p1 - p3 - p4 - p5 - p6;
+  const mc = (v, w, o = {}) => cell(Pg(R(money(v), { bold:o.bold, color:o.color, size:o.size || 19 }), { after:0, align:CEN }), { w, fill:o.fill });
+  B.push(tbl([ new X.TableRow({ tableHeader:true, children:[HC("#", p1, CEN), HC(Lx.works, p2), HC(Lx.payment, p3, CEN), HC(Lx.exVat, p4, CEN), HC(`${Lx.vatCol} ${c.vatRate}%`, p5, CEN), HC(Lx.incVat, p6, CEN)] }),
+    ...m.pays.map((p, j) => { const fill = p.gov ? "FBF7EE" : undefined; return new X.TableRow({ cantSplit:true, children:[ cell(Pg(R(String(j+1)), { after:0, align:CEN }), { w:p1, fill }), cell(Pg(R(p.label, { size:19 }), { after:0 }), { w:p2, fill }),
+      cell(Pg(R(p.ord, { size:19 }), { after:0, align:CEN }), { w:p3, fill }), mc(p.amount, p4, { fill }), mc(p.vat, p5, { fill }), mc(p.total, p6, { bold:true, fill }) ] }); }),
+    new X.TableRow({ cantSplit:true, children:[ cell(Pg(R("")), { w:p1, fill:brand }), cell(Pg(R(Lx.total + (c.disc ? ` (${Lx.afterDiscN} ${money(c.disc)})` : ""), { bold:true, color:"FFFFFF", size:21 }), { after:0 }), { w:p2 + p3, span:2, fill:brand }),
+      mc(c.net + c.gov, p4, { bold:true, color:"FFFFFF", fill:brand }), mc(c.vat, p5, { bold:true, color:"FFFFFF", fill:brand }), mc(c.grand, p6, { bold:true, color:"FFFFFF", fill:brand, size:21 }) ] })
+  ], [p1, p2, p3, p4, p5, p6]));
   B.push(Pg(R(m.totalNote, { bold:true }), { before:140, after:100, align:X.AlignmentType.BOTH, border:{ [ar ? "right" : "left"]:{ style:X.BorderStyle.SINGLE, size:18, color:brand2, space:8 } } }));
   B.push(...bullets(m.notes));
   if (co.iban){ B.push(H(`${Lx.sec[n++]}: ${Lx.bank}`));
