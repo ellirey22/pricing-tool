@@ -453,8 +453,8 @@ details.en-fields[open] summary{margin-bottom:10px}
 .d-sign th{background:#eef4f8;color:var(--brand);padding:6px 10px;border:1px solid #d3dee6;text-align:right;width:50%}
 .d-sign td{padding:5px 10px;border:1px solid #d3dee6;vertical-align:top;height:28px}
 .d-sign td span{color:#6d7c88}
-.d-sign td.stamp{height:84px;position:relative}
-.d-sign td.stamp img{position:absolute;top:2px;left:40%;width:80px;height:80px;opacity:.95;transform:rotate(-8deg)}
+.d-sign td.stamp{height:96px;position:relative}
+.d-sign td.stamp img{position:absolute;top:-14px;left:32%;width:150px;height:150px;opacity:.95;transform:rotate(-8deg)}
 #pages.editing [data-edit]{outline:1.5px dashed #c98a1b;outline-offset:2px;border-radius:3px;cursor:text;background:#fffbea}
 #pages.editing [data-edit]:focus{outline:2px solid #c98a1b;background:#fff6d6}
 
@@ -1405,8 +1405,8 @@ function blocksHTML(m){
     <tr class="tot"><td></td><td colspan="2">${X.total}</td><td class="m">${money(c.grand)}</td></tr></tbody></table></div>`);
   B.push(`<p class="d-words" data-edit="text.totalNote">${esc(m.totalNote)}</p>`);
   B.push(`<div class="d-sec">${list("text.notes", m.notes)}</div>`);
-  if (co.iban) B.push(`<div class="d-sec">${H(X.bank)}<div class="d-bank"><div><span>${X.accName}:</span> <b>${esc(m.coName)}</b></div><div><span>${X.bankName}:</span> <b>${esc(m.bankName)}</b></div><div><span>${X.iban}:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div></div>`);
-  B.push(`<div class="d-sec" style="margin-top:22px"><h4>${X.accept}</h4><table class="d-sign"><thead><tr><th>${esc(m.coName)}</th><th>${X.client}: ${esc(q.client.name)}</th></tr></thead><tbody>
+  const bankHTML = co.iban ? `${H(X.bank)}<div class="d-bank"><div><span>${X.accName}:</span> <b>${esc(m.coName)}</b></div><div><span>${X.bankName}:</span> <b>${esc(m.bankName)}</b></div><div><span>${X.iban}:</span> <b><bdi dir="ltr">${esc(co.iban)}</bdi></b></div></div>` : "";
+  B.push(`<div class="d-sec d-close-block">${bankHTML}<h4 style="margin-top:${co.iban ? 16 : 22}px">${X.accept}</h4><table class="d-sign"><thead><tr><th>${esc(m.coName)}</th><th>${X.client}: ${esc(q.client.name)}</th></tr></thead><tbody>
     <tr><td><span>${X.rep}</span> ${esc(m.signName)}</td><td><span>${X.rep}</span></td></tr>
     <tr><td><span>${X.title}</span> ${esc(m.signTitle)}</td><td><span>${X.title}</span></td></tr>
     <tr><td class="stamp"><span>${X.stamp}</span>${co.stamp && co.showStamp ? `<img src="${esc(co.stamp)}" alt="">` : ""}</td><td class="stamp" ${co.signLine ? 'rowspan="2"' : ""}><span>${X.stampSign}</span></td></tr>
@@ -1563,7 +1563,7 @@ async function buildDocx(q){
   const headerKids = [], footerKids = [];
   let top = 1300, bottom = 1300, hdrDist = 500, ftrDist = 400;
   if (hasLH()){
-    headerKids.push(new X.Paragraph({ bidirectional:ar, alignment:X.AlignmentType.END, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0), ...pnoRuns() ] }));
+    headerKids.push(new X.Paragraph({ bidirectional:ar, alignment:ar ? X.AlignmentType.START : X.AlignmentType.END, spacing:{ after:0 }, children:[ floatImg(co.letterhead, 794, 1123, 0), ...pnoRuns() ] }));
     top = Math.round(num(co.mt) * 15); bottom = Math.round(num(co.mb) * 15); hdrDist = 620; ftrDist = 0;
     footerKids.push(new X.Paragraph({ children:[] }));
   } else {
@@ -1637,12 +1637,12 @@ async function buildDocx(q){
   B.push(Pg(R(m.totalNote, { bold:true }), { before:140, after:100, align:X.AlignmentType.BOTH, border:{ [ar ? "right" : "left"]:{ style:X.BorderStyle.SINGLE, size:18, color:brand2, space:8 } } }));
   B.push(...bullets(m.notes));
   if (co.iban){ B.push(H(`${Lx.sec[n++]}: ${Lx.bank}`));
-    [[Lx.accName, m.coName], [Lx.bankName, m.bankName], [Lx.iban, co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30 }))); }
-  B.push(Pg(R(""), { after:160 }));
+    [[Lx.accName, m.coName], [Lx.bankName, m.bankName], [Lx.iban, co.iban]].forEach(([k, v]) => B.push(Pg([R(k + ": ", { color:"6D7C88" }), R(v || " ", { bold:true })], { after:30, keepNext:true }))); }
+  B.push(Pg(R(""), { after:100, keepNext:true }));
   B.push(H4(Lx.accept));
   const sr = (a, b2, o = {}) => new X.TableRow({ cantSplit:true, children:[ cell(a, { w:half, fill:o.fill }), cell(b2, { w:CW - half, fill:o.fill }) ] });
   const lv = (k, v, last) => Pg([R(k + " ", { color:"6D7C88" }), R(v || "", { bold:true })], { after:0, keepNext:!last });
-  const stampKids = co.stamp && co.showStamp ? [lv(Lx.stamp, ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:105, height:105 } })], { after:0, keepNext:true, line:null, align:CEN })] : [lv(Lx.stamp, ""), Pg(R(""), { after:900, keepNext:true })];
+  const stampKids = co.stamp && co.showStamp ? [lv(Lx.stamp, ""), Pg([new X.ImageRun({ type:imgType(co.stamp), data:dataUrlBytes(co.stamp), transformation:{ width:140, height:140 } })], { after:0, keepNext:true, line:null, align:CEN })] : [lv(Lx.stamp, ""), Pg(R(""), { after:900, keepNext:true })];
   B.push(tbl([
     sr([Pg(R(m.coName, { bold:true, color:brand }), { after:0, keepNext:true })], [Pg(R(`${Lx.client}: ${q.client.name || ""}`, { bold:true, color:brand }), { after:0, keepNext:true })], { fill:"EEF4F8" }),
     sr([lv(Lx.rep, m.signName)], [lv(Lx.rep, "")]), sr([lv(Lx.title, m.signTitle)], [lv(Lx.title, "")]),
